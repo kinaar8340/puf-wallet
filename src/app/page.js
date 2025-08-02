@@ -10,6 +10,17 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
+import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { PhantomWalletAdapter, SolflareWalletAdapter /* add others, exclude Keystone */ } from '@solana/wallet-adapter-wallets'; // Remove Keystone import if present
+import { useMemo } from 'react';
+
+// Devnet
+const network = WalletAdapterNetwork.Devnet; 
+
+// MainnetBeta
+// const network = WalletAdapterNetwork.Mainnet;
+
 // Hardcode program IDs to avoid import issues
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
@@ -96,6 +107,12 @@ const TOKEN_MINT = new PublicKey('33gD5RJNKifwMBd7wsgUSKX8VPJLGPPKfHX1aLjgqmu6')
 
 const strains = ['Tropican', 'Kazuma', 'BlueBerry', 'Lemon', 'Pineapple'];
 
+const voteStrains = [
+  { value: 'Dinamita', label: 'Dinamita (Sativa)' },
+  { value: 'Kazuma', label: 'Kazuma (Hybrid)' },
+  { value: 'MAC', label: 'MAC (Sativa-Leaning)' },
+];
+
 export default function Home() {
   useEffect(() => {
     fetch('/api/env')
@@ -108,12 +125,15 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [theme, setTheme] = useState('dark');
 
-  // Form states (as before)
+  // Form states for upload
   const [strain, setStrain] = useState('');
   const [puffs, setPuffs] = useState('');
   const [effects, setEffects] = useState('');
-  const [selectedStrain, setSelectedStrain] = useState('');
-  const [voteAmount, setVoteAmount] = useState(1);
+
+  // State for votes
+  const [votes, setVotes] = useState(
+    voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {})
+  );
 
   // Add states for history
   const [userUploads, setUserUploads] = useState([]);
@@ -248,30 +268,53 @@ export default function Home() {
 
   // For handleVote
   const handleVote = async () => {
-    if (!publicKey || !selectedStrain) return;
+    if (!publicKey) return;
+
+    const voteEntries = Object.entries(votes)
+      .filter(([_, amt]) => amt >= 1 && amt <= 10)
+      .map(([strain, vote_amount]) => ({
+        user_pubkey: publicKey.toBase58(),
+        strain,
+        vote_amount: Number(vote_amount),
+      }));
+
+    if (voteEntries.length === 0) {
+      toast.error('Please enter at least one vote between 1 and 10.');
+      return;
+    }
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.from('votes').insert([
-        {
-          user_pubkey: publicKey.toBase58(),
-          strain: selectedStrain,
-          vote_amount: voteAmount,
-        }
-      ]);
+      const { data, error } = await supabase.from('votes').insert(voteEntries);
       if (error) throw error;
+      if (!data || data.length === 0) throw new Error('Insert succeeded but no data was added—check table constraints');
 
-      console.log('Vote Submitted:', { selectedStrain, voteAmount });
+      console.log('Votes Submitted:', voteEntries);
       await claimRewards(publicKey);
-      toast.success('Vote submitted successfully!');
-      setSelectedStrain(''); setVoteAmount(1);
+      toast.success('Votes submitted successfully!');
+      setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
     } catch (err) {
       console.error('Vote Error:', err);
-      toast.error('Failed to submit vote: ' + (err.message || 'Unknown error'));
+      toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
   };
+  
+  export default function RootLayout({ children }) {
+  const wallets = useMemo(() => [
+    new PhantomWalletAdapter(),
+    new SolflareWalletAdapter({ network }),
+    // Add more adapters as needed, but omit new KeystoneWalletAdapter()
+  ], [network]);
+
+  return (
+    <ConnectionProvider endpoint="https://api.devnet.solana.com">
+      <WalletProvider wallets={wallets} autoConnect>
+        {children}
+      </WalletProvider>
+    </ConnectionProvider>
+  );
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
@@ -288,9 +331,9 @@ export default function Home() {
             <div className="w-full bg-gray-800 p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-semibold mb-4">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-4">
-                <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-2 rounded bg-gray-700 text-white" required />
-                <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-2 rounded bg-gray-700 text-white" required />
-                <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-2 rounded bg-gray-700 text-white h-24" required />
+                <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full" required />
+                <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full" required />
+                <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full h-24" required />
                 <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
                   {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
                 </button>
@@ -299,19 +342,35 @@ export default function Home() {
 
             <div className="w-full bg-gray-800 p-6 rounded-lg shadow-md">
               <h2 className="text-2xl font-semibold mb-4">Vote on Strains</h2>
-              <select value={selectedStrain} onChange={(e) => setSelectedStrain(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full mb-4" required>
-                <option value="">Select a Strain</option>
-                <option value="Dinamita">Dinamita (Sativa)</option>
-                <option value="Kazuma">Kazuma (Hybrid)</option>
-                <option value="MAC">MAC (Sativa-Leaning)</option>
-              </select>
-              <input type="number" min="1" max="100" value={voteAmount} onChange={(e) => setVoteAmount(Number(e.target.value))} className="p-2 rounded bg-gray-700 text-white w-full mb-4" required />
+              <table className="w-full table-auto mb-4">
+                <thead>
+                  <tr>
+                    <th className="text-left py-2">Strain</th>
+                    <th className="text-left py-2">Vote (1-10)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {voteStrains.map(({ value, label }) => (
+                    <tr key={value}>
+                      <td className="py-2">{label}</td>
+                      <td className="py-2">
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={votes[value] || ''}
+                          onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
+                          className="p-2 rounded bg-gray-700 text-white w-full"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
               <button onClick={handleVote} disabled={loading} className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded w-full">
                 {loading ? 'Claiming...' : 'Vote & Claim $PUF'}
               </button>
             </div>
-
-            <p className="mt-4 text-lg">Total Votes Cast: {userVotes.reduce((acc, v) => acc + v.vote_amount, 0)}</p>
 
             {/* History Dashboard */}
             {publicKey && (
@@ -332,5 +391,5 @@ export default function Home() {
         {/* Footer if needed */}
       </footer>
     </div>
-  ); 
+  );
 } 
