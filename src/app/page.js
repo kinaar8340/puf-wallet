@@ -1,4 +1,3 @@
-
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
@@ -316,12 +315,14 @@ export default function Home() {
   }, {});
 
   return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black">
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black relative">
       {/* Favicon links moved here as a temp fix; better in app/layout.js metadata */}
       {/* <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" /> */}
       {/* <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" /> */}
       {/* <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" /> */}
       {/* <link rel="manifest" href="/site.webmanifest" /> */}
+
+      <img src="/images/logo1.png" alt="PUF Wallet Logo" className="absolute top-8 left-8 w-24 h-24 object-contain" />
 
       <main className="flex flex-col gap-[48px] row-start-2 items-center w-full max-w-2xl mx-auto">
         <h1 className="text-6xl font-bold text-center text-black dark:text-[#22f703]">PUF Wallet</h1>
