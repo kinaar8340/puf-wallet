@@ -256,6 +256,7 @@ export default function Home() {
   };
 
 // For handleVote
+  // For handleVote
 const handleVote = async () => {
   if (!publicKey) return;
 
@@ -283,13 +284,15 @@ const handleVote = async () => {
     await claimRewards(publicKey);
     toast.success('Votes submitted successfully!');
     setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
+    // Optional: Update local history without refetch
+    setUserVotes([...userVotes, ...data]);
   } catch (err) {
     console.error('Vote Error:', err);
     toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
   } finally {
     setLoading(false);
   }
-};
+}; 
 
 return (
   <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
