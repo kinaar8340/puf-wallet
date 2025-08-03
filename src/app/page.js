@@ -143,7 +143,7 @@ export default function Home() {
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
-    document.body.style.backgroundColor = theme === 'dark' ? 'black' : 'white';
+    // document.body.style.backgroundColor = theme === 'dark' ? 'black' : 'white';
   }, [theme]);
 
   const toggleTheme = () => {
