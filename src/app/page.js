@@ -255,40 +255,41 @@ export default function Home() {
     }
   };
 
-  // For handleVote
-  const handleVote = async () => {
-    if (!publicKey) return;
+// For handleVote
+const handleVote = async () => {
+  if (!publicKey) return;
 
-    const voteEntries = Object.entries(votes)
-      .filter(([_, amt]) => amt >= 1 && amt <= 10)
-      .map(([strain, vote_amount]) => ({
-        user_pubkey: publicKey.toBase58(),
-        strain,
-        vote_amount: Number(vote_amount),
-      }));
+  const voteEntries = Object.entries(votes)
+    .filter(([_, amt]) => amt >= 1 && amt <= 10)
+    .map(([strain, vote_amount]) => ({
+      user_pubkey: publicKey.toBase58(),
+      strain,
+      vote_amount: Math.floor(Number(vote_amount)), // Ensure integer
+    }));
 
-    if (voteEntries.length === 0) {
-      toast.error('Please enter at least one vote between 1 and 10.');
-      return;
-    }
+  if (voteEntries.length === 0) {
+    toast.error('Please enter at least one vote between 1 and 10.');
+    return;
+  }
 
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.from('votes').insert(voteEntries);
-      if (error) throw error;
-      if (!data || data.length === 0) throw new Error('Insert succeeded but no data was added—check table constraints');
+  setLoading(true);
+  try {
+    const { data, error } = await supabase.from('votes').insert(voteEntries).select(); // Add .select() for returned rows
+    console.log('Insert response:', { data, error }); // Debug full response
+    if (error) throw error;
+    if (!data || data.length === 0) throw new Error('Insert succeeded but no data was added—check table constraints or logs');
 
-      console.log('Votes Submitted:', voteEntries);
-      await claimRewards(publicKey);
-      toast.success('Votes submitted successfully!');
-      setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
-    } catch (err) {
-      console.error('Vote Error:', err);
-      toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log('Votes Submitted:', voteEntries);
+    await claimRewards(publicKey);
+    toast.success('Votes submitted successfully!');
+    setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
+  } catch (err) {
+    console.error('Vote Error:', err);
+    toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
+  } finally {
+    setLoading(false);
+  }
+};
 
 return (
   <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
