@@ -92,7 +92,7 @@ async function getCustomMintDecimals(connection, mintPubkey) {
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 // $PUF token mint address (use your Devnet test mint)
-const TOKEN_MINT = new PublicKey('33gD5RJNKifwMBd7wsgUSKX8VPJLGPPKfHX1aLjgqmu6');
+const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 const strains = ['Tropican', 'Kazuma', 'BlueBerry', 'Lemon', 'Pineapple'];
 
