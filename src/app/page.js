@@ -290,89 +290,89 @@ export default function Home() {
     }
   };
 
-  return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <ToastContainer />
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-md">
-        <h1 className="text-4xl font-bold text-center sm:text-left">Welcome to Puf Wallet</h1>
-        <div className="flex flex-col items-center gap-4 w-full">
-          <WalletMultiButton className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full" />
-          {publicKey && <p className="text-sm text-gray-600">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
-        </div>
+return (
+  <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+    <ToastContainer />
+    <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-md">
+      <h1 className="text-4xl font-bold text-center sm:text-left text-green-500">Welcome to Puf Wallet</h1>
+      <div className="flex flex-col items-center gap-4 w-full">
+        <WalletMultiButton className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full" />
+        {publicKey && <p className="text-sm text-green-500">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+      </div>
 
-        {publicKey ? (
-          <>
-            <div className="w-full bg-gray-800 p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-semibold mb-4">Upload Vape Data</h2>
-              <form onSubmit={handleUpload} className="flex flex-col gap-4">
-                <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full" required />
-                <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full" required />
-                <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-2 rounded bg-gray-700 text-white w-full h-24" required />
-                <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                  {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
-                </button>
-              </form>
-            </div>
-
-            <div className="w-full bg-gray-800 p-6 rounded-lg shadow-md">
-              <h2 className="text-2xl font-semibold mb-4">Vote on Strains</h2>
-              <table className="w-full table-auto mb-4">
-                <thead>
-                  <tr>
-                    <th className="text-left py-2">Strain</th>
-                    <th className="text-left py-2">Vote (1-10)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {voteStrains.map(({ value, label }) => (
-                    <tr key={value}>
-                      <td className="py-2">{label}</td>
-                      <td className="py-2 flex items-center">
-                        <input
-                          type="number"
-                          min="1"
-                          max="10"
-                          value={votes[value] || ''}
-                          onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
-                          className="p-2 rounded bg-gray-700 text-white w-full"
-                        />
-                        {/* Later: Add colored meter here, e.g.:
-                        {votes[value] && (
-                          <div
-                            className="ml-2 w-8 h-4 rounded"
-                            style={{
-                              backgroundColor: votes[value] <= 5 ? (votes[value] <= 2 ? 'red' : 'lightcoral') : (votes[value] <= 7 ? 'lightgreen' : 'green'),
-                            }}
-                          ></div>
-                        )} */}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <button onClick={handleVote} disabled={loading} className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded w-full">
-                {loading ? 'Claiming...' : 'Vote & Claim $PUF'}
+      {publicKey ? (
+        <>
+          <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4 text-green-500">Upload Vape Data</h2>
+            <form onSubmit={handleUpload} className="flex flex-col gap-4">
+              <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full" required />
+              <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full" required />
+              <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full h-24" required />
+              <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
               </button>
-            </div>
+            </form>
+          </div>
 
-            {/* History Dashboard */}
-            {publicKey && (
-              <div className="w-full bg-gray-800 p-6 rounded-lg shadow-md mt-6">
-                <h2 className="text-2xl font-semibold mb-4">Your History</h2>
-                <h3>Uploads</h3>
-                <ul>{userUploads.map((u, i) => <li key={i}>{u.strain} - {u.puffs} puffs</li>)}</ul>
-                <h3>Votes</h3>
-                <ul>{userVotes.map((v, i) => <li key={i}>{v.strain} - {v.vote_amount} votes</li>)}</ul>
-              </div>
-            )}
-          </>
-        ) : (
-          <p className="text-center text-gray-400">Connect your wallet to upload data and vote!</p>
-        )}
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        {/* Footer if needed */}
-      </footer>
-    </div>
-  );
-} 
+          <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-semibold mb-4 text-green-500">Vote on Strains</h2>
+            <table className="w-full table-auto mb-4">
+              <thead>
+                <tr>
+                  <th className="text-left py-2 text-green-500">Strain</th>
+                  <th className="text-left py-2 text-green-500">Vote (1-10)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {voteStrains.map(({ value, label }) => (
+                  <tr key={value}>
+                    <td className="py-2 text-green-500">{label}</td>
+                    <td className="py-2 flex items-center">
+                      <input
+                        type="number"
+                        min="1"
+                        max="10"
+                        value={votes[value] || ''}
+                        onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
+                        className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full"
+                      />
+                      {/* Later: Add colored meter here, e.g.:
+                      {votes[value] && (
+                        <div
+                          className="ml-2 w-8 h-4 rounded"
+                          style={{
+                            backgroundColor: votes[value] <= 5 ? (votes[value] <= 2 ? 'red' : 'lightcoral') : (votes[value] <= 7 ? 'lightgreen' : 'green'),
+                          }}
+                        ></div>
+                      )} */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <button onClick={handleVote} disabled={loading} className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded w-full">
+              {loading ? 'Claiming...' : 'Vote & Claim $PUF'}
+            </button>
+          </div>
+
+          {/* History Dashboard */}
+          {publicKey && (
+            <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+              <h2 className="text-2xl font-semibold mb-4 text-green-500">Your History</h2>
+              <h3 className="text-green-500">Uploads</h3>
+              <ul className="text-green-500">{userUploads.map((u, i) => <li key={i}>{u.strain} - {u.puffs} puffs</li>)}</ul>
+              <h3 className="text-green-500">Votes</h3>
+              <ul className="text-green-500">{userVotes.map((v, i) => <li key={i}>{v.strain} - {v.vote_amount} votes</li>)}</ul>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="text-center text-green-500">Connect your wallet to upload data and vote!</p>
+      )}
+    </main>
+    <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+      {/* Footer if needed */}
+    </footer>
+  </div>
+);
+}
