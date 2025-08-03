@@ -153,85 +153,80 @@ export default function Home() {
   };
 
   // Function to claim rewards (mints $PUF to recipient)
-  const claimRewards = useCallback(async (recipient) => {
-    if (!publicKey || !signTransaction) return;
+  // Function to claim rewards (mints $PUF to recipient)
+const claimRewards = useCallback(async (recipient) => {
+  if (!publicKey || !signTransaction) return;
 
-    setLoading(true);
-    try {
-      const decimals = await getCustomMintDecimals(connection, TOKEN_MINT);
-      const recipientATA = getCustomAssociatedTokenAddress(TOKEN_MINT, recipient);
+  setLoading(true);
+  try {
+    const decimals = await getCustomMintDecimals(connection, TOKEN_MINT);
+    const recipientATA = getCustomAssociatedTokenAddress(TOKEN_MINT, recipient);
 
-      // Check if recipient ATA exists; create if not
-      const recipientAccount = await connection.getAccountInfo(recipientATA);
-      const transaction = new Transaction();
+    // Check if recipient ATA exists; create if not
+    const recipientAccount = await connection.getAccountInfo(recipientATA);
+    const transaction = new Transaction();
 
-      if (!recipientAccount) {
-        transaction.add(createCustomAssociatedTokenAccountInstruction(
-          publicKey,
-          recipientATA,
-          recipient,
-          TOKEN_MINT
-        ));
-      }
-
-      // Add mintTo instruction (10 tokens; adjust amount/decimals)
-      transaction.add(createCustomMintToInstruction(
-        TOKEN_MINT,
+    if (!recipientAccount) {
+      transaction.add(createCustomAssociatedTokenAccountInstruction(
+        publicKey,
         recipientATA,
-        publicKey, // Mint authority (your wallet)
-        10 * (10 ** decimals) // Amount (10 tokens)
+        recipient,
+        TOKEN_MINT
       ));
+    }
 
-      // Fetch recent blockhash
-      transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-      transaction.feePayer = publicKey;
+    // Add mintTo instruction (10 tokens; adjust amount/decimals)
+    transaction.add(createCustomMintToInstruction(
+      TOKEN_MINT,
+      recipientATA,
+      publicKey, // Mint authority (your wallet)
+      10 * (10 ** decimals) // Amount (10 tokens)
+    ));
 
-      // Sign
-      const signedTx = await signTransaction(transaction);
+    // Fetch recent blockhash
+    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+    transaction.feePayer = publicKey;
 
-      // Extract signature for potential status check
-      const signature = signedTx.signatures[0].signature;
+    // Sign
+    const signedTx = await signTransaction(transaction);
 
-      // Send with skipPreflight
-      let txId;
-      try {
-        txId = await connection.sendRawTransaction(signedTx.serialize(), {
-          skipPreflight: true,
-          preflightCommitment: 'processed' // Faster for devnet
-        });
-      } catch (sendError) {
-        if (sendError.message.includes('already been processed')) {
-          // Check status if "duplicate"
-          const status = await connection.getSignatureStatus(signature);
-          if (status.value && (status.value.confirmationStatus === 'confirmed' || status.value.confirmationStatus === 'finalized')) {
-            toast.success('Rewards already claimed successfully!');
-            return; // Exit as success
-          }
-        }
-        throw sendError; // Rethrow if not duplicate
-        } 
-        
-        catch (error) {
-          console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
-          toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
+    // Extract signature for potential status check
+    const signature = signedTx.signatures[0].signature;
+
+    // Send with skipPreflight
+    let txId;
+    try {
+      txId = await connection.sendRawTransaction(signedTx.serialize(), {
+        skipPreflight: true,
+        preflightCommitment: 'processed' // Faster for devnet
+      });
+    } catch (sendError) {
+      if (sendError.message.includes('already been processed')) {
+        // Check status if "duplicate"
+        const status = await connection.getSignatureStatus(signature);
+        if (status.value && (status.value.confirmationStatus === 'confirmed' || status.value.confirmationStatus === 'finalized')) {
+          toast.success('Rewards already claimed successfully!');
+          return; // Exit as success
         }
       }
-
-      // Confirm
-      await connection.confirmTransaction({
-        signature: txId,
-        lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight,
-        blockhash: transaction.recentBlockhash
-      }, 'processed');
-
-      toast.success(`Rewards claimed! Tx: ${txId}`);
-    } catch (error) {
-      console.error('Reward Claim Error:', error);
-      alert('Failed to claim rewards. Check console.');
-    } finally {
-      setLoading(false);
+      throw sendError; // Rethrow if not duplicate
     }
-  }, [publicKey, signTransaction]);
+
+    // Confirm
+    await connection.confirmTransaction({
+      signature: txId,
+      lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight,
+      blockhash: transaction.recentBlockhash
+    }, 'processed');
+
+    toast.success(`Rewards claimed! Tx: ${txId}`);
+  } catch (error) {
+    console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
+    toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
+  } finally {
+    setLoading(false);
+  }
+}, [publicKey, signTransaction]); 
 
   const handleUpload = async (e) => {
     e.preventDefault();
