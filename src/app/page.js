@@ -331,38 +331,38 @@ return (
           <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4 text-green-500">Vote on Strains</h2>
             <table className="w-full table-auto mb-4">
-              <thead>
-                <tr>
-                  <th className="text-left py-2 text-green-500">Strain</th>
-                  <th className="text-left py-2 text-green-500">Vote (1-10)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {voteStrains.map(({ value, label }) => (
-                  <tr key={value}>
-                    <td className="py-2 text-green-500">{label}</td>
-<td className="py-2 flex items-center">
-  <input
-    type="number"
-    min="1"
-    max="10"
-    value={votes[value] || ''}
-    onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
-    className="p-2 rounded bg-gray-700 text-white w-full"
-  />
-  {/* Later: Add colored meter here, e.g.: */}
-  {votes[value] && (
-    <div
-      className="ml-2 w-8 h-4 rounded"
-      style={{
-        backgroundColor: `hsl(${ (votes[value] - 1) * 12 }, 100%, 50%)`, // Red (0) at 1 to green (120) at 10
-      }}
-    ></div>
-  )}
-</td>
-                ))}
-              </tbody>
-            </table>
+  <thead>
+    <tr>
+      <th className="text-left py-2 text-green-500">Strain</th>
+      <th className="text-left py-2 text-green-500">Vote (1-10)</th>
+    </tr>
+  </thead>
+  <tbody>
+    {voteStrains.map(({ value, label }) => (
+      <tr key={value}>
+        <td className="py-2 text-green-500">{label}</td>
+        <td className="py-2 flex items-center">
+          <input
+            type="number"
+            min="1"
+            max="10"
+            value={votes[value] || ''}
+            onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
+            className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full"
+          />
+          {votes[value] && (
+            <div
+              className="ml-2 w-8 h-4 rounded"
+              style={{
+                backgroundColor: `hsl(${ (votes[value] - 1) * 12 }, 100%, 50%)`, // Red (0) at 1 to green (120) at 10
+              }}
+            ></div>
+          )}
+        </td>
+      </tr>
+      ))}
+      </tbody>
+      </table>
             <button onClick={handleVote} disabled={loading} className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded w-full">
               {loading ? 'Claiming...' : 'Vote & Claim $PUF'}
             </button>
