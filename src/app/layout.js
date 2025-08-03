@@ -1,12 +1,12 @@
 'use client';
 
+import '@solana/wallet-adapter-react-ui/styles.css'; // Wallet UI styles
 import './globals.css'; // Add if you have global styles
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets'; // Add more adapters as needed
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { useMemo } from 'react';
-import '@solana/wallet-adapter-react-ui/styles.css'; // Wallet UI styles
 
 const network = WalletAdapterNetwork.Devnet;
 
