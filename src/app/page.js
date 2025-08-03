@@ -153,8 +153,26 @@ export default function Home() {
   };
 
   // Function to claim rewards (mints $PUF to recipient)
-  // Function to claim rewards (mints $PUF to recipient)
 const claimRewards = useCallback(async (recipient) => {
+  // In your claim function (e.g., using @solana/web3.js)
+async function claimRewards(wallet, amount) {
+  if (!wallet.connected) {
+    throw new Error('Wallet disconnected - please reconnect');
+  }
+  const tx = new Transaction().add(/* your instruction */);
+  tx.feePayer = wallet.publicKey;
+  const { blockhash } = await connection.getLatestBlockhash();
+  tx.recentBlockhash = blockhash;
+  
+  // Sign and send with options to handle errors
+  const signedTx = await wallet.signTransaction(tx);
+  const signature = await connection.sendRawTransaction(signedTx.serialize(), {
+    skipPreflight: true, // Bypass simulation if needed
+    preflightCommitment: 'processed'
+  });
+  await connection.confirmTransaction(signature);
+  return signature;
+}
   if (!publicKey || !signTransaction) return;
 
   setLoading(true);
@@ -180,7 +198,7 @@ const claimRewards = useCallback(async (recipient) => {
       TOKEN_MINT,
       recipientATA,
       publicKey, // Mint authority (your wallet)
-      10 * (10 ** decimals) // Amount (10 tokens)
+      100 * (10 ** decimals) // Amount (100 tokens)
     ));
 
     // Fetch recent blockhash
