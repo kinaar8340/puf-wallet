@@ -209,6 +209,12 @@ export default function Home() {
           }
         }
         throw sendError; // Rethrow if not duplicate
+        } 
+        
+        catch (error) {
+          console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
+          toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
+        }
       }
 
       // Confirm
