@@ -10,10 +10,10 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { PhantomWalletAdapter, SolflareWalletAdapter /* add others, exclude Keystone */ } from '@solana/wallet-adapter-wallets'; // Remove Keystone import if present
-import { useMemo } from 'react';
+// import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
+// import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+// import { PhantomWalletAdapter, SolflareWalletAdapter /* add others, exclude Keystone */ } from '@solana/wallet-adapter-wallets'; // Remove Keystone import if present
+// import { useMemo } from 'react';
 
 // Devnet
 const network = WalletAdapterNetwork.Devnet; 
@@ -300,21 +300,6 @@ export default function Home() {
       setLoading(false);
     }
   };
-  
-  export default function RootLayout({ children }) {
-  const wallets = useMemo(() => [
-    new PhantomWalletAdapter(),
-    new SolflareWalletAdapter({ network }),
-    // Add more adapters as needed, but omit new KeystoneWalletAdapter()
-  ], [network]);
-
-  return (
-    <ConnectionProvider endpoint="https://api.devnet.solana.com">
-      <WalletProvider wallets={wallets} autoConnect>
-        {children}
-      </WalletProvider>
-    </ConnectionProvider>
-  );
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
