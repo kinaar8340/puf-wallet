@@ -153,98 +153,79 @@ export default function Home() {
   };
 
   // Function to claim rewards (mints $PUF to recipient)
-const claimRewards = useCallback(async (recipient) => {
-  // In your claim function (e.g., using @solana/web3.js)
-async function claimRewards(wallet, amount) {
-  if (!wallet.connected) {
-    throw new Error('Wallet disconnected - please reconnect');
-  }
-  const tx = new Transaction().add(/* your instruction */);
-  tx.feePayer = wallet.publicKey;
-  const { blockhash } = await connection.getLatestBlockhash();
-  tx.recentBlockhash = blockhash;
-  
-  // Sign and send with options to handle errors
-  const signedTx = await wallet.signTransaction(tx);
-  const signature = await connection.sendRawTransaction(signedTx.serialize(), {
-    skipPreflight: true, // Bypass simulation if needed
-    preflightCommitment: 'processed'
-  });
-  await connection.confirmTransaction(signature);
-  return signature;
-}
-  if (!publicKey || !signTransaction) return;
+  const claimRewards = useCallback(async (recipient) => {
+    if (!publicKey || !signTransaction) return;
 
-  setLoading(true);
-  try {
-    const decimals = await getCustomMintDecimals(connection, TOKEN_MINT);
-    const recipientATA = getCustomAssociatedTokenAddress(TOKEN_MINT, recipient);
-
-    // Check if recipient ATA exists; create if not
-    const recipientAccount = await connection.getAccountInfo(recipientATA);
-    const transaction = new Transaction();
-
-    if (!recipientAccount) {
-      transaction.add(createCustomAssociatedTokenAccountInstruction(
-        publicKey,
-        recipientATA,
-        recipient,
-        TOKEN_MINT
-      ));
-    }
-
-    // Add mintTo instruction (10 tokens; adjust amount/decimals)
-    transaction.add(createCustomMintToInstruction(
-      TOKEN_MINT,
-      recipientATA,
-      publicKey, // Mint authority (your wallet)
-      100 * (10 ** decimals) // Amount (100 tokens)
-    ));
-
-    // Fetch recent blockhash
-    transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-    transaction.feePayer = publicKey;
-
-    // Sign
-    const signedTx = await signTransaction(transaction);
-
-    // Extract signature for potential status check
-    const signature = signedTx.signatures[0].signature;
-
-    // Send with skipPreflight
-    let txId;
+    setLoading(true);
     try {
-      txId = await connection.sendRawTransaction(signedTx.serialize(), {
-        skipPreflight: true,
-        preflightCommitment: 'processed' // Faster for devnet
-      });
-    } catch (sendError) {
-      if (sendError.message.includes('already been processed')) {
-        // Check status if "duplicate"
-        const status = await connection.getSignatureStatus(signature);
-        if (status.value && (status.value.confirmationStatus === 'confirmed' || status.value.confirmationStatus === 'finalized')) {
-          toast.success('Rewards already claimed successfully!');
-          return; // Exit as success
-        }
+      const decimals = await getCustomMintDecimals(connection, TOKEN_MINT);
+      const recipientATA = getCustomAssociatedTokenAddress(TOKEN_MINT, recipient);
+
+      // Check if recipient ATA exists; create if not
+      const recipientAccount = await connection.getAccountInfo(recipientATA);
+      const transaction = new Transaction();
+
+      if (!recipientAccount) {
+        transaction.add(createCustomAssociatedTokenAccountInstruction(
+          publicKey,
+          recipientATA,
+          recipient,
+          TOKEN_MINT
+        ));
       }
-      throw sendError; // Rethrow if not duplicate
+
+      // Add mintTo instruction (10 tokens; adjust amount/decimals)
+      transaction.add(createCustomMintToInstruction(
+        TOKEN_MINT,
+        recipientATA,
+        publicKey, // Mint authority (your wallet)
+        100 * (10 ** decimals) // Amount (100 tokens)
+      ));
+
+      // Fetch recent blockhash
+      transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
+      transaction.feePayer = publicKey;
+
+      // Sign
+      const signedTx = await signTransaction(transaction);
+
+      // Extract signature for potential status check
+      const signature = signedTx.signatures[0].signature;
+
+      // Send with skipPreflight
+      let txId;
+      try {
+        txId = await connection.sendRawTransaction(signedTx.serialize(), {
+          skipPreflight: true,
+          preflightCommitment: 'processed' // Faster for devnet
+        });
+      } catch (sendError) {
+        if (sendError.message.includes('already been processed')) {
+          // Check status if "duplicate"
+          const status = await connection.getSignatureStatus(signature);
+          if (status.value && (status.value.confirmationStatus === 'confirmed' || status.value.confirmationStatus === 'finalized')) {
+            toast.success('Rewards already claimed successfully!');
+            return; // Exit as success
+          }
+        }
+        throw sendError; // Rethrow if not duplicate
+      }
+
+      // Confirm
+      await connection.confirmTransaction({
+        signature: txId,
+        lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight,
+        blockhash: transaction.recentBlockhash
+      }, 'processed');
+
+      toast.success(`Rewards claimed! Tx: ${txId}`);
+    } catch (error) {
+      console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
+      toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
+    } finally {
+      setLoading(false);
     }
-
-    // Confirm
-    await connection.confirmTransaction({
-      signature: txId,
-      lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight,
-      blockhash: transaction.recentBlockhash
-    }, 'processed');
-
-    toast.success(`Rewards claimed! Tx: ${txId}`);
-  } catch (error) {
-    console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
-    toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
-  } finally {
-    setLoading(false);
-  }
-}, [publicKey, signTransaction]); 
+  }, [publicKey, signTransaction]); 
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -274,136 +255,131 @@ async function claimRewards(wallet, amount) {
     }
   };
 
-// For handleVote
   // For handleVote
-const handleVote = async () => {
-  if (!publicKey) return;
+  const handleVote = async () => {
+    if (!publicKey) return;
 
-  const voteEntries = Object.entries(votes)
-    .filter(([_, amt]) => amt >= 1 && amt <= 10)
-    .map(([strain, vote_amount]) => ({
-      user_pubkey: publicKey.toBase58(),
-      strain,
-      vote_amount: Math.floor(Number(vote_amount)), // Ensure integer
-    }));
+    const voteEntries = Object.entries(votes)
+      .filter(([_, amt]) => amt >= 1 && amt <= 10)
+      .map(([strain, vote_amount]) => ({
+        user_pubkey: publicKey.toBase58(),
+        strain,
+        vote_amount: Math.floor(Number(vote_amount)), // Ensure integer
+      }));
 
-  if (voteEntries.length === 0) {
-    toast.error('Please enter at least one vote between 1 and 10.');
-    return;
-  }
+    if (voteEntries.length === 0) {
+      toast.error('Please enter at least one vote between 1 and 10.');
+      return;
+    }
 
-  setLoading(true);
-  try {
-    const { data, error } = await supabase.from('votes').insert(voteEntries).select(); // Add .select() for returned rows
-    console.log('Insert response:', { data, error }); // Debug full response
-    if (error) throw error;
-    if (!data || data.length === 0) throw new Error('Insert succeeded but no data was added—check table constraints or logs');
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.from('votes').insert(voteEntries).select(); // Add .select() for returned rows
+      console.log('Insert response:', { data, error }); // Debug full response
+      if (error) throw error;
+      if (!data || data.length === 0) throw new Error('Insert succeeded but no data was added—check table constraints or logs');
 
-    console.log('Votes Submitted:', voteEntries);
-    await claimRewards(publicKey);
-    toast.success('Votes submitted successfully!');
-    setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
-    // Optional: Update local history without refetch
-    setUserVotes([...userVotes, ...data]);
-  } catch (err) {
-    console.error('Vote Error:', err);
-    toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
-  } finally {
-    setLoading(false);
-  }
-}; 
+      console.log('Votes Submitted:', voteEntries);
+      await claimRewards(publicKey);
+      toast.success('Votes submitted successfully!');
+      setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
+      // Optional: Update local history without refetch
+      setUserVotes([...userVotes, ...data]);
+    } catch (err) {
+      console.error('Vote Error:', err);
+      toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  }; 
 
-{ votes[value] && (
-  <div
-    className="ml-2 w-8 h-4 rounded"
-    style={{
-      backgroundColor: `hsl(${ (votes[value] - 1) * 12 }, 100%, 50%)`, // Red (0) at 1 to green (120) at 10
-    }}
-  ></div>
-)}
+  return (
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
+      <ToastContainer />
+      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-md">
+        <h1 className="text-4xl font-bold text-center sm:text-left text-green-500">Welcome to Puf Wallet</h1>
+        <div className="flex flex-col items-center gap-4 w-full">
+          <WalletMultiButton className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full" />
+          {publicKey && <p className="text-sm text-green-500">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+        </div>
 
-return (
-  <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-    <ToastContainer />
-    <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-md">
-      <h1 className="text-4xl font-bold text-center sm:text-left text-green-500">Welcome to Puf Wallet</h1>
-      <div className="flex flex-col items-center gap-4 w-full">
-        <WalletMultiButton className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full" />
-        {publicKey && <p className="text-sm text-green-500">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
-      </div>
-
-      {publicKey ? (
-        <>
-          <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-4 text-green-500">Upload Vape Data</h2>
-            <form onSubmit={handleUpload} className="flex flex-col gap-4">
-              <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full" required />
-              <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full" required />
-              <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full h-24" required />
-              <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
-              </button>
-            </form>
-          </div>
-
-          <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-semibold mb-4 text-green-500">Vote on Strains</h2>
-            <table className="w-full table-auto mb-4">
-  <thead>
-    <tr>
-      <th className="text-left py-2 text-green-500">Strain</th>
-      <th className="text-left py-2 text-green-500">Vote (1-10)</th>
-    </tr>
-  </thead>
-  <tbody>
-    {voteStrains.map(({ value, label }) => (
-      <tr key={value}>
-        <td className="py-2 text-green-500">{label}</td>
-        <td className="py-2 flex items-center">
-          <input
-            type="number"
-            min="1"
-            max="10"
-            value={votes[value] || ''}
-            onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
-            className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full"
-          />
-          {votes[value] && (
-            <div
-              className="ml-2 w-8 h-4 rounded"
-              style={{
-                backgroundColor: `hsl(${ (votes[value] - 1) * 12 }, 100%, 50%)`, // Red (0) at 1 to green (120) at 10
-              }}
-            ></div>
-          )}
-        </td>
-      </tr>
-      ))}
-      </tbody>
-      </table>
-            <button onClick={handleVote} disabled={loading} className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded w-full">
-              {loading ? 'Claiming...' : 'Vote & Claim $PUF'}
-            </button>
-          </div>
-
-          {/* History Dashboard */}
-          {publicKey && (
-            <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
-              <h2 className="text-2xl font-semibold mb-4 text-green-500">Your History</h2>
-              <h3 className="text-green-500">Uploads</h3>
-              <ul className="text-green-500">{userUploads.map((u, i) => <li key={i}>{u.strain} - {u.puffs} puffs</li>)}</ul>
-              <h3 className="text-green-500">Votes</h3>
-              <ul className="text-green-500">{userVotes.map((v, i) => <li key={i}>{v.strain} - {v.vote_amount} votes</li>)}</ul>
+        {publicKey ? (
+          <>
+            <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold mb-4 text-green-500">Upload Vape Data</h2>
+              <form onSubmit={handleUpload} className="flex flex-col gap-4">
+                <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full" required />
+                <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full" required />
+                <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full h-24" required />
+                <button type="submit" disabled={loading} className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
+                  {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
+                </button>
+              </form>
             </div>
-          )}
-        </>
-      ) : (
-        <p className="text-center text-green-500">Connect your wallet to upload data and vote!</p>
-      )}
-    </main>
-    <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-      {/* Footer if needed */}
-    </footer>
-  </div>
-);
+
+            <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+              <h2 className="text-2xl font-semibold mb-4 text-green-500">Vote on Strains</h2>
+              <table className="w-full table-auto mb-4">
+                <thead>
+                  <tr>
+                    <th className="text-left py-2 text-green-500">Strain</th>
+                    <th className="text-left py-2 text-green-500">Vote (1-10)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {voteStrains.map(({ value, label }) => (
+                    <tr key={value}>
+                      <td className="py-2 text-green-500">{label}</td>
+                      <td className="py-2 flex items-center">
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={votes[value] || ''}
+                          onChange={(e) => {
+                            const numValue = e.target.value ? Number(e.target.value) : '';
+                            if (numValue === '' || (numValue >= 1 && numValue <= 10)) {
+                              setVotes({ ...votes, [value]: numValue });
+                            }
+                          }}
+                          className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full"
+                        />
+                        {votes[value] && (
+                          <div
+                            className="ml-2 w-8 h-4 rounded"
+                            style={{
+                              backgroundColor: `hsl(${ ((Number(votes[value]) || 1) - 1) * 12 }, 100%, 50%)`, // Red (0) at 1 to green (120) at 10
+                            }}
+                          ></div>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button onClick={handleVote} disabled={loading} className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded w-full">
+                {loading ? 'Claiming...' : 'Vote & Claim $PUF'}
+              </button>
+            </div>
+
+            {/* History Dashboard */}
+            {publicKey && (
+              <div className="w-full bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md mt-6">
+                <h2 className="text-2xl font-semibold mb-4 text-green-500">Your History</h2>
+                <h3 className="text-green-500">Uploads</h3>
+                <ul className="text-green-500">{userUploads.map((u, i) => <li key={i}>{u.strain} - {u.puffs} puffs</li>)}</ul>
+                <h3 className="text-green-500">Votes</h3>
+                <ul className="text-green-500">{userVotes.map((v, i) => <li key={i}>{v.strain} - {v.vote_amount} votes</li>)}</ul>
+              </div>
+            )}
+          </>
+        ) : (
+          <p className="text-center text-green-500">Connect your wallet to upload data and vote!</p>
+        )}
+      </main>
+      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        {/* Footer if needed */}
+      </footer>
+    </div>
+  );
 }
