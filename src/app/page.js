@@ -1,21 +1,22 @@
+
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
-const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 import { useState, useCallback, useEffect } from 'react';
 import { Connection, PublicKey, Transaction, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
 
 // Hardcode program IDs to avoid import issues
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
-// Manual u64 LE set for browser compatibility
+
+// Manual u64 LE set for browser compatibility 
 function setU64LE(bytes, offset, value) {
   value = BigInt(value);
   for (let i = 0; i < 8; i++) {
@@ -116,7 +117,7 @@ export default function Home() {
 
   // Form states for upload
   const [strain, setStrain] = useState('');
-  const [puffs, setPuffs] = useState('');
+  const [score, setscore] = useState('');
   const [effects, setEffects] = useState('');
 
   // State for votes
@@ -237,16 +238,16 @@ export default function Home() {
         {
           user_pubkey: publicKey.toBase58(),
           strain,
-          puffs: parseInt(puffs),
+          score: parseInt(score),
           effects,
         }
       ]);
       if (error) throw error;
 
-      console.log('Uploaded Data:', { strain, puffs, effects });
+      console.log('Uploaded Data:', { strain, score, effects });
       await claimRewards(publicKey);
       toast.success('Data uploaded successfully!');
-      setStrain(''); setPuffs(''); setEffects('');
+      setStrain(''); setscore(''); setEffects('');
     } catch (error) {
       console.error('Upload Error:', error);
       alert('Failed to upload data: ' + error.message);
@@ -298,6 +299,22 @@ export default function Home() {
     }
   };
 
+  // Aggregate votes by strain
+  const aggregatedVotes = userVotes.reduce((acc, v) => {
+    acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
+    return acc;
+  }, {});
+
+  // Aggregate uploads by strain
+  const aggregatedUploads = userUploads.reduce((acc, u) => {
+    if (!acc[u.strain]) {
+      acc[u.strain] = { score: 0, effects: [] };
+    }
+    acc[u.strain].score += u.score;
+    acc[u.strain].effects.push(u.effects);
+    return acc;
+  }, {});
+
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black">
       {/* Favicon links moved here as a temp fix; better in app/layout.js metadata */}
@@ -336,9 +353,9 @@ export default function Home() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Number of Puffs</td>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Number of score</td>
                       <td className="pb-4">
-                        <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                        <input type="number" placeholder="Number of score" value={score} onChange={(e) => setscore(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
@@ -365,16 +382,16 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {strains.map(s => (
-                    <tr key={s}>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s}</td>
+                  {voteStrains.map(s => (
+                    <tr key={s.value}>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s.label}</td>
                       <td className="pb-4">
                         <input
                           type="number"
                           min="1"
                           max="10"
-                          value={votes[s] || ''}
-                          onChange={(e) => handleVoteChange(s, e.target.value)}
+                          value={votes[s.value] || ''}
+                          onChange={(e) => handleVoteChange(s.value, e.target.value)}
                           className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
                         />
                       </td>
@@ -392,13 +409,44 @@ export default function Home() {
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
                 <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
                 <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
-                <ul className="list-disc pl-8 text-black dark:text-[#22f703] text-xl">
-                  {userUploads.map((u, i) => <li key={i}>{u.strain} - {u.puffs} puffs - Effects: {u.effects}</li>)}
-                </ul>
+                <table className="w-full table-auto mx-auto">
+                  <thead>
+                    <tr>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Total score</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Effects/Notes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(aggregatedUploads).map(([strain, { score, effects }], i) => (
+                      <tr key={i}>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{score}</td>
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{effects.join('; ')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
+
                 <h3 className="text-3xl mb-4 text-black dark:text-[#22f703] mt-8">Votes</h3>
-                <ul className="list-disc pl-8 text-black dark:text-[#22f703] text-xl">
-                  {userVotes.map((v, i) => <li key={i}>{v.strain} - {v.vote_amount} votes</li>)}
-                </ul>
+                <table className="w-full table-auto mx-auto">
+                  <thead>
+                    <tr>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Votes</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(aggregatedVotes).map(([strain, total], i) => (
+                      <tr key={i}>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{total}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {Object.keys(aggregatedVotes).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No votes yet.</p>}
               </div>
             )}
           </>
