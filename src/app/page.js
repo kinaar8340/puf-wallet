@@ -330,44 +330,44 @@ export default function Home() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Strain Name</td>
+                      <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">Strain Name</td>
                       <td className="pb-4">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Number of Puffs</td>
+                      <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">Number of Puffs</td>
                       <td className="pb-4">
-                        <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                        <input type="number" placeholder="Number of Puffs" value={puffs} onChange={(e) => setPuffs(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Effects/Notes</td>
+                      <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">Effects/Notes</td>
                       <td className="pb-4">
-                        <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                        <textarea placeholder="Effects/Notes" value={effects} onChange={(e) => setEffects(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
+                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text[#22f703] font-bold py-6 px-10 rounded text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
                   {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
                 </button>
               </form>
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Strains</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Vote on Strains</h2>
               <table className="w-full table-auto mx-auto">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Vote (1-10)</th>
+                    <th className="text-center pb-4 text-black dark:text[#22f703]">Strain</th>
+                    <th className="text-center pb-4 text-black dark:text[#22f703]">Vote (1-10)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {strains.map(s => (
                     <tr key={s}>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s}</td>
+                      <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{s}</td>
                       <td className="pb-4">
                         <input
                           type="number"
@@ -375,14 +375,14 @@ export default function Home() {
                           max="10"
                           value={votes[s] || ''}
                           onChange={(e) => handleVoteChange(s, e.target.value)}
-                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
+                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56"
                         />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 dark:bg-gray-800 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 dark:bg-gray-800 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text[#22f703] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
                 {loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'}
               </button>
             </div>
@@ -390,20 +390,20 @@ export default function Home() {
             {/* History Dashboard */}
             {publicKey && (
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
-                <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
-                <ul className="list-disc pl-8 text-black dark:text-[#22f703] text-xl">
+                <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Your History</h2>
+                <h3 className="text-3xl mb-4 text-black dark:text[#22f703]">Uploads</h3>
+                <ul className="list-disc pl-8 text-black dark:text[#22f703] text-xl">
                   {userUploads.map((u, i) => <li key={i}>{u.strain} - {u.puffs} puffs - Effects: {u.effects}</li>)}
                 </ul>
-                <h3 className="text-3xl mb-4 text-black dark:text-[#22f703] mt-8">Votes</h3>
-                <ul className="list-disc pl-8 text-black dark:text-[#22f703] text-xl">
+                <h3 className="text-3xl mb-4 text-black dark:text[#22f703] mt-8">Votes</h3>
+                <ul className="list-disc pl-8 text-black dark:text[#22f703] text-xl">
                   {userVotes.map((v, i) => <li key={i}>{v.strain} - {v.vote_amount} votes</li>)}
                 </ul>
               </div>
             )}
           </>
         ) : (
-          <p className="text-center text-gray-600 dark:text-[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
+          <p className="text-center text-gray-600 dark:text[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
@@ -412,4 +412,4 @@ export default function Home() {
       <ToastContainer theme={theme} />
     </div>
   );
-} 
+}
