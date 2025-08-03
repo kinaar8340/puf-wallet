@@ -333,24 +333,23 @@ return (
                   <tr key={value}>
                     <td className="py-2 text-green-500">{label}</td>
                     <td className="py-2 flex items-center">
-                      <input
-                        type="number"
-                        min="1"
-                        max="10"
-                        value={votes[value] || ''}
-                        onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
-                        className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-green-500 w-full"
-                      />
-                      {// Later: Add colored meter here, e.g.:
-                      {votes[value] && (
-                        <div
-                          className="ml-2 w-8 h-4 rounded"
-                          style={{
-                            backgroundColor: votes[value] <= 5 ? (votes[value] <= 2 ? 'red' : 'lightcoral') : (votes[value] <= 7 ? 'lightgreen' : 'green'),
-                          }}
-                        ></div>
-                      )} }
-                    </td>
+                    <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={votes[value] || ''}
+                    onChange={(e) => setVotes({ ...votes, [value]: e.target.value ? Number(e.target.value) : '' })}
+                    className="p-2 rounded bg-gray-700 text-white w-full"
+                    />
+                  {/* Later: Add colored meter here, e.g.: */}
+                    {votes[value] && (
+                    <div
+                    className="ml-2 w-8 h-4 rounded"
+                    style={{backgroundColor: votes[value] <= 5 ? (votes[value] <= 2 ? 'red' : 'lightcoral') : (votes[value] <= 7 ? 'lightgreen' : 'green'),
+                    }}
+                  ></div>
+            )}
+          </td>
                   </tr>
                 ))}
               </tbody>
