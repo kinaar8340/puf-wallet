@@ -1,104 +1,22 @@
- 
+
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
 import { useState, useCallback, useEffect } from 'react';
-import { Connection, PublicKey, Transaction, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction, getTokenAccountBalance } from '@solana/web3.js';
+import { Connection, PublicKey, Transaction, TransactionInstruction, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getAssociatedTokenAddressSync, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
-// Hardcode program IDs to avoid import issues
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
-const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
-const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
-
-
-// Manual u64 LE set for browser compatibility 
-function setU64LE(bytes, offset, value) {
-  value = BigInt(value);
-  for (let i = 0; i < 8; i++) {
-    bytes[offset + i] = Number(value & 0xffn);
-    value = value >> 8n;
-  }
-}
-
-// Custom function for getAssociatedTokenAddress (sync version)
-function getCustomAssociatedTokenAddress(mint, owner) {
-  return PublicKey.findProgramAddressSync(
-    [
-      owner.toBuffer(),
-      TOKEN_PROGRAM_ID
-
-.toBuffer(),
-      mint.toBuffer(),
-    ],
-    ASSOCIATED_TOKEN_PROGRAM_ID
-  )[0];
-}
-
-// Custom function for createAssociatedTokenAccountInstruction
-function createCustomAssociatedTokenAccountInstruction(
-  payer, // PublicKey
-  associatedToken, // PublicKey
-  owner, // PublicKey
-  mint // PublicKey
-) {
-  return new TransactionInstruction({
-    keys: [
-      { pubkey: payer, isSigner: true, isWritable: true },
-      { pubkey: associatedToken, isSigner: false, isWritable: true },
-      { pubkey: owner, isSigner: false, isWritable: false },
-      { pubkey: mint, isSigner: false, isWritable: false },
-      { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
-      { pubkey: TOKEN_PROGRAM_ID
-
-, isSigner: false, isWritable: false },
-      { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
-    ],
-    programId: ASSOCIATED_TOKEN_PROGRAM_ID,
-    data: Buffer.from([]),
-  });
-}
-
-// Custom function for createMintToInstruction
-function createCustomMintToInstruction(
-  mint, // PublicKey
-  destination, // PublicKey
-  authority, // PublicKey
-  amount // number
-) {
-  const data = new Uint8Array(9);
-  data[0] = 7; // MintTo opcode
-  setU64LE(data, 1, amount);
-  return new TransactionInstruction({
-    keys: [
-      { pubkey: mint, isSigner: false, isWritable: true },
-      { pubkey: destination, isSigner: false, isWritable: true },
-      { pubkey: authority, isSigner: true, isWritable: false },
-    ],
-    programId: TOKEN_PROGRAM_ID
-
-,
-    data,
-  });
-}
-
-// Custom function to get mint decimals
-async function getCustomMintDecimals(connection, mintPubkey) {
-  const accountInfo = await connection.getAccountInfo(mintPubkey);
-  if (!accountInfo) throw new Error('Mint not found');
-  if (accountInfo.data.length < 44) throw new Error('Invalid mint size');
-  const decimals = accountInfo.data[36];
-  return decimals;
-}
 
 // Solana Devnet connection (switch to 'https://api.mainnet-beta.solana.com' later)
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
-// $PUF token mint address (use your Devnet test mint)
+// $PUF token mint address (use your Devnet test mint; switch to mainnet '3RoiaUKQDEED6Uc8Diz6aJ7TVwwe8H15fbrJEYTJbonk' later)
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 const voteStrains = [
@@ -117,7 +35,7 @@ export default function Home() {
       .catch(err => console.error('API error:', err));
   }, []);
 
-  const { publicKey, signTransaction } = useWallet(); // Wallet state and signer
+  const { publicKey } = useWallet(); // No signTransaction needed with API approach
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState('0');
 
@@ -139,17 +57,24 @@ export default function Home() {
 
   useEffect(() => {
     if (publicKey) {
-      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
-      supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserVotes(data || []));
+      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+        if (error) console.error('Uploads fetch error:', error);
+        setUserUploads(data || []);
+      });
+      supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+        if (error) console.error('Votes fetch error:', error);
+        setUserVotes(data || []);
+      });
       // Fetch balance
-      const ata = getCustomAssociatedTokenAddress(TOKEN_MINT, publicKey);
+      const ata = getAssociatedTokenAddressSync(TOKEN_MINT, publicKey, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
       connection.getTokenAccountBalance(ata).then((res) => {
         setBalance(res.value.uiAmountString);
       }).catch(() => setBalance('0'));
     }
     // Fetch all votes for total aggregation
-    supabase.from('votes').select('*').then(({ data }) => {
-      const agg = data.reduce((acc, v) => {
+    supabase.from('votes').select('*').then(({ data, error }) => {
+      if (error) console.error('Total votes fetch error:', error);
+      const agg = (data || []).reduce((acc, v) => {
         acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
         return acc;
       }, {});
@@ -157,85 +82,38 @@ export default function Home() {
     });
   }, [publicKey]);
 
-  // Function to claim rewards (mints $PUF to recipient)
+  // Function to claim rewards (calls server API for transfer)
   const claimRewards = useCallback(async (recipient) => {
-    if (!publicKey || !signTransaction) return;
+    if (!recipient) return;
 
     setLoading(true);
     try {
-      const decimals = await getCustomMintDecimals(connection, TOKEN_MINT);
-      const recipientATA = getCustomAssociatedTokenAddress(TOKEN_MINT, recipient);
+      const response = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient: recipient.toBase58() }),
+      });
 
-      // Check if recipient ATA exists; create if not
-      const recipientAccount = await connection.getAccountInfo(recipientATA);
-      const transaction = new Transaction();
+      const data = await response.json();
 
-      if (!recipientAccount) {
-        transaction.add(createCustomAssociatedTokenAccountInstruction(
-          publicKey,
-          recipientATA,
-          recipient,
-          TOKEN_MINT
-        ));
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to claim');
       }
 
-      // Add mintTo instruction (10 tokens; adjust amount/decimals)
-      transaction.add(createCustomMintToInstruction(
-        TOKEN_MINT,
-        recipientATA,
-        publicKey, // Mint authority (your wallet)
-        100 * (10 ** decimals) // Amount (100 tokens)
-      ));
+      toast.success(`Rewards claimed! Tx: ${data.signature}`);
 
-      // Fetch recent blockhash
-      transaction.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
-      transaction.feePayer = publicKey;
-
-      // Sign
-      const signedTx = await signTransaction(transaction);
-
-      // Extract signature for potential status check
-      const signature = signedTx.signatures[0].signature;
-
-      // Send with skipPreflight
-      let txId;
-      try {
-        txId = await connection.sendRawTransaction(signedTx.serialize(), {
-          skipPreflight: true,
-          preflightCommitment: 'processed' // Faster for devnet
-        });
-      } catch (sendError) {
-        if (sendError.message.includes('already been processed')) {
-          // Check status if "duplicate"
-          const status = await connection.getSignatureStatus(signature);
-          if (status.value && (status.value.confirmationStatus === 'confirmed' || status.value.confirmationStatus === 'finalized')) {
-            toast.success('Rewards already claimed successfully!');
-            return; // Exit as success
-          }
-        }
-        throw sendError; // Rethrow if not duplicate
-      }
-
-      // Confirm
-      await connection.confirmTransaction({
-        signature: txId,
-        lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight,
-        blockhash: transaction.recentBlockhash
-      }, 'processed');
-
-      toast.success(`Rewards claimed! Tx: ${txId}`);
-      // Refresh balance after claim
-      const ata = getCustomAssociatedTokenAddress(TOKEN_MINT, publicKey);
+      // Refresh balance
+      const ata = getAssociatedTokenAddressSync(TOKEN_MINT, recipient, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
       connection.getTokenAccountBalance(ata).then((res) => {
         setBalance(res.value.uiAmountString);
       }).catch(() => setBalance('0'));
     } catch (error) {
-      console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
+      console.error('Reward Claim Error:', error);
       toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
-  }, [publicKey, signTransaction]); 
+  }, []);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -260,7 +138,7 @@ export default function Home() {
       setStrain(''); setType(''); setThc(''); setTerpenes('');
     } catch (error) {
       console.error('Upload Error:', error);
-      alert('Failed to upload data: ' + error.message);
+      toast.error('Failed to upload data: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -302,15 +180,16 @@ export default function Home() {
       toast.success('Votes submitted successfully!');
       setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
       // Refresh total votes
-      supabase.from('votes').select('*').then(({ data }) => {
-        const agg = data.reduce((acc, v) => {
+      supabase.from('votes').select('*').then(({ data, error }) => {
+        if (error) console.error('Total votes refresh error:', error);
+        const agg = (data || []).reduce((acc, v) => {
           acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
           return acc;
         }, {});
         setTotalVotes(agg);
       });
     } catch (err) {
-      console.error('Vote Error:', JSON.stringify(err, null, 2)); // Full error log
+      console.error('Vote Error:', JSON.stringify(err, null, 2));
       toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
     } finally {
       setLoading(false);
@@ -342,12 +221,6 @@ export default function Home() {
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black relative">
-      {/* Favicon links moved here as a temp fix; better in app/layout.js metadata */}
-      {/* <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" /> */}
-      {/* <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" /> */}
-      {/* <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" /> */}
-      {/* <link rel="manifest" href="/site.webmanifest" /> */}
-
       <main className="flex flex-col gap-[48px] row-start-4 items-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain" />
         {publicKey && <p className="text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
@@ -500,3 +373,4 @@ export default function Home() {
     </div>
   ); 
 }
+```
