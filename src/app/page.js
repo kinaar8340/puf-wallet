@@ -26,7 +26,7 @@ const voteStrains = [
   { value: 'Cartridge 2', label: 'Cartridge 2' },
   { value: 'Cartridge 3', label: 'Cartridge 3' },
   { value: 'Cartridge 4', label: 'Cartridge 4' },
-  { value: 'Cartridge', label: 'Cartridge 5' },
+  { value: 'Cartridge 5', label: 'Cartridge 5' },
 ];
 
 export default function Home() {
@@ -127,33 +127,35 @@ export default function Home() {
   }, []);
 
   const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!publicKey) return;
+  e.preventDefault();
+  if (!publicKey) return;
 
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.from('uploads').insert([
-        {
-          user_pubkey: publicKey.toBase58(),
-          strain,
-          type,
-          thc: parseFloat(thc),
-          terpenes: parseFloat(terpenes),
-        }
-      ]);
-      if (error) throw error;
+  setLoading(true);
+  try {
+    const { data, error } = await supabase.from('uploads').insert([
+      {
+        user_pubkey: publicKey.toBase58(),
+        strain,
+        type,
+        thc: parseFloat(thc),
+        terpenes: parseFloat(terpenes),
+      }
+    ]);
+    if (error) throw error;
 
-      console.log('Uploaded Data:', { strain, type, thc, terpenes });
-      await claimRewards(publicKey);
-      toast.success('Data uploaded successfully!');
-      setStrain(''); setType(''); setThc(''); setTerpenes('');
-    } catch (error) {
-      console.error('Upload Error:', error);
-      toast.error('Failed to upload data: ' + (error.message || 'Unknown error'));
-    } finally {
-      setLoading(false);
-    }
-  };
+    console.log('Uploaded Data:', { strain, type, thc, terpenes });
+    toast.success('Data uploaded successfully!');
+    setStrain(''); setType(''); setThc(''); setTerpenes('');
+
+    // Refresh user uploads to show in history
+    supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
+  } catch (error) {
+    console.error('Upload Error:', error);
+    toast.error('Failed to upload data: ' + (error.message || 'Unknown error'));
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleVoteChange = (strain, value) => {
     const numValue = Number(value);
