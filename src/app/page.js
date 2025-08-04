@@ -1,4 +1,4 @@
-
+ 
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
@@ -218,6 +218,11 @@ export default function Home() {
       }, 'processed');
 
       toast.success(`Rewards claimed! Tx: ${txId}`);
+      // Refresh balance after claim
+      const ata = getCustomAssociatedTokenAddress(TOKEN_MINT, publicKey);
+      connection.getTokenAccountBalance(ata).then((res) => {
+        setBalance(res.value.uiAmountString);
+      }).catch(() => setBalance('0'));
     } catch (error) {
       console.error('Reward Claim Error:', error.message, error.stack); // Improved logging
       toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
@@ -337,10 +342,10 @@ export default function Home() {
       {/* <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" /> */}
       {/* <link rel="manifest" href="/site.webmanifest" /> */}
 
-      <img src="/images/logo1.png" alt="PUF Wallet Logo" className="absolute items-center top-0 w-128 h-128 object-contain" />
-      {publicKey && <p className="absolute top-[128px] left-0 right-0 text-center text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
+      <main className="flex flex-col gap-[48px] row-start-4 items-center w-full max-w-2xl mx-auto">
+        <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain" />
+        {publicKey && <p className="text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
 
-      <main className="flex flex-col gap-[48px] row-start-4 items-center w-full max-w-2xl mx-auto pt-40">
         <div className="flex flex-col items-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
           {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
