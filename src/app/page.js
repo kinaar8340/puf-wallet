@@ -116,7 +116,13 @@ export default function Home() {
 
   // Form states for upload
   const [strain, setStrain] = useState('');
-  const [score, setscore] = useState('');
+  const [type, setType] = useState('');
+  const [score, setScore] = useState('');
+  const [myrcene, setMyrcene] = useState('');
+  const [limonene, setLimonene] = useState('');
+  const [pinene, setPinene] = useState('');
+  const [terpinolene, setTerpinolene] = useState('');
+  const [ocimene, setOcimene] = useState('');
   const [effects, setEffects] = useState('');
 
   // State for votes
@@ -237,16 +243,22 @@ export default function Home() {
         {
           user_pubkey: publicKey.toBase58(),
           strain,
+          type,
           score: parseInt(score),
+          myrcene: parseFloat(myrcene),
+          limonene: parseFloat(limonene),
+          pinene: parseFloat(pinene),
+          terpinolene: parseFloat(terpinolene),
+          ocimene: parseFloat(ocimene),
           effects,
         }
       ]);
       if (error) throw error;
 
-      console.log('Uploaded Data:', { strain, score, effects });
+      console.log('Uploaded Data:', { strain, type, score, myrcene, limonene, pinene, terpinolene, ocimene, effects });
       await claimRewards(publicKey);
       toast.success('Data uploaded successfully!');
-      setStrain(''); setscore(''); setEffects('');
+      setStrain(''); setType(''); setScore(''); setMyrcene(''); setLimonene(''); setPinene(''); setTerpinolene(''); setOcimene(''); setEffects('');
     } catch (error) {
       console.error('Upload Error:', error);
       alert('Failed to upload data: ' + error.message);
@@ -307,10 +319,27 @@ export default function Home() {
   // Aggregate uploads by strain
   const aggregatedUploads = userUploads.reduce((acc, u) => {
     if (!acc[u.strain]) {
-      acc[u.strain] = { score: 0, effects: [] };
+      acc[u.strain] = {
+        type: u.type,
+        score: 0,
+        sum_myrcene: 0,
+        sum_limonene: 0,
+        sum_pinene: 0,
+        sum_terpinolene: 0,
+        sum_ocimene: 0,
+        effects: [],
+        count: 0
+      };
     }
+    acc[u.strain].type = u.type; // Overwrite with last type
     acc[u.strain].score += u.score;
+    acc[u.strain].sum_myrcene += u.myrcene;
+    acc[u.strain].sum_limonene += u.limonene;
+    acc[u.strain].sum_pinene += u.pinene;
+    acc[u.strain].sum_terpinolene += u.terpinolene;
+    acc[u.strain].sum_ocimene += u.ocimene;
     acc[u.strain].effects.push(u.effects);
+    acc[u.strain].count += 1;
     return acc;
   }, {});
 
@@ -353,9 +382,50 @@ export default function Home() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Number of score</td>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Type</td>
                       <td className="pb-4">
-                        <input type="number" placeholder="Number of score" value={score} onChange={(e) => setscore(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required>
+                          <option value="">Select Type</option>
+                          <option value="Sativa">Sativa</option>
+                          <option value="Indica">Indica</option>
+                          <option value="Hybrid">Hybrid</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Score</td>
+                      <td className="pb-4">
+                        <input type="number" placeholder="Score" value={score} onChange={(e) => setScore(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Myrcene (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.01" min="0" max="100" placeholder="Myrcene (%)" value={myrcene} onChange={(e) => setMyrcene(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Limonene (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.01" min="0" max="100" placeholder="Limonene (%)" value={limonene} onChange={(e) => setLimonene(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Pinene (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.01" min="0" max="100" placeholder="Pinene (%)" value={pinene} onChange={(e) => setPinene(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Terpinolene (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.01" min="0" max="100" placeholder="Terpinolene (%)" value={terpinolene} onChange={(e) => setTerpinolene(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Ocimene (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.01" min="0" max="100" placeholder="Ocimene (%)" value={ocimene} onChange={(e) => setOcimene(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
@@ -413,16 +483,28 @@ export default function Home() {
                   <thead>
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Total score</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Score</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Myrcene (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Limonene (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Pinene (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Terpinolene (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Ocimene (%)</th>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Effects/Notes</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(aggregatedUploads).map(([strain, { score, effects }], i) => (
+                    {Object.entries(aggregatedUploads).map(([strain, info], i) => (
                       <tr key={i}>
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{score}</td>
-                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{effects.join('; ')}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.score}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_myrcene / info.count).toFixed(2)}%</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_limonene / info.count).toFixed(2)}%</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_pinene / info.count).toFixed(2)}%</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_terpinolene / info.count).toFixed(2)}%</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_ocimene / info.count).toFixed(2)}%</td>
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{info.effects.join('; ')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -460,4 +542,4 @@ export default function Home() {
       <ToastContainer theme={theme} />
     </div>
   ); 
-}
+} 
