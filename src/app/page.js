@@ -1,11 +1,10 @@
-
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
 import { useState, useCallback, useEffect } from 'react';
-import { Connection, PublicKey, Transaction, TransactionInstruction, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
+import { Connection, PublicKey } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
@@ -18,6 +17,9 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 // $PUF token mint address (use your Devnet test mint; switch to mainnet '3RoiaUKQDEED6Uc8Diz6aJ7TVwwe8H15fbrJEYTJbonk' later)
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
+
+// Current flight (update this when cartridges change, e.g., to 2 for FLIGHT2)
+const CURRENT_FLIGHT = 1;
 
 const voteStrains = [
   { value: 'Cartridge 1', label: 'Cartridge 1' },
@@ -56,72 +58,73 @@ export default function Home() {
   const [totalVotes, setTotalVotes] = useState({});
 
   useEffect(() => {
-  if (publicKey) {
-    supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
-      if (error) console.error('Uploads fetch error:', error);
-      setUserUploads(data || []);
+    if (publicKey) {
+      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+        if (error) console.error('Uploads fetch error:', error);
+        setUserUploads(data || []);
+      });
+      // Fetch user votes for current flight
+      supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
+        if (error) console.error('Votes fetch error:', error);
+        setUserVotes(data || []);
+      });
+      // Fetch balance
+      (async () => {
+        try {
+          const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+          const res = await connection.getTokenAccountBalance(ata);
+          setBalance(res.value.uiAmountString);
+        } catch {
+          setBalance('0');
+        }
+      })();
+    }
+    // Fetch all votes for total aggregation (per current flight)
+    supabase.from('votes').select('*').eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
+      if (error) console.error('Total votes fetch error:', error);
+      const agg = (data || []).reduce((acc, v) => {
+        acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
+        return acc;
+      }, {});
+      setTotalVotes(agg);
     });
-    supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
-      if (error) console.error('Votes fetch error:', error);
-      setUserVotes(data || []);
-    });
-    // Fetch balance asynchronously
-    (async () => {
+  }, [publicKey]);
+
+  // Function to claim rewards (calls server API for transfer)
+  const claimRewards = useCallback(async (recipient) => {
+    if (!recipient) return;
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/claim', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ recipient: recipient.toBase58() }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to claim');
+      }
+
+      toast.success(`Rewards claimed! Tx: ${data.signature}`);
+
+      // Refresh balance
       try {
-        const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+        const ata = await getAssociatedTokenAddress(TOKEN_MINT, recipient, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
         const res = await connection.getTokenAccountBalance(ata);
         setBalance(res.value.uiAmountString);
       } catch {
         setBalance('0');
       }
-    })();
-  }
-  // Fetch all votes for total aggregation
-  supabase.from('votes').select('*').then(({ data, error }) => {
-    if (error) console.error('Total votes fetch error:', error);
-    const agg = (data || []).reduce((acc, v) => {
-      acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
-      return acc;
-    }, {});
-    setTotalVotes(agg);
-  });
-}, [publicKey]);
-
-  // Function to claim rewards (calls server API for transfer)
-  const claimRewards = useCallback(async (recipient) => {
-  if (!recipient) return;
-
-  setLoading(true);
-  try {
-    const response = await fetch('/api/claim', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ recipient: recipient.toBase58() }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || 'Failed to claim');
+    } catch (error) {
+      console.error('Reward Claim Error:', error);
+      toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
+    } finally {
+      setLoading(false);
     }
-
-    toast.success(`Rewards claimed! Tx: ${data.signature}`);
-
-    // Refresh balance asynchronously
-    try {
-      const ata = await getAssociatedTokenAddress(TOKEN_MINT, recipient, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-      const res = await connection.getTokenAccountBalance(ata);
-      setBalance(res.value.uiAmountString);
-    } catch {
-      setBalance('0');
-    }
-  } catch (error) {
-    console.error('Reward Claim Error:', error);
-    toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
-  } finally {
-    setLoading(false);
-  }
-}, []); 
+  }, []);
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -166,6 +169,14 @@ export default function Home() {
 
     setLoading(true);
     try {
+      // Check if user has already voted in this flight
+      const { data: existingVotes, error: checkError } = await supabase.from('votes').select('id').eq('user_pubkey', publicKey.toBase58()).eq('flight', CURRENT_FLIGHT).limit(1);
+      if (checkError) throw checkError;
+      if (existingVotes.length > 0) {
+        toast.error('You have already voted and claimed in this flight');
+        return;
+      }
+
       const voteEntries = Object.entries(votes).filter(([_, amount]) => amount > 0);
       if (voteEntries.length === 0) {
         toast.error('No votes entered');
@@ -178,6 +189,7 @@ export default function Home() {
             user_pubkey: publicKey.toBase58(),
             strain,
             vote_amount,
+            flight: CURRENT_FLIGHT, // Add flight to vote
           }
         ]);
         if (error) throw error;
@@ -187,8 +199,8 @@ export default function Home() {
       await claimRewards(publicKey);
       toast.success('Votes submitted successfully!');
       setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
-      // Refresh total votes
-      supabase.from('votes').select('*').then(({ data, error }) => {
+      // Refresh total votes (per flight)
+      supabase.from('votes').select('*').eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
         if (error) console.error('Total votes refresh error:', error);
         const agg = (data || []).reduce((acc, v) => {
           acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
@@ -204,13 +216,13 @@ export default function Home() {
     }
   };
 
-  // Aggregate votes by strain (user-specific)
+  // Aggregate votes by strain (user-specific, per flight)
   const aggregatedVotes = userVotes.reduce((acc, v) => {
     acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
     return acc;
   }, {});
 
-  // Aggregate uploads by strain
+  // Aggregate uploads by strain (no flight filter for uploads, as per your description)
   const aggregatedUploads = userUploads.reduce((acc, u) => {
     if (!acc[u.strain]) {
       acc[u.strain] = { 
@@ -349,7 +361,7 @@ export default function Home() {
               </div>
             )}
 
-            {/* Total Votes Across All Users */}
+            {/* Total Votes Across All Users (per current flight) */}
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Total Votes Across All Users</h2>
               <table className="w-full table-auto mx-auto">
@@ -381,4 +393,3 @@ export default function Home() {
     </div>
   ); 
 }
-
