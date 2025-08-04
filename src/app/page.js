@@ -12,7 +12,9 @@ import 'react-toastify/dist/ReactToastify.css';
 // Hardcode program IDs to avoid import issues
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
-const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+const TOKEN_PROGRAM_ID
+
+ = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
 
@@ -30,7 +32,9 @@ function getCustomAssociatedTokenAddress(mint, owner) {
   return PublicKey.findProgramAddressSync(
     [
       owner.toBuffer(),
-      TOKEN_2022_PROGRAM_ID.toBuffer(),
+      TOKEN_PROGRAM_ID
+
+.toBuffer(),
       mint.toBuffer(),
     ],
     ASSOCIATED_TOKEN_PROGRAM_ID
@@ -51,7 +55,9 @@ function createCustomAssociatedTokenAccountInstruction(
       { pubkey: owner, isSigner: false, isWritable: false },
       { pubkey: mint, isSigner: false, isWritable: false },
       { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
-      { pubkey: TOKEN_2022_PROGRAM_ID, isSigner: false, isWritable: false },
+      { pubkey: TOKEN_PROGRAM_ID
+
+, isSigner: false, isWritable: false },
       { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
     ],
     programId: ASSOCIATED_TOKEN_PROGRAM_ID,
@@ -75,7 +81,9 @@ function createCustomMintToInstruction(
       { pubkey: destination, isSigner: false, isWritable: true },
       { pubkey: authority, isSigner: true, isWritable: false },
     ],
-    programId: TOKEN_2022_PROGRAM_ID,
+    programId: TOKEN_PROGRAM_ID
+
+,
     data,
   });
 }
