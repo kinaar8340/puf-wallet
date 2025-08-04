@@ -322,7 +322,7 @@ export default function Home() {
       {/* <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" /> */}
       {/* <link rel="manifest" href="/site.webmanifest" /> */}
 
-      <img src="/images/logo1.png" alt="PUF Wallet Logo" className="absolute items-center top-center w-128 h-128 object-contain" />
+      <img src="/images/logo1.png" alt="PUF Wallet Logo" className="absolute items-center top-0 w-128 h-128 object-contain" />
 
       <main className="flex flex-col gap-[48px] row-start-2 items-center w-full max-w-2xl mx-auto">
         <div className="flex flex-col items-center gap-8 w-full">
