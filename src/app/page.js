@@ -113,7 +113,6 @@ export default function Home() {
 
   const { publicKey, signTransaction } = useWallet(); // Wallet state and signer
   const [loading, setLoading] = useState(false);
-  const [theme, setTheme] = useState('dark');
 
   // Form states for upload
   const [strain, setStrain] = useState('');
@@ -145,23 +144,6 @@ export default function Home() {
       setTotalVotes(agg);
     });
   }, [publicKey]);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const initialTheme = savedTheme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    setTheme(initialTheme);
-  }, []);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    // document.body.style.backgroundColor = theme === 'dark' ? 'black' : 'white';
-  }, [theme]);
-
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
-  };
 
   // Function to claim rewards (mints $PUF to recipient)
   const claimRewards = useCallback(async (recipient) => {
@@ -355,9 +337,6 @@ export default function Home() {
         <div className="flex flex-col items-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
           {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
-          <button onClick={toggleTheme} className="top-5 right-2 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-900">
-            {theme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
-          </button>
         </div>
 
         {publicKey ? (
@@ -474,7 +453,7 @@ export default function Home() {
                   <thead>
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Votes</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Score</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -518,7 +497,7 @@ export default function Home() {
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
         {/* Footer if needed */}
       </footer>
-      <ToastContainer theme={theme} />
+      <ToastContainer theme="dark" />
     </div>
   ); 
 }
