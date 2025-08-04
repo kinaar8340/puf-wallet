@@ -10,6 +10,22 @@ import { useMemo } from 'react';
 
 const network = WalletAdapterNetwork.Devnet;
 
+export const metadata = {
+  title: 'PUF Wallet', // Sets the tab title (change if needed)
+  description: 'Vote and upload vape data for PUF Wallet',
+  icons: {
+    icon: '/images/logo2.png', // Path to your favicon
+  },
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
+} 
+
 export default function RootLayout({ children }) {
   const wallets = useMemo(() => [
     new PhantomWalletAdapter(),
