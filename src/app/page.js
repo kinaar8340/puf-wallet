@@ -96,11 +96,11 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 const voteStrains = [
-  { value: 'Dinamita', label: 'Dinamita (Sativa)' },
-  { value: 'Kazuma', label: 'Kazuma (Hybrid)' },
-  { value: 'MAC', label: 'MAC (Sativa-Leaning)' },
-  { value: 'BlueBerry', label: 'BlueBerry' },
-  { value: 'Lemon', label: 'Lemon' },
+  { value: 'Dinamita', label: 'Cartridge 1' },
+  { value: 'Kazuma', label: 'Cartridge 2' },
+  { value: 'MAC', label: 'Cartridge 3' },
+  { value: 'BlueBerry', label: 'Cartridge 4' },
+  { value: 'Lemon', label: 'Cartridge 5' },
 ];
 
 export default function Home() {
