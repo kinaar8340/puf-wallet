@@ -8,7 +8,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Connection, PublicKey, Transaction, TransactionInstruction, SystemProgram, SYSVAR_RENT_PUBKEY } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAssociatedTokenAddressSync, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 
 const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
@@ -56,64 +56,72 @@ export default function Home() {
   const [totalVotes, setTotalVotes] = useState({});
 
   useEffect(() => {
-    if (publicKey) {
-      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
-        if (error) console.error('Uploads fetch error:', error);
-        setUserUploads(data || []);
-      });
-      supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
-        if (error) console.error('Votes fetch error:', error);
-        setUserVotes(data || []);
-      });
-      // Fetch balance
-      const ata = getAssociatedTokenAddressSync(TOKEN_MINT, publicKey, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-      connection.getTokenAccountBalance(ata).then((res) => {
-        setBalance(res.value.uiAmountString);
-      }).catch(() => setBalance('0'));
-    }
-    // Fetch all votes for total aggregation
-    supabase.from('votes').select('*').then(({ data, error }) => {
-      if (error) console.error('Total votes fetch error:', error);
-      const agg = (data || []).reduce((acc, v) => {
-        acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
-        return acc;
-      }, {});
-      setTotalVotes(agg);
+  if (publicKey) {
+    supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+      if (error) console.error('Uploads fetch error:', error);
+      setUserUploads(data || []);
     });
-  }, [publicKey]);
+    supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+      if (error) console.error('Votes fetch error:', error);
+      setUserVotes(data || []);
+    });
+    // Fetch balance asynchronously
+    (async () => {
+      try {
+        const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+        const res = await connection.getTokenAccountBalance(ata);
+        setBalance(res.value.uiAmountString);
+      } catch {
+        setBalance('0');
+      }
+    })();
+  }
+  // Fetch all votes for total aggregation
+  supabase.from('votes').select('*').then(({ data, error }) => {
+    if (error) console.error('Total votes fetch error:', error);
+    const agg = (data || []).reduce((acc, v) => {
+      acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
+      return acc;
+    }, {});
+    setTotalVotes(agg);
+  });
+}, [publicKey]);
 
   // Function to claim rewards (calls server API for transfer)
   const claimRewards = useCallback(async (recipient) => {
-    if (!recipient) return;
+  if (!recipient) return;
 
-    setLoading(true);
-    try {
-      const response = await fetch('/api/claim', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recipient: recipient.toBase58() }),
-      });
+  setLoading(true);
+  try {
+    const response = await fetch('/api/claim', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ recipient: recipient.toBase58() }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to claim');
-      }
-
-      toast.success(`Rewards claimed! Tx: ${data.signature}`);
-
-      // Refresh balance
-      const ata = getAssociatedTokenAddressSync(TOKEN_MINT, recipient, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
-      connection.getTokenAccountBalance(ata).then((res) => {
-        setBalance(res.value.uiAmountString);
-      }).catch(() => setBalance('0'));
-    } catch (error) {
-      console.error('Reward Claim Error:', error);
-      toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
-    } finally {
-      setLoading(false);
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to claim');
     }
-  }, []);
+
+    toast.success(`Rewards claimed! Tx: ${data.signature}`);
+
+    // Refresh balance asynchronously
+    try {
+      const ata = await getAssociatedTokenAddress(TOKEN_MINT, recipient, false, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+      const res = await connection.getTokenAccountBalance(ata);
+      setBalance(res.value.uiAmountString);
+    } catch {
+      setBalance('0');
+    }
+  } catch (error) {
+    console.error('Reward Claim Error:', error);
+    toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
+  } finally {
+    setLoading(false);
+  }
+}, []); 
 
   const handleUpload = async (e) => {
     e.preventDefault();
