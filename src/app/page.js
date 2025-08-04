@@ -324,7 +324,7 @@ export default function Home() {
 
       <img src="/images/logo1.png" alt="PUF Wallet Logo" className="absolute items-center top-0 w-128 h-128 object-contain" />
 
-      <main className="flex flex-col gap-[48px] row-start-2 items-center w-full max-w-2xl mx-auto">
+      <main className="flex flex-col gap-[48px] row-start-2 items-center top-4 w-full max-w-2xl mx-auto">
         <div className="flex flex-col items-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
           {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
