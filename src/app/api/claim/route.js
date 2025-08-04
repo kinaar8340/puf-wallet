@@ -8,7 +8,7 @@ import {
 } from '@solana/spl-token';
 import bs58 from 'bs58';
 
-const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 
 export async function POST(request) {
   const { recipient } = await request.json();
@@ -29,7 +29,7 @@ export async function POST(request) {
     const tokenMint = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ'); // Switch to mainnet mint later
 
     // Get mint decimals
-    const mintInfo = await getMint(connection, tokenMint, 'confirmed', TOKEN_PROGRAM_ID);
+    const mintInfo = await getMint(connection, tokenMint, 'confirmed', TOKEN_2022_PROGRAM_ID);
     const decimals = mintInfo.decimals;
 
     const recipientPubkey = new PublicKey(recipient);
@@ -37,7 +37,7 @@ export async function POST(request) {
       tokenMint,
       recipientPubkey,
       false,
-      TOKEN_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
@@ -45,7 +45,7 @@ export async function POST(request) {
       tokenMint,
       treasuryKeypair.publicKey,
       false,
-      TOKEN_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
@@ -60,7 +60,7 @@ export async function POST(request) {
           recipientATA,
           recipientPubkey,
           tokenMint,
-          TOKEN_PROGRAM_ID,
+          TOKEN_2022_PROGRAM_ID,
           ASSOCIATED_TOKEN_PROGRAM_ID
         )
       );
@@ -74,7 +74,7 @@ export async function POST(request) {
         treasuryKeypair.publicKey, // Owner
         1000 * (10 ** decimals), // Amount
         [], // No multisig
-        TOKEN_PROGRAM_ID
+        TOKEN_2022_PROGRAM_ID
       )
     );
 
