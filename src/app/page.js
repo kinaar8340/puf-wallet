@@ -1,4 +1,4 @@
-
+ 
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
@@ -96,12 +96,12 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 const voteStrains = [
-  { value: 'Cartridge 1', label: 'Cartridge 1' },
-  { value: 'Cartridge 2', label: 'Cartridge 2' },
-  { value: 'Cartridge 3', label: 'Cartridge 3' },
-  { value: 'Cartridge 4', label: 'Cartridge 4' },
-  { value: 'Cartridge', label: 'Cartridge 5' },
-]; 
+  { value: 'Dinamita', label: 'Dinamita (Sativa)' },
+  { value: 'Kazuma', label: 'Kazuma (Hybrid)' },
+  { value: 'MAC', label: 'MAC (Sativa-Leaning)' },
+  { value: 'BlueBerry', label: 'BlueBerry' },
+  { value: 'Lemon', label: 'Lemon' },
+];
 
 export default function Home() {
   useEffect(() => {
@@ -447,25 +447,6 @@ export default function Home() {
                   </tbody>
                 </table>
                 {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
-
-                <h3 className="text-3xl mb-4 text-black dark:text-[#22f703] mt-8">Your Votes</h3>
-                <table className="w-full table-auto mx-auto">
-                  <thead>
-                    <tr>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Score</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(aggregatedVotes).map(([strain, total], i) => (
-                      <tr key={i}>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
-                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{total}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {Object.keys(aggregatedVotes).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No votes yet.</p>}
               </div>
             )}
 
