@@ -335,33 +335,54 @@ export default function Home() {
             </div>
 
             {/* History Dashboard */}
-            {publicKey && (
-              <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
-                <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
-                <table className="w-full table-auto mx-auto">
-                  <thead>
-                    <tr>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC (%)</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Terpenes (%)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(aggregatedUploads).map(([strain, info], i) => (
-                      <tr key={i}>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_terpenes / info.count).toFixed(1)}%</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
-              </div>
-            )}
+{publicKey && (
+  <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
+    <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
+    <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
+    <table className="w-full table-auto mx-auto">
+      <thead>
+        <tr>
+          <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
+          <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
+          <th className="text-center pb-4 text-black dark:text-[#22f703]">THC (%)</th>
+          <th className="text-center pb-4 text-black dark:text-[#22f703]">Terpenes (%)</th>
+          <th className="text-center pb-4 text-black dark:text-[#22f703]">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(aggregatedUploads).map(([strain, info], i) => (
+          <tr key={i}>
+            <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
+            <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
+            <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
+            <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_terpenes / info.count).toFixed(1)}%</td>
+            <td className="pb-4 text-center">
+              <button
+                onClick={async () => {
+                  if (confirm(`Delete all uploads for ${strain}? This can't be undone.`)) {
+                    try {
+                      const { error } = await supabase.from('uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
+                      if (error) throw error;
+                      toast.success('Upload deleted!');
+                      // Refresh uploads
+                      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
+                    } catch (err) {
+                      toast.error('Failed to delete: ' + err.message);
+                    }
+                  }
+                }}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded text-sm"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
+  </div>
+)}
 
             {/* Total Votes Across All Users (per current flight) */}
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
