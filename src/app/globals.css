@@ -21,13 +21,11 @@
 
 body {
   background-image: url('/images/background.png');
-  background-repeat: repeat; /* Tiles the image horizontally and vertically */
   background-size: 100px; /* Adjust size for tile density (small for dense pattern, larger for bigger tiles) */
 }
 
 /* Dark mode override (keep tiling, adjust if needed for contrast) */
 .dark body {
   background-image: url('/images/background.png');
-  background-repeat: repeat;
   background-size: 100px;
 }
