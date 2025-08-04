@@ -1,4 +1,3 @@
-
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
@@ -95,14 +94,6 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 // $PUF token mint address (use your Devnet test mint)
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
-const strains = ['Tropican', 'Kazuma', 'BlueBerry', 'Lemon', 'Pineapple'];
-
-const voteStrains = [
-  { value: 'Dinamita', label: 'Dinamita (Sativa)' },
-  { value: 'Kazuma', label: 'Kazuma (Hybrid)' },
-  { value: 'MAC', label: 'MAC (Sativa-Leaning)' },
-];
-
 export default function Home() {
   useEffect(() => {
     fetch('/api/env')
@@ -121,10 +112,11 @@ export default function Home() {
   const [thc, setThc] = useState('');
   const [terpenes, setTerpenes] = useState('');
 
+  // State for dynamic vote strains from uploads
+  const [voteStrains, setVoteStrains] = useState([]);
+
   // State for votes
-  const [votes, setVotes] = useState(
-    voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {})
-  );
+  const [votes, setVotes] = useState({});
 
   // Add states for history
   const [userUploads, setUserUploads] = useState([]);
@@ -153,6 +145,16 @@ export default function Home() {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
   };
+
+  // Fetch unique strains from uploads for voting
+  useEffect(() => {
+    supabase.from('uploads').select('strain').then(({ data }) => {
+      const uniqueStrains = [...new Set(data.map(d => d.strain))];
+      const strainsList = uniqueStrains.map(s => ({ value: s, label: s }));
+      setVoteStrains(strainsList);
+      setVotes(strainsList.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
+    });
+  }, []);
 
   // Function to claim rewards (mints $PUF to recipient)
   const claimRewards = useCallback(async (recipient) => {
@@ -250,6 +252,13 @@ export default function Home() {
       await claimRewards(publicKey);
       toast.success('Data uploaded successfully!');
       setStrain(''); setType(''); setThc(''); setTerpenes('');
+      // Refresh unique strains after upload
+      supabase.from('uploads').select('strain').then(({ data }) => {
+        const uniqueStrains = [...new Set(data.map(d => d.strain))];
+        const strainsList = uniqueStrains.map(s => ({ value: s, label: s }));
+        setVoteStrains(strainsList);
+        setVotes(strainsList.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
+      });
     } catch (error) {
       console.error('Upload Error:', error);
       alert('Failed to upload data: ' + error.message);
