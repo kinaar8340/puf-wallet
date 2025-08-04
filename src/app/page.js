@@ -1,4 +1,4 @@
- 
+
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
@@ -96,12 +96,12 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 const voteStrains = [
-  { value: 'Dinamita', label: 'Cartridge 1' },
-  { value: 'Kazuma', label: 'Cartridge 2' },
-  { value: 'MAC', label: 'Cartridge 3' },
-  { value: 'BlueBerry', label: 'Cartridge 4' },
-  { value: 'Lemon', label: 'Cartridge 5' },
-];
+  { value: 'Cartridge 1', label: 'Cartridge 1' },
+  { value: 'Cartridge 2', label: 'Cartridge 2' },
+  { value: 'Cartridge 3', label: 'Cartridge 3' },
+  { value: 'Cartridge 4', label: 'Cartridge 4' },
+  { value: 'Cartridge', label: 'Cartridge 5' },
+]; 
 
 export default function Home() {
   useEffect(() => {
@@ -384,7 +384,7 @@ export default function Home() {
                   </tbody>
                 </table>
                 <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
-                  {loading ? 'Claiming...' : 'Upload & Claim $PUF'}
+                  {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
             </div>
