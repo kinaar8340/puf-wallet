@@ -1,20 +1,19 @@
-'use client'; // Client-side only
+'use client';
 
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'; // Add more adapters if needed
-import { useMemo } from 'react';
-import { Connection } from '@solana/web3.js';
+import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'; // Add other adapters if needed
 
-// Use your devnet connection (or env var for mainnet toggle)
-const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+// Import styles for wallet UI
+import '@solana/wallet-adapter-react-ui/styles.css';
 
 export default function Providers({ children }) {
-  // Memoize wallets to avoid re-renders
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+  const network = WalletAdapterNetwork.Devnet; // Or MainnetBeta for production
+  const wallets = [new PhantomWalletAdapter()]; // Add more wallets as needed
 
   return (
-    <ConnectionProvider endpoint={connection.rpcEndpoint}>
+    <ConnectionProvider endpoint="https://api.devnet.solana.com"> {/* Switch to mainnet endpoint later */}
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
           {children}
