@@ -7,7 +7,7 @@ import SolanaProvider from '../components/SolanaProvider';  // If used
 // Original metadata (add if your web had it; e.g., for Next.js SEO)
 export const metadata = {
   title: 'PUF Wallet',
-  description: 'This project aims to reflects real-time consumer preference, offering a decentralized alternative to traditional market research.',
+  description: 'This project aims to reflects real-time consumer preference.',
 };
 
 export default function RootLayout({ children }) {
