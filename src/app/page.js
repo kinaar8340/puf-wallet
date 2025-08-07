@@ -1,21 +1,28 @@
-// Adapted for React Native (RN) as the Home Page component
-// Replaces web elements with RN equivalents, uses RN styles, and adapts libraries
-// Assumes installation of: yarn add react-native-toast-message @react-native-picker/picker @solana-mobile/wallet-adapter-mobile (for RN wallet button if needed; fallback to Button for connect)
-// For tables, uses FlatList for dynamic rendering
-// Keeps Supabase and Solana logic intact
-// Use in Expo Router as src/app/index.tsx for home route
+// Reverted to original web/Next.js version for Vercel build
+// Removed RN imports/components, restored HTML/JSX, react-toastify, dynamic WalletMultiButton, etc.
+// Keep 'use client' for hooks
 
+'use client'; // Client component for hooks and state
+
+import { supabase } from '../lib/supabase';
+import { useWallet } from '@solana/wallet-adapter-react';
+import dynamic from 'next/dynamic';
 import { useState, useCallback, useEffect } from 'react';
-import { View, Text, TextInput, Picker, Button, FlatList, StyleSheet, Alert, ActivityIndicator } from 'react-native';
-import { useWallet } from '@solana/wallet-adapter-react';  // Keep for wallet context
 import { Connection, PublicKey } from '@solana/web3.js';
-import Toast from 'react-native-toast-message';  // Replace react-toastify
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
-import { supabase } from '../lib/supabase';  // Your Supabase client (works in RN)
 
 const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
+
+// Solana Devnet connection (switch to 'https://api.mainnet-beta.solana.com' later)
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+
+// $PUF token mint address (use your Devnet test mint; switch to mainnet '3RoiaUKQDEED6Uc8Diz6aJ7TVwwe8H15fbrJEYTJbonk' later)
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
+
+// Current flight (update this when cartridges change, e.g., to 2 for FLIGHT2)
 const CURRENT_FLIGHT = 2;
 
 const voteStrains = [
@@ -28,14 +35,13 @@ const voteStrains = [
 
 export default function Home() {
   useEffect(() => {
-    // Fetch env from API (adapted for RN; use fetch directly)
     fetch('/api/env')
       .then(res => res.json())
       .then(data => console.log('From server API:', data.supabaseUrl))
       .catch(err => console.error('API error:', err));
   }, []);
 
-  const { publicKey } = useWallet();  // Wallet context
+  const { publicKey } = useWallet(); // No signTransaction needed with API approach
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState('0');
 
@@ -106,7 +112,7 @@ export default function Home() {
         throw new Error(data.error || 'Failed to claim');
       }
 
-      Toast.show({ type: 'success', text1: `Rewards claimed! Tx: ${data.signature}` });
+      toast.success(`Rewards claimed! Tx: ${data.signature}`);
 
       // Refresh balance
       try {
@@ -118,13 +124,14 @@ export default function Home() {
       }
     } catch (error) {
       console.error('Reward Claim Error:', error);
-      Toast.show({ type: 'error', text1: 'Failed to claim rewards: ' + (error.message || 'Unknown error') });
+      toast.error('Failed to claim rewards: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
   }, []);
 
-  const handleUpload = async () => {
+  const handleUpload = async (e) => {
+    e.preventDefault();
     if (!publicKey) return;
 
     setLoading(true);
@@ -141,14 +148,14 @@ export default function Home() {
       if (error) throw error;
 
       console.log('Uploaded Data:', { strain, type, thc, terpenes });
-      Toast.show({ type: 'success', text1: 'Data uploaded successfully!' });
+      toast.success('Data uploaded successfully!');
       setStrain(''); setType(''); setThc(''); setTerpenes('');
 
       // Refresh user uploads to show in history
       supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
     } catch (error) {
       console.error('Upload Error:', error);
-      Toast.show({ type: 'error', text1: 'Failed to upload data: ' + (error.message || 'Unknown error') });
+      toast.error('Failed to upload data: ' + (error.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -172,13 +179,13 @@ export default function Home() {
       const { data: existingVotes, error: checkError } = await supabase.from('votes').select('id').eq('user_pubkey', publicKey.toBase58()).eq('flight', CURRENT_FLIGHT).limit(1);
       if (checkError) throw checkError;
       if (existingVotes.length > 0) {
-        Toast.show({ type: 'error', text1: 'You have already voted and claimed in this flight' });
+        toast.error('You have already voted and claimed in this flight');
         return;
       }
 
       const voteEntries = Object.entries(votes).filter(([_, amount]) => amount > 0);
       if (voteEntries.length === 0) {
-        Toast.show({ type: 'error', text1: 'No votes entered' });
+        toast.error('No votes entered');
         return;
       }
 
@@ -188,7 +195,7 @@ export default function Home() {
             user_pubkey: publicKey.toBase58(),
             strain,
             vote_amount,
-            flight: CURRENT_FLIGHT,
+            flight: CURRENT_FLIGHT, // Add flight to vote
           }
         ]);
         if (error) throw error;
@@ -196,7 +203,7 @@ export default function Home() {
       }
 
       await claimRewards(publicKey);
-      Toast.show({ type: 'success', text1: 'Votes submitted successfully!' });
+      toast.success('Votes submitted successfully!');
       setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: '' }), {}));
       // Refresh total votes (per flight)
       supabase.from('votes').select('*').eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
@@ -209,7 +216,7 @@ export default function Home() {
       });
     } catch (err) {
       console.error('Vote Error:', JSON.stringify(err, null, 2));
-      Toast.show({ type: 'error', text1: 'Failed to submit votes: ' + (err.message || 'Unknown error') });
+      toast.error('Failed to submit votes: ' + (err.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -239,121 +246,177 @@ export default function Home() {
   }, {});
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.logo}>PUF Wallet Logo</Text>  // Replace with Image component if logo available
-      {publicKey && <Text style={styles.balance}>$PUF Balance: {balance}</Text>}
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black relative">
+      <main className="flex flex-col gap-[48px] row-start-4 items-center w-full max-w-2xl mx-auto">
+        <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain" />
+        {publicKey && <p className="text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
 
-      <View style={styles.walletSection}>
-        <Button title="Connect Wallet" onPress={connect} style={styles.walletButton} />  // Adapt for WalletMultiButton if using mobile adapter
-        {publicKey && <Text style={styles.connectedText}>Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</Text>}
-      </View>
+        <div className="flex flex-col items-center gap-8 w-full">
+          <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
+          {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+        </div>
 
-      {publicKey ? (
-        <>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Upload Vape Data</Text>
-            <TextInput placeholder="Strain Name" value={strain} onChangeText={setStrain} style={styles.input} />
-            <Picker selectedValue={type} onValueChange={setType} style={styles.picker}>
-              <Picker.Item label="Select Type" value="" />
-              <Picker.Item label="Sativa" value="Sativa" />
-              <Picker.Item label="Indica" value="Indica" />
-              <Picker.Item label="Hybrid" value="Hybrid" />
-            </Picker>
-            <TextInput placeholder="THC (%)" value={thc} onChangeText={setThc} keyboardType="numeric" style={styles.input} />
-            <TextInput placeholder="Terpenes (%)" value={terpenes} onChangeText={setTerpenes} keyboardType="numeric" style={styles.input} />
-            <Button title={loading ? 'Uploading...' : 'Upload'} onPress={handleUpload} disabled={loading} />
-          </View>
+        {publicKey ? (
+          <>
+            <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Upload Vape Data</h2>
+              <form onSubmit={handleUpload} className="flex flex-col gap-10">
+                <table className="w-full table-auto mx-auto">
+                  <thead>
+                    <tr>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Field</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Value</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Strain Name</td>
+                      <td className="pb-4">
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Type</td>
+                      <td className="pb-4">
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required>
+                          <option value="">Select Type</option>
+                          <option value="Sativa">Sativa</option>
+                          <option value="Indica">Indica</option>
+                          <option value="Hybrid">Hybrid</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">THC (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Terpenes (%)</td>
+                      <td className="pb-4">
+                        <input type="number" step="0.1" placeholder="Terpenes (%)" value={terpenes} onChange={(e) => setTerpenes(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
+                  {loading ? 'Uploading...' : 'Upload'}
+                </button>
+              </form>
+            </div>
 
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Vote on Strains</Text>
-            <FlatList
-              data={voteStrains}
-              keyExtractor={item => item.value}
-              renderItem={({ item }) => (
-                <View style={styles.voteRow}>
-                  <Text style={styles.strainLabel}>{item.label}</Text>
-                  <TextInput
-                    placeholder="Vote (1-10)"
-                    value={votes[item.value] || ''}
-                    onChangeText={(value) => handleVoteChange(item.value, value)}
-                    keyboardType="numeric"
-                    style={styles.voteInput}
-                  />
-                </View>
-              )}
-            />
-            <Button title={loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'} onPress={handleVoteSubmit} disabled={loading} />
-          </View>
+            <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Strains</h2>
+              <table className="w-full table-auto mx-auto">
+                <thead>
+                  <tr>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Vote (1-10)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {voteStrains.map(s => (
+                    <tr key={s.value}>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s.label}</td>
+                      <td className="pb-4">
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={votes[s.value] || ''}
+                          onChange={(e) => handleVoteChange(s.value, e.target.value)}
+                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 dark:bg-gray-800 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
+                {loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'}
+              </button>
+            </div>
 
-          {/* History Dashboard */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Your History</Text>
-            <Text style={styles.subTitle}>Uploads</Text>
-            <FlatList
-              data={Object.entries(aggregatedUploads)}
-              keyExtractor={([strain]) => strain}
-              renderItem={({ item: [strain, info] }) => (
-                <View style={styles.uploadRow}>
-                  <Text>{strain}</Text>
-                  <Text>{info.type}</Text>
-                  <Text>{(info.sum_thc / info.count).toFixed(1)}%</Text>
-                  <Text>{(info.sum_terpenes / info.count).toFixed(1)}%</Text>
-                  <Button title="Delete" onPress={async () => {
-                    if (await Alert.promise('Delete all uploads for ' + strain + '?', ['Cancel', 'OK']) === 'OK') {
-                      try {
-                        const { error } = await supabase.from('uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
-                        if (error) throw error;
-                        Toast.show({ type: 'success', text1: 'Upload deleted!' });
-                        supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
-                      } catch (err) {
-                        Toast.show({ type: 'error', text1: 'Failed to delete: ' + err.message });
-                      }
-                    }
-                  }} />
-                </View>
-              )}
-              ListEmptyComponent={<Text>No uploads yet.</Text>}
-            />
-          </View>
+            {/* History Dashboard */}
+            {publicKey && (
+              <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
+                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
+                <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
+                <table className="w-full table-auto mx-auto">
+                  <thead>
+                    <tr>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Terpenes (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(aggregatedUploads).map(([strain, info], i) => (
+                      <tr key={i}>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_terpenes / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 text-center">
+                          <button
+                            onClick={async () => {
+                              if (confirm(`Delete all uploads for ${strain}? This can't be undone.`)) {
+                                try {
+                                  const { error } = await supabase.from('uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
+                                  if (error) throw error;
+                                  toast.success('Upload deleted!');
+                                  // Refresh uploads
+                                  supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
+                                } catch (err) {
+                                  toast.error('Failed to delete: ' + err.message);
+                                }
+                              }
+                            }}
+                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded text-sm"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
+              </div>
+            )}
 
-          {/* Total Votes */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Total Votes Across All Users</Text>
-            <FlatList
-              data={voteStrains}
-              keyExtractor={item => item.value}
-              renderItem={({ item }) => (
-                <View style={styles.totalVoteRow}>
-                  <Text>{item.label}</Text>
-                  <Text>{totalVotes[item.value] || 0}</Text>
-                </View>
-              )}
-            />
-          </View>
-        </>
-      ) : (
-        <Text>Connect your wallet to upload data and vote!</Text>
-      )}
-      <Toast />  // Add <Toast /> at root level if using react-native-toast-message
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  logo: { fontSize: 24, marginBottom: 20 },  // Adapt for Image if logo PNG
-  balance: { fontSize: 18, marginBottom: 10 },
-  walletSection: { marginBottom: 20 },
-  walletButton: { marginBottom: 10 },
-  connectedText: { fontSize: 16 },
-  section: { marginBottom: 20, padding: 10, backgroundColor: '#f0f0f0', borderRadius: 8 },
-  sectionTitle: { fontSize: 24, marginBottom: 10 },
-  subTitle: { fontSize: 20, marginBottom: 5 },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 10, borderRadius: 4 },
-  picker: { borderWidth: 1, borderColor: '#ccc', marginBottom: 10, borderRadius: 4 },
-  voteRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  strainLabel: { fontSize: 16 },
-  voteInput: { borderWidth: 1, borderColor: '#ccc', padding: 10, width: 100, textAlign: 'center' },
-  uploadRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-  totalVoteRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 },
-});
+            {/* Total Votes Across All Users (per current flight) */}
+            <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Total Votes Across All Users</h2>
+              <table className="w-full table-auto mx-auto">
+                <thead>
+                  <tr>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Votes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {voteStrains.map(s => (
+                    <tr key={s.value}>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s.label}</td>
+                      <td className="pb-4 text-black dark:text-[#22f703] text-center">{totalVotes[s.value] || 0}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <p className="text-center text-gray-600 dark:text-[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
+        )}
+      </main>
+      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+        {/* Footer if needed */}
+      </footer>
+      <ToastContainer theme="dark" />
+    </div>
+  ); 
+} 
