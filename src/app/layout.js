@@ -14,9 +14,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <Providers>  // Wrap with your providers
-          <SolanaProvider>  // If this is your Solana wrapper
-            {children}  // Renders page.js or other routes
+        <Providers> 
+          <SolanaProvider>
+            {children}  
           </SolanaProvider>
         </Providers>
       </body>
