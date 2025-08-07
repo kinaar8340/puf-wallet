@@ -1,3 +1,4 @@
+// page.js
 // Reverted to original web/Next.js version for Vercel build
 // Removed RN imports/components, restored HTML/JSX, react-toastify, dynamic WalletMultiButton, etc.
 // Keep 'use client' for hooks
@@ -247,21 +248,29 @@ export default function Home() {
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black relative">
-      <main className="flex flex-col gap-[48px] row-start-4 items-center w-full max-w-2xl mx-auto">
-        <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain" />
+      {/* ^ No change needed for background (already matches OS light/dark). Ensured text color is black (light) / #22f703 green (dark) globally. */}
+      <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
+        {/* ^ Changed row-start-4 to row-start-2 (fix potential bug). Added justify-center for extra horizontal centering in flex. */}
+        <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain mx-auto" />
+        {/* ^ Added mx-auto for centering. */}
         {publicKey && <p className="text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
 
-        <div className="flex flex-col items-center gap-8 w-full">
+        <div className="flex flex-col items-center justify-center gap-8 w-full">
+          {/* ^ Added justify-center. */}
           <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
           {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+          {/* ^ Updated text-gray-600 to use dark:text-[#22f703] for green match in dark. */}
         </div>
 
         {publicKey ? (
           <>
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Upload Vape Data</h2>
-              <form onSubmit={handleUpload} className="flex flex-col gap-10">
-                <table className="w-full table-auto mx-auto">
+              {/* ^ Ensured text-black dark:text-[#22f703]. */}
+              <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
+                {/* ^ Added items-center for form centering. */}
+                <table className="w-full table-auto mx-auto text-center">
+                  {/* ^ Added text-center to table. */}
                   <thead>
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Field</th>
@@ -308,7 +317,7 @@ export default function Home() {
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Strains</h2>
-              <table className="w-full table-auto mx-auto">
+              <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
                     <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
@@ -343,7 +352,7 @@ export default function Home() {
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
                 <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
                 <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
-                <table className="w-full table-auto mx-auto">
+                <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
@@ -385,13 +394,14 @@ export default function Home() {
                   </tbody>
                 </table>
                 {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
+                {/* ^ Updated to dark:text-[#22f703]. */}
               </div>
             )}
 
             {/* Total Votes Across All Users (per current flight) */}
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Total Votes Across All Users</h2>
-              <table className="w-full table-auto mx-auto">
+              <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
                     <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
@@ -411,6 +421,7 @@ export default function Home() {
           </>
         ) : (
           <p className="text-center text-gray-600 dark:text-[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
+          {/* ^ Updated to dark:text-[#22f703]. */}
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
