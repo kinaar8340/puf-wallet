@@ -14,13 +14,16 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <Providers> 
+      <head>
+        <link rel="icon" href="/images/logo2.png" type="image/png" />
+      </head>
+      <body className="dark">
+        <Providers>
           <SolanaProvider>
-            {children}  
+            {children}
           </SolanaProvider>
         </Providers>
       </body>
     </html>
   );
-}  
+}
