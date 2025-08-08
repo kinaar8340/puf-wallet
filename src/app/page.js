@@ -286,7 +286,7 @@ export default function Home() {
             {/* History Dashboard */}
             {publicKey && (
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
+                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#63a05a] text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
