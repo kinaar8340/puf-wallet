@@ -253,16 +253,16 @@ export default function Home() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black bg-transparent relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain mx-auto" />
-        {publicKey && <p className="text-3xl text-black bg-[#00ff00] p-8 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
+        {publicKey && <p className="text-3xl font-bold text-black bg-[#00ff00] p-8 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
-          <WalletMultiButton className="bg-blue-500/30 hover:bg-blue-600/30 text-black font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500/30 to-blue-600/30" />
+          <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 text-black font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
           {publicKey && <p className="text-xl text-black">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
 
         {publicKey ? (
           <>
-            <div className="w-full bg-white/30 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black text-center">Voting Results</h2>
               <p className="text-xl text-black text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center">
@@ -285,7 +285,7 @@ export default function Home() {
 
             {/* History Dashboard */}
             {publicKey && (
-              <div className="w-full bg-white/30 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
+              <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
                 <h2 className="text-5xl font-semibold mb-8 text-black text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
@@ -320,7 +320,7 @@ export default function Home() {
                                 }
                               }
                             }}
-                            className="bg-red-500/30 hover:bg-red-600/30 text-black font-bold py-2 px-4 rounded text-sm"
+                            className="bg-red-500/70 hover:bg-red-600/70 text-black font-bold py-2 px-4 rounded text-sm"
                           >
                             Delete
                           </button>
@@ -333,7 +333,7 @@ export default function Home() {
               </div>
             )}
 
-            <div className="w-full bg-white/30 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black text-center">Voting Docket</h2>
               <p className="text-2xl text-black text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
@@ -355,12 +355,12 @@ export default function Home() {
                   ))}
                 </tbody>
               </table>
-              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500/30 hover:bg-purple-600/30 text-black font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/30 to-purple-600/30 mx-auto mt-8">
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500/70 hover:bg-purple-600/70 text-black font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-8">
                 {loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'}
               </button>
             </div>
 
-            <div className="w-full bg-white/30 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
@@ -392,7 +392,7 @@ export default function Home() {
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500/30 hover:bg-green-600/30 text-black font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500/30 to-green-600/30 mx-auto">
+                <button type="submit" disabled={loading} className="bg-green-500/70 hover:bg-green-600/70 text-black font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500/70 to-green-600/70 mx-auto">
                   {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
@@ -408,4 +408,4 @@ export default function Home() {
       <ToastContainer theme="dark" />
     </div>
   ); 
-}
+} 
