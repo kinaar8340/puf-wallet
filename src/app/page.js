@@ -298,7 +298,7 @@ export default function Home() {
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Exhibits</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Docket</h2>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
                   {voteStrains.map(s => (
