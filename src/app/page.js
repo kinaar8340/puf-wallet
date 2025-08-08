@@ -253,17 +253,17 @@ export default function Home() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain mx-auto" />
-        {publicKey && <p className="text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
+        {publicKey && <p className="text-xl dark:text-[#00FF00]">$PUF Balance: {balance}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
-          {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+          {publicKey && <p className="text-xl text-gray-600 dark:text-[#00FF00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
 
         {publicKey ? (
           <>
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Results</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Voting Results</h2>
               <p className="text-xl text-black dark:text-[#22f703] text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
@@ -286,7 +286,7 @@ export default function Home() {
             {/* History Dashboard */}
             {publicKey && (
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#63a05a] text-center">Your History</h2>
+                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
@@ -334,7 +334,7 @@ export default function Home() {
             )}
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Docket</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Voting Docket</h2>
               <p className="text-2xl text-black dark:text-[#22f703] text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
@@ -361,7 +361,7 @@ export default function Home() {
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Upload Vape Data</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
                   <tbody>
