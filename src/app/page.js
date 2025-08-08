@@ -1,4 +1,4 @@
-// page.js
+// app/page.jsx
 // Reverted to original web/Next.js version for Vercel build
 // Removed RN imports/components, restored HTML/JSX, react-toastify, dynamic WalletMultiButton, etc.
 // Keep 'use client' for hooks
@@ -262,7 +262,7 @@ export default function Home() {
 
         {publicKey ? (
           <>
-            <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] border-4 border-[#00ff00]">
               <h2 className="text-5xl font-bold mb-8 text-center">Voting Results</h2>
               <p className="text-xl font-bold text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
@@ -285,7 +285,7 @@ export default function Home() {
 
             {/* History Dashboard */}
             {publicKey && (
-              <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8 text-[#00ff00]">
+              <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8 text-[#00ff00] border-4 border-[#00ff00]">
                 <h2 className="text-5xl font-bold mb-8 text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
@@ -310,7 +310,7 @@ export default function Home() {
                             onClick={async () => {
                               if (confirm(`Delete all uploads for ${strain}? This can't be undone.`)) {
                                 try {
-                                  const { error } = await supabase.from('uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
+                                  const { error } = await supabase.from('Uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
                                   if (error) throw error;
                                   toast.success('Upload deleted!');
                                   // Refresh uploads
@@ -333,7 +333,7 @@ export default function Home() {
               </div>
             )}
 
-            <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50 border-4 border-[#00ff00]">
               <h2 className="text-5xl font-bold mb-8 text-[#00ff00] text-center">Voting Docket</h2>
               <p className="text-2xl text-[#00ff00] font-bold text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
@@ -348,7 +348,7 @@ export default function Home() {
                           placeholder={s.label}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="p-8 rounded bg-black text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56"
+                          className="p-8 rounded bg-transparent text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56"
                         />
                       </td>
                     </tr>
@@ -360,19 +360,19 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50 border-4 border-[#00ff00]">
               <h2 className="text-5xl font-bold mb-8 text-[#00ff00] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
                   <tbody>
                     <tr>
                       <td className="pb-4">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56" required />
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-transparent text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56" required>
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-transparent text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56" required>
                           <option value="">Select Type</option>
                           <option value="Sativa">Sativa</option>
                           <option value="Indica">Indica</option>
@@ -382,12 +382,12 @@ export default function Home() {
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-xl border-4 border-black w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-xl border-4 border-black w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>

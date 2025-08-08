@@ -1,3 +1,4 @@
+// app/layout.jsx
 // Reverted to original web/Next.js version for Vercel build
 // Removed RN imports/styles, restored metadata if any (assume none from adapted), and Slot not needed in web
 
