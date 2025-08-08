@@ -1,3 +1,35 @@
+// Reverted to original web/Next.js version for Vercel build
+// Removed RN imports/styles, restored metadata if any (assume none from adapted), and Slot not needed in web
+
+import '../app/globals.css';  
+import Providers from './Providers';  // Your context/providers
+import SolanaProvider from '../components/SolanaProvider';  // If used
+
+// Original metadata (add if your web had it; e.g., for Next.js SEO)
+export const metadata = {
+  title: 'PUF Wallet',
+  description: 'This project aims to reflects real-time consumer preference.',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="icon" href="/images/icon1.png" type="image/png" />
+      </head>
+      <body className="dark bg-[url('/images/bg1.png')] bg-fixed bg-cover bg-center">
+        <Providers>
+          <SolanaProvider>
+            {children}
+          </SolanaProvider>
+        </Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+```jsx
 // page.js
 // Reverted to original web/Next.js version for Vercel build
 // Removed RN imports/components, restored HTML/JSX, react-toastify, dynamic WalletMultiButton, etc.
@@ -250,19 +282,19 @@ export default function Home() {
   }, {});
 
   return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#00FF00] bg-white dark:bg-black relative">
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#00FF00] bg-transparent relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain mx-auto" />
         {publicKey && <p className="text-3xl dark:text-[#00FF00]">$PUF Balance: {Number(balance).toFixed(2)}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
-          <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
+          <WalletMultiButton className="bg-blue-500 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-50 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
           {publicKey && <p className="text-xl text-gray-600 dark:text-[#00FF00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
 
         {publicKey ? (
           <>
-            <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-white bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Voting Results</h2>
               <p className="text-xl text-black dark:text-[#00FF00] text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center">
@@ -285,7 +317,7 @@ export default function Home() {
 
             {/* History Dashboard */}
             {publicKey && (
-              <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
+              <div className="w-full bg-white bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
                 <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
@@ -320,7 +352,7 @@ export default function Home() {
                                 }
                               }
                             }}
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded text-sm"
+                            className="bg-red-500 bg-opacity-50 hover:bg-red-600 text-white font-bold py-2 px-4 rounded text-sm"
                           >
                             Delete
                           </button>
@@ -333,7 +365,7 @@ export default function Home() {
               </div>
             )}
 
-            <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-white bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Voting Docket</h2>
               <p className="text-2xl text-black dark:text-[#00FF00] text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
@@ -348,31 +380,31 @@ export default function Home() {
                           placeholder={s.label}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#00FF00] text-2xl border border-green-500 w-full h-56"
+                          className="p-8 rounded bg-gray-200 bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-50 text-black dark:text-[#00FF00] text-2xl border border-green-500 w-full h-56"
                         />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 dark:bg-gray-800 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-50 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
                 {loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'}
               </button>
             </div>
 
-            <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-white bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#00FF00] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
                   <tbody>
                     <tr>
                       <td className="pb-4">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#00FF00] text-2xl border border-green-500 w-full h-56" required />
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-50 text-black dark:text-[#00FF00] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#00FF00] text-2xl border border-green-500 w-full h-56" required>
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-50 text-black dark:text-[#00FF00] text-2xl border border-green-500 w-full h-56" required>
                           <option value="">Select Type</option>
                           <option value="Sativa">Sativa</option>
                           <option value="Indica">Indica</option>
@@ -382,17 +414,17 @@ export default function Home() {
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#00FF00] text-xl border border-green-500 w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-50 text-black dark:text-[#00FF00] text-xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#00FF00] text-xl border border-green-500 w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 bg-opacity-50 dark:bg-gray-700 dark:bg-opacity-50 text-black dark:text-[#00FF00] text-xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
+                <button type="submit" disabled={loading} className="bg-green-500 bg-opacity-50 dark:bg-gray-800 dark:bg-opacity-50 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
                   {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
