@@ -415,7 +415,7 @@ export default function Home() {
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        {/* Footer if needed */}
+        {/* Footer*/}
       </footer>
       <ToastContainer theme="dark" />
     </div>
