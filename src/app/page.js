@@ -262,21 +262,21 @@ export default function Home() {
 
         {publicKey ? (
           <>
-            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-bold mb-8 text-black text-center">Voting Results</h2>
-              <p className="text-xl text-black font-bold text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
+            <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+              <h2 className="text-5xl font-bold mb-8 text-center">Voting Results</h2>
+              <p className="text-xl font-bold text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black font-bold underline">Docket</th>
-                    <th className="text-center pb-4 text-black font-bold underline">Total Votes</th>
+                    <th className="text-center pb-4 font-bold underline">Docket</th>
+                    <th className="text-center pb-4 font-bold underline">Total Votes</th>
                   </tr>
                 </thead>
                 <tbody>
                   {voteStrains.map(s => (
                     <tr key={s.value}>
-                      <td className="pr-4 pb-4 text-black font-bold text-center">{s.label}</td>
-                      <td className="pb-4 text-black font-bold text-center">{totalVotes[s.value] || 0}</td>
+                      <td className="pr-4 pb-4 font-bold text-center">{s.label}</td>
+                      <td className="pb-4 font-bold text-center">{totalVotes[s.value] || 0}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -285,26 +285,26 @@ export default function Home() {
 
             {/* History Dashboard */}
             {publicKey && (
-              <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-bold mb-8 text-black text-center">Your History</h2>
+              <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8 text-[#00ff00]">
+                <h2 className="text-5xl font-bold mb-8 text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
-                      <th className="text-center pb-4 text-black font-bold underline">Strain Name</th>
-                      <th className="text-center pb-4 text-black font-bold underline">Type</th>
-                      <th className="text-center pb-4 text-black font-bold underline">THC</th>
-                      <th className="text-center pb-4 text-black font-bold underline">CBD</th>
-                      <th className="text-center pb-4 text-black font-bold underline">Actions</th>
+                      <th className="text-center pb-4 font-bold underline">Strain Name</th>
+                      <th className="text-center pb-4 font-bold underline">Type</th>
+                      <th className="text-center pb-4 font-bold underline">THC</th>
+                      <th className="text-center pb-4 font-bold underline">CBD</th>
+                      <th className="text-center pb-4 font-bold underline">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {Object.entries(aggregatedUploads).map(([strain, info], i) => (
                       <tr key={i}>
-                        <td className="pr-4 pb-4 text-black font-bold text-center">{strain}</td>
-                        <td className="pr-4 pb-4 text-black font-bold text-center">{info.type}</td>
-                        <td className="pr-4 pb-4 text-black font-bold text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black font-bold text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
+                        <td className="pr-4 pb-4 font-bold text-center">{strain}</td>
+                        <td className="pr-4 pb-4 font-bold text-center">{info.type}</td>
+                        <td className="pr-4 pb-4 font-bold text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 font-bold text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
                         <td className="pb-4 text-center">
                           <button
                             onClick={async () => {
@@ -320,7 +320,7 @@ export default function Home() {
                                 }
                               }
                             }}
-                            className="bg-red-500/70 hover:bg-red-600/70 text-black font-bold py-2 px-4 rounded text-sm"
+                            className="bg-red-500/70 hover:bg-red-600/70 font-bold py-2 px-4 rounded text-sm"
                           >
                             Delete
                           </button>
@@ -329,11 +329,11 @@ export default function Home() {
                     ))}
                   </tbody>
                 </table>
-                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-black font-bold text-xl">No uploads yet.</p>}
+                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center font-bold text-xl">No uploads yet.</p>}
               </div>
             )}
 
-            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-bold mb-8 text-black text-center">Voting Docket</h2>
               <p className="text-2xl text-black font-bold text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
@@ -360,7 +360,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50">
+            <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-bold mb-8 text-black text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
