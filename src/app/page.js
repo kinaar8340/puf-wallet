@@ -67,7 +67,7 @@ export default function Home() {
 
   useEffect(() => {
     if (publicKey) {
-      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+      supabase.from('Uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
         if (error) console.error('Uploads fetch error:', error);
         setUserUploads(data || []);
       });
@@ -140,7 +140,7 @@ export default function Home() {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.from('uploads').insert([
+      const { data, error } = await supabase.from('Uploads').insert([
         {
           user_pubkey: publicKey.toBase58(),
           strain,
@@ -156,7 +156,7 @@ export default function Home() {
       setStrain(''); setType(''); setThc(''); setCbd('');
 
       // Refresh user uploads to show in history
-      supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
+      supabase.from('Uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
     } catch (error) {
       console.error('Upload Error:', error);
       toast.error('Failed to upload data: ' + (error.message || 'Unknown error'));
@@ -253,7 +253,7 @@ export default function Home() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain mx-auto" />
-        {publicKey && <p className="text-3xl font-bold bg-black/25 p-8 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
+        {publicKey && <p className="text-3xl font-bold bg-black/75 p-8 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
@@ -262,7 +262,7 @@ export default function Home() {
 
         {publicKey ? (
           <>
-            <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] border-4 border-[#00ff00]">
+            <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] border-4 border-[#00ff00]">
               <h2 className="text-5xl font-bold mb-8 text-center">Voting Results</h2>
               <p className="text-xl font-bold text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
@@ -285,7 +285,7 @@ export default function Home() {
 
             {/* History Dashboard */}
             {publicKey && (
-              <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8 text-[#00ff00] border-4 border-[#00ff00]">
+              <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8 text-[#00ff00] border-4 border-[#00ff00]">
                 <h2 className="text-5xl font-bold mb-8 text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
@@ -310,7 +310,7 @@ export default function Home() {
                           onClick={async () => {
                             if (confirm(`Delete all uploads for ${strain}? This can't be undone.`)) {
                               try {
-                                const { error } = await supabase.from('uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
+                                const { error } = await supabase.from('Uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
                                 if (error) throw error;
                                 toast.success('Upload deleted!');
                                 // Refresh uploads
@@ -333,7 +333,7 @@ export default function Home() {
             </div>
           )}
 
-          <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50 border-4 border-[#00ff00]">
+          <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50 border-4 border-[#00ff00]">
             <h2 className="text-5xl font-bold mb-8 text-[#00ff00] text-center">Voting Docket</h2>
             <p className="text-2xl text-[#00ff00] font-bold text-center mb-4">Select a value between (1-10)</p>
             <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
@@ -360,7 +360,7 @@ export default function Home() {
             </button>
           </div>
 
-          <div className="w-full bg-black/25 p-10 rounded-lg shadow-md shadow-green-500/50 border-4 border-[#00ff00]">
+          <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50 border-4 border-[#00ff00]">
             <h2 className="text-5xl font-bold mb-8 text-[#00ff00] text-center">Upload Vape Data</h2>
             <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
               <table className="w-full table-auto mx-auto text-center border-4 border-[#00ff00]">
