@@ -264,7 +264,7 @@ export default function Home() {
           <>
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Results</h2>
-              <p className="text-xl text-black dark:text-[#22f703] text-center mb-4">Flight {CURRENT_FLIGHT}     Flight Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}</p>
+              <p className="text-xl text-black dark:text-[#22f703] text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
