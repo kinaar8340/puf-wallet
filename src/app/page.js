@@ -24,7 +24,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 // Current flight (update this when cartridges change, e.g., to 2 for FLIGHT2)
-const CURRENT_FLIGHT = 3;
+const CURRENT_FLIGHT = 2;
 
 const voteStrains = [
   { value: 'Item 1', label: 'Item 1' },
@@ -328,14 +328,14 @@ export default function Home() {
             {publicKey && (
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
                 <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
-                <h3 className="text-3xl mb-4 text-black dark:text-[#22f703]">Uploads</h3>
+                {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC (%)</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">CBD (%)</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">CBD</th>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Actions</th>
                     </tr>
                   </thead>
