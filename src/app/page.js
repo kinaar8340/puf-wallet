@@ -24,7 +24,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 // Current flight (updated to 3 as requested)
-const CURRENT_FLIGHT = 3;
+const CURRENT_FLIGHT = 4;
 
 // New variable for flight status (0 = Closed, 1 = Open)
 const FLIGHT_STATUS = 1; // Set to 1 for Open; change to 0 for Closed
