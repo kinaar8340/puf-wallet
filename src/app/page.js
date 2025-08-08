@@ -257,26 +257,26 @@ export default function Home() {
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 text-black font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
-          {publicKey && <p className="text-xl text-black">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+          {publicKey && <p className="text-xl text-black font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
 
         {publicKey ? (
           <>
-            <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black text-center">Voting Results</h2>
-              <p className="text-xl text-black text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
+            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-bold mb-8 text-black text-center">Voting Results</h2>
+              <p className="text-xl text-black font-bold text-center mb-4">|  Flight: {CURRENT_FLIGHT}  |    |  Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}  |</p>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black underline">Docket</th>
-                    <th className="text-center pb-4 text-black underline">Total Votes</th>
+                    <th className="text-center pb-4 text-black font-bold underline">Docket</th>
+                    <th className="text-center pb-4 text-black font-bold underline">Total Votes</th>
                   </tr>
                 </thead>
                 <tbody>
                   {voteStrains.map(s => (
                     <tr key={s.value}>
-                      <td className="pr-4 pb-4 text-black text-center">{s.label}</td>
-                      <td className="pb-4 text-black text-center">{totalVotes[s.value] || 0}</td>
+                      <td className="pr-4 pb-4 text-black font-bold text-center">{s.label}</td>
+                      <td className="pb-4 text-black font-bold text-center">{totalVotes[s.value] || 0}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -285,26 +285,26 @@ export default function Home() {
 
             {/* History Dashboard */}
             {publicKey && (
-              <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-semibold mb-8 text-black text-center">Your History</h2>
+              <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
+                <h2 className="text-5xl font-bold mb-8 text-black text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
-                      <th className="text-center pb-4 text-black underline">Strain Name</th>
-                      <th className="text-center pb-4 text-black underline">Type</th>
-                      <th className="text-center pb-4 text-black underline">THC</th>
-                      <th className="text-center pb-4 text-black underline">CBD</th>
-                      <th className="text-center pb-4 text-black underline">Actions</th>
+                      <th className="text-center pb-4 text-black font-bold underline">Strain Name</th>
+                      <th className="text-center pb-4 text-black font-bold underline">Type</th>
+                      <th className="text-center pb-4 text-black font-bold underline">THC</th>
+                      <th className="text-center pb-4 text-black font-bold underline">CBD</th>
+                      <th className="text-center pb-4 text-black font-bold underline">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {Object.entries(aggregatedUploads).map(([strain, info], i) => (
                       <tr key={i}>
-                        <td className="pr-4 pb-4 text-black text-center">{strain}</td>
-                        <td className="pr-4 pb-4 text-black text-center">{info.type}</td>
-                        <td className="pr-4 pb-4 text-black text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
+                        <td className="pr-4 pb-4 text-black font-bold text-center">{strain}</td>
+                        <td className="pr-4 pb-4 text-black font-bold text-center">{info.type}</td>
+                        <td className="pr-4 pb-4 text-black font-bold text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 text-black font-bold text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
                         <td className="pb-4 text-center">
                           <button
                             onClick={async () => {
@@ -329,13 +329,13 @@ export default function Home() {
                     ))}
                   </tbody>
                 </table>
-                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-black text-xl">No uploads yet.</p>}
+                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-black font-bold text-xl">No uploads yet.</p>}
               </div>
             )}
 
-            <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black text-center">Voting Docket</h2>
-              <p className="text-2xl text-black text-center mb-4">Select a value between (1-10)</p>
+            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-bold mb-8 text-black text-center">Voting Docket</h2>
+              <p className="text-2xl text-black font-bold text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
                   {voteStrains.map(s => (
@@ -348,7 +348,7 @@ export default function Home() {
                           placeholder={s.label}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="p-8 rounded bg-[#00ff00] text-black text-2xl border-4 border-black w-full h-56"
+                          className="p-8 rounded bg-[#00ff00] text-black font-bold text-2xl border-4 border-black w-full h-56"
                         />
                       </td>
                     </tr>
@@ -360,19 +360,19 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="w-full bg-white/70 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black text-center">Upload Vape Data</h2>
+            <div className="w-full bg-black/50 p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-bold mb-8 text-black text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
                   <tbody>
                     <tr>
                       <td className="pb-4">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black text-2xl border-4 border-black w-full h-56" required />
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-2xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black text-2xl border-4 border-black w-full h-56" required>
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-2xl border-4 border-black w-full h-56" required>
                           <option value="">Select Type</option>
                           <option value="Sativa">Sativa</option>
                           <option value="Indica">Indica</option>
@@ -382,12 +382,12 @@ export default function Home() {
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black text-xl border-4 border-black w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black text-xl border-4 border-black w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>
@@ -399,7 +399,7 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <p className="text-center text-black text-2xl">Connect your wallet to upload data and vote!</p>
+          <p className="text-center text-black font-bold text-2xl">Connect your wallet to upload data and vote!</p>
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
@@ -408,4 +408,4 @@ export default function Home() {
       <ToastContainer theme="dark" />
     </div>
   ); 
-} 
+}
