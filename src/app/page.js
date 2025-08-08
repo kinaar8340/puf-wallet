@@ -24,7 +24,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 // Current flight (update this when cartridges change, e.g., to 2 for FLIGHT2)
-const CURRENT_FLIGHT = 2;
+const CURRENT_FLIGHT = 3;
 
 const voteStrains = [
   { value: 'Item 1', label: 'Item 1' },
