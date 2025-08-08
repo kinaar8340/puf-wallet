@@ -27,11 +27,11 @@ const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ')
 const CURRENT_FLIGHT = 2;
 
 const voteStrains = [
-  { value: 'Exhibit 1', label: 'Exhibit 1' },
-  { value: 'Exhibit 2', label: 'Exhibit 2' },
-  { value: 'Exhibit 3', label: 'Exhibit 3' },
-  { value: 'Exhibit 4', label: 'Exhibit 4' },
-  { value: 'Exhibit 5', label: 'Exhibit 5' },
+  { value: 'Item 1', label: 'Item 1' },
+  { value: 'Item 2', label: 'Item 2' },
+  { value: 'Item 3', label: 'Item 3' },
+  { value: 'Item 4', label: 'Item 4' },
+  { value: 'Item 5', label: 'Item 5' },
 ];
 
 export default function Home() {
@@ -271,7 +271,7 @@ export default function Home() {
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required>
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56" required>
                           <option value="">Select Type</option>
                           <option value="Sativa">Sativa</option>
                           <option value="Indica">Indica</option>
@@ -333,18 +333,18 @@ export default function Home() {
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC (%)</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">CBD (%)</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Actions</th>
+                      <th className="text-center pb-4 text-black dark:text[#22f703]">THC (%)</th>
+                      <th className="text-center pb-4 text-black dark:text[#22f703]">CBD (%)</th>
+                      <th className="text-center pb-4 text-black dark:text[#22f703]">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {Object.entries(aggregatedUploads).map(([strain, info], i) => (
                       <tr key={i}>
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
-                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
+                        <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{info.type}</td>
+                        <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 text-black dark:text[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
                         <td className="pb-4 text-center">
                           <button
                             onClick={async () => {
@@ -369,25 +369,25 @@ export default function Home() {
                     ))}
                   </tbody>
                 </table>
-                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
+                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text[#22f703] text-xl">No uploads yet.</p>}
               </div>
             )}
 
             {/* Total Votes Across All Users (per current flight) */}
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Total Votes Across All Users</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Total Votes Across All Users</h2>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Exhibit</th>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Votes</th>
+                    <th className="text-center pb-4 text-black dark:text[#22f703]">Docket</th>
+                    <th className="text-center pb-4 text-black dark:text[#22f703]">Total Votes</th>
                   </tr>
                 </thead>
                 <tbody>
                   {voteStrains.map(s => (
                     <tr key={s.value}>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s.label}</td>
-                      <td className="pb-4 text-black dark:text-[#22f703] text-center">{totalVotes[s.value] || 0}</td>
+                      <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{s.label}</td>
+                      <td className="pb-4 text-black dark:text[#22f703] text-center">{totalVotes[s.value] || 0}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -395,7 +395,7 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <p className="text-center text-gray-600 dark:text-[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
+          <p className="text-center text-gray-600 dark:text[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
