@@ -253,28 +253,28 @@ export default function Home() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#22f703] bg-white dark:bg-black relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-128 h-128 object-contain mx-auto" />
-        {publicKey && <p className="text-xl dark:text[#22f703]">$PUF Balance: {balance}</p>}
+        {publicKey && <p className="text-xl dark:text-[#22f703]">$PUF Balance: {balance}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
-          <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
-          {publicKey && <p className="text-xl text-gray-600 dark:text[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+          <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
+          {publicKey && <p className="text-xl text-gray-600 dark:text-[#22f703]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
 
         {publicKey ? (
           <>
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Upload Vape Data</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
                   <tbody>
                     <tr>
                       <td className="pb-4">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56" required />
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56" required>
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required>
                           <option value="">Select Type</option>
                           <option value="Sativa">Sativa</option>
                           <option value="Indica">Indica</option>
@@ -284,25 +284,25 @@ export default function Home() {
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-xl border border-green-500 w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-xl border border-green-500 w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text[#22f703] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
+                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
                   {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Voting Docket</h2>
-              <p className="text-2xl text-black dark:text[#22f703] text-center mb-4">Select a value between (1-10)</p>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Docket</h2>
+              <p className="text-2xl text-black dark:text-[#22f703] text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
                   {voteStrains.map(s => (
@@ -315,14 +315,14 @@ export default function Home() {
                           placeholder={s.label}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text[#22f703] text-2xl border border-green-500 w-full h-56"
+                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
                         />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 dark:bg-gray-800 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text[#22f703] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500 dark:bg-gray-800 hover:bg-purple-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500 to-purple-600 dark:from-gray-800 dark:to-gray-900 mx-auto mt-8">
                 {loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'}
               </button>
             </div>
@@ -330,25 +330,25 @@ export default function Home() {
             {/* History Dashboard */}
             {publicKey && (
               <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-                <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Your History</h2>
+                <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Your History</h2>
                 {/* Removed <h3> "Uploads" */}
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
-                      <th className="text-center pb-4 text-black dark:text[#22f703]">Strain Name</th>
-                      <th className="text-center pb-4 text-black dark:text[#22f703]">Type</th>
-                      <th className="text-center pb-4 text-black dark:text[#22f703]">THC</th>
-                      <th className="text-center pb-4 text-black dark:text[#22f703]">CBD</th>
-                      <th className="text-center pb-4 text-black dark:text[#22f703]">Actions</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">CBD</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {Object.entries(aggregatedUploads).map(([strain, info], i) => (
                       <tr key={i}>
-                        <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{strain}</td>
-                        <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{info.type}</td>
-                        <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black dark:text[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
+                        <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
                         <td className="pb-4 text-center">
                           <button
                             onClick={async () => {
@@ -373,26 +373,26 @@ export default function Home() {
                     ))}
                   </tbody>
                 </table>
-                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text[#22f703] text-xl">No uploads yet.</p>}
+                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center text-gray-600 dark:text-[#22f703] text-xl">No uploads yet.</p>}
               </div>
             )}
 
             {/* Total Votes Across All Users (per current flight) */}
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text[#22f703] text-center">Voting Results</h2>
-              <p className="text-xl text-black dark:text[#22f703] text-center mb-4">Flight {CURRENT_FLIGHT}     Flight Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}</p>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Results</h2>
+              <p className="text-xl text-black dark:text-[#22f703] text-center mb-4">Flight {CURRENT_FLIGHT}     Flight Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}</p>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black dark:text[#22f703]">Docket</th>
-                    <th className="text-center pb-4 text-black dark:text[#22f703]">Total Votes</th>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Docket</th>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Votes</th>
                   </tr>
                 </thead>
                 <tbody>
                   {voteStrains.map(s => (
                     <tr key={s.value}>
-                      <td className="pr-4 pb-4 text-black dark:text[#22f703] text-center">{s.label}</td>
-                      <td className="pb-4 text-black dark:text[#22f703] text-center">{totalVotes[s.value] || 0}</td>
+                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s.label}</td>
+                      <td className="pb-4 text-black dark:text-[#22f703] text-center">{totalVotes[s.value] || 0}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -400,7 +400,7 @@ export default function Home() {
             </div>
           </>
         ) : (
-          <p className="text-center text-gray-600 dark:text[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
+          <p className="text-center text-gray-600 dark:text-[#22f703] text-2xl">Connect your wallet to upload data and vote!</p>
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
