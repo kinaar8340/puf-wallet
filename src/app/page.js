@@ -253,7 +253,7 @@ export default function Home() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black dark:text-[#00FF00] bg-white dark:bg-black relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain mx-auto" />
-        {publicKey && <p className="text-3xl dark:text-[#00FF00]">$PUF Balance: {balance}</p>}
+        {publicKey && <p className="text-3xl dark:text-[#00FF00]">$PUF Balance: {Number(balance).toFixed(2)}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
           <WalletMultiButton className="bg-blue-500 dark:bg-gray-800 hover:bg-blue-600 dark:hover:bg-gray-600 text-white dark:text-[#00FF00] font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500 to-blue-600 dark:from-gray-800 dark:to-gray-900" />
