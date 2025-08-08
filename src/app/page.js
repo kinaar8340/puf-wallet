@@ -50,7 +50,7 @@ export default function Home() {
   const [strain, setStrain] = useState('');
   const [type, setType] = useState('');
   const [thc, setThc] = useState('');
-  const [terpenes, setTerpenes] = useState('');
+  const [cbd, setCbd] = useState('');  // Replaced terpenes with cbd
 
   // State for votes
   const [votes, setVotes] = useState(
@@ -143,14 +143,14 @@ export default function Home() {
           strain,
           type,
           thc: parseFloat(thc),
-          terpenes: parseFloat(terpenes),
+          cbd: parseFloat(cbd),  // Replaced terpenes with cbd
         }
       ]);
       if (error) throw error;
 
-      console.log('Uploaded Data:', { strain, type, thc, terpenes });
+      console.log('Uploaded Data:', { strain, type, thc, cbd });
       toast.success('Data uploaded successfully!');
-      setStrain(''); setType(''); setThc(''); setTerpenes('');
+      setStrain(''); setType(''); setThc(''); setCbd('');
 
       // Refresh user uploads to show in history
       supabase.from('uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
@@ -196,7 +196,7 @@ export default function Home() {
             user_pubkey: publicKey.toBase58(),
             strain,
             vote_amount,
-            flight: CURRENT_FLIGHT, // Add flight to vote
+            flight: CURRENT_FLIGHT,
           }
         ]);
         if (error) throw error;
@@ -235,13 +235,13 @@ export default function Home() {
       acc[u.strain] = { 
         type: u.type,
         sum_thc: 0,
-        sum_terpenes: 0,
+        sum_cbd: 0,  // Replaced sum_terpenes with sum_cbd
         count: 0 
       };
     }
     acc[u.strain].type = u.type; // last type
     acc[u.strain].sum_thc += u.thc;
-    acc[u.strain].sum_terpenes += u.terpenes;
+    acc[u.strain].sum_cbd += u.cbd;  // Replaced u.terpenes with u.cbd
     acc[u.strain].count += 1;
     return acc;
   }, {});
@@ -263,12 +263,7 @@ export default function Home() {
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
-                  <thead>
-                    <tr>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]"> </th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]"> </th>
-                    </tr>
-                  </thead>
+                  {/* Removed <thead> to eliminate "Field" and "Value" header row */}
                   <tbody>
                     <tr>
                       <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Strain Name</td>
@@ -290,29 +285,29 @@ export default function Home() {
                     <tr>
                       <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">THC (%)</td>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-1xl border border-green-500 w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-28" required />  {/* Changed text-1xl to text-xl, reduced height */}
                       </td>
                     </tr>
                     <tr>
                       <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">CBD (%)</td>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-1xl border border-green-500 w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-28" required />  {/* Changed text-1xl to text-xl, reduced height */}
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-1xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
+                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">  {/* Changed text-2xl to text-xl */}
                   {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Strains</h2>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Item</th>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
                     <th className="text-center pb-4 text-black dark:text-[#22f703]">Vote (1-10)</th>
                   </tr>
                 </thead>
@@ -327,7 +322,7 @@ export default function Home() {
                           max="10"
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-1xl border border-green-500 w-full h-56"
+                          className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
                         />
                       </td>
                     </tr>
@@ -360,7 +355,7 @@ export default function Home() {
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>  {/* Replaced sum_terpenes with sum_cbd */}
                         <td className="pb-4 text-center">
                           <button
                             onClick={async () => {
@@ -415,9 +410,9 @@ export default function Home() {
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        {/* Footer ya or nay*/}
+        {/* Footer if needed */}
       </footer>
       <ToastContainer theme="dark" />
     </div>
   ); 
-}  
+}
