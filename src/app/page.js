@@ -265,8 +265,8 @@ export default function Home() {
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Field</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">Value</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]"> </th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]"> </th>
                     </tr>
                   </thead>
                   <tbody>
