@@ -27,11 +27,11 @@ const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ')
 const CURRENT_FLIGHT = 2;
 
 const voteStrains = [
-  { value: 'Cartridge 1', label: 'Cartridge 1' },
-  { value: 'Cartridge 2', label: 'Cartridge 2' },
-  { value: 'Cartridge 3', label: 'Cartridge 3' },
-  { value: 'Cartridge 4', label: 'Cartridge 4' },
-  { value: 'Cartridge 5', label: 'Cartridge 5' },
+  { value: 'Exhibit 1', label: 'Exhibit 1' },
+  { value: 'Exhibit 2', label: 'Exhibit 2' },
+  { value: 'Exhibit 3', label: 'Exhibit 3' },
+  { value: 'Exhibit 4', label: 'Exhibit 4' },
+  { value: 'Exhibit 5', label: 'Exhibit 5' },
 ];
 
 export default function Home() {
@@ -50,7 +50,7 @@ export default function Home() {
   const [strain, setStrain] = useState('');
   const [type, setType] = useState('');
   const [thc, setThc] = useState('');
-  const [cbd, setCbd] = useState('');  // Replaced terpenes with cbd
+  const [cbd, setCbd] = useState('');
 
   // State for votes
   const [votes, setVotes] = useState(
@@ -143,7 +143,7 @@ export default function Home() {
           strain,
           type,
           thc: parseFloat(thc),
-          cbd: parseFloat(cbd),  // Replaced terpenes with cbd
+          cbd: parseFloat(cbd),
         }
       ]);
       if (error) throw error;
@@ -165,9 +165,9 @@ export default function Home() {
   const handleVoteChange = (strain, value) => {
     const numValue = Number(value);
     if (numValue >= 1 && numValue <= 10) {
-      setVotes(prev => ({ ...prev, [strain]: numValue }));
+      setVotes(prev => ({ ...prev, [strain]: numValue });
     } else if (value === '') {
-      setVotes(prev => ({ ...prev, [strain]: 0 }));
+      setVotes(prev => ({ ...prev, [strain]: 0 });
     }
   };
 
@@ -196,7 +196,7 @@ export default function Home() {
             user_pubkey: publicKey.toBase58(),
             strain,
             vote_amount,
-            flight: CURRENT_FLIGHT,
+            flight: CURRENT_FLIGHT, // Add flight to vote
           }
         ]);
         if (error) throw error;
@@ -235,13 +235,13 @@ export default function Home() {
       acc[u.strain] = { 
         type: u.type,
         sum_thc: 0,
-        sum_cbd: 0,  // Replaced sum_terpenes with sum_cbd
+        sum_cbd: 0,
         count: 0 
       };
     }
     acc[u.strain].type = u.type; // last type
     acc[u.strain].sum_thc += u.thc;
-    acc[u.strain].sum_cbd += u.cbd;  // Replaced u.terpenes with u.cbd
+    acc[u.strain].sum_cbd += u.cbd;
     acc[u.strain].count += 1;
     return acc;
   }, {});
@@ -263,16 +263,13 @@ export default function Home() {
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
-                  {/* Removed <thead> to eliminate "Field" and "Value" header row */}
                   <tbody>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Strain Name</td>
                       <td className="pb-4">
                         <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">Type</td>
                       <td className="pb-4">
                         <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56" required>
                           <option value="">Select Type</option>
@@ -283,20 +280,18 @@ export default function Home() {
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">THC (%)</td>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-28" required />  {/* Changed text-1xl to text-xl, reduced height */}
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">CBD (%)</td>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-28" required />  {/* Changed text-1xl to text-xl, reduced height */}
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-xl border border-green-500 w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">  {/* Changed text-2xl to text-xl */}
+                <button type="submit" disabled={loading} className="bg-green-500 dark:bg-gray-800 hover:bg-green-600 dark:hover:bg-gray-600 text-white dark:text-[#22f703] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500 to-green-600 dark:from-gray-800 dark:to-gray-900 mx-auto">
                   {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
@@ -305,21 +300,15 @@ export default function Home() {
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Strains</h2>
               <table className="w-full table-auto mx-auto text-center">
-                <thead>
-                  <tr>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Vote (1-10)</th>
-                  </tr>
-                </thead>
-                <tbody>
+                <tbody>  {/* Removed <thead> for no headers */}
                   {voteStrains.map(s => (
                     <tr key={s.value}>
-                      <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{s.label}</td>
                       <td className="pb-4">
                         <input
                           type="number"
                           min="1"
                           max="10"
+                          placeholder={`Vote for ${s.label} (1-10)`}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
                           className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
@@ -355,7 +344,7 @@ export default function Home() {
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{strain}</td>
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{info.type}</td>
                         <td className="pr-4 pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>  {/* Replaced sum_terpenes with sum_cbd */}
+                        <td className="pb-4 text-black dark:text-[#22f703] text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
                         <td className="pb-4 text-center">
                           <button
                             onClick={async () => {
