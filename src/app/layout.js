@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/images/icon1.png" type="image/png" />
       </head>
-      <body className="dark bg-[url('/images/bg1.png')] bg-fixed bg-cover bg-center">
+      <body className="bg-[url('/images/bg1.png')] bg-fixed bg-cover bg-center">
         <Providers>
           <SolanaProvider>
             {children}
