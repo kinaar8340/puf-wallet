@@ -23,8 +23,11 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 // $PUF token mint address (use your Devnet test mint; switch to mainnet '3RoiaUKQDEED6Uc8Diz6aJ7TVwwe8H15fbrJEYTJbonk' later)
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
-// Current flight (update this when cartridges change, e.g., to 2 for FLIGHT2)
-const CURRENT_FLIGHT = 2;
+// Current flight (updated to 3 as requested)
+const CURRENT_FLIGHT = 3;
+
+// New variable for flight status (0 = Closed, 1 = Open)
+const FLIGHT_STATUS = 1; // Set to 1 for Open; change to 0 for Closed
 
 const voteStrains = [
   { value: 'Item 1', label: 'Item 1' },
@@ -86,7 +89,7 @@ export default function Home() {
     }
     // Fetch all votes for total aggregation (per current flight)
     supabase.from('votes').select('*').eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
-      if (error) console.error('Total votes fetch error:', error);
+      if (error) console.error('Total votes refresh error:', error);
       const agg = (data || []).reduce((acc, v) => {
         acc[v.strain] = (acc[v.strain] || 0) + v.vote_amount;
         return acc;
@@ -334,8 +337,8 @@ export default function Home() {
                     <tr>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain Name</th>
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Type</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC</th>
-                      <th className="text-center pb-4 text-black dark:text-[#22f703]">CBD</th>
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">THC</th> {/* Removed "(%)" */}
+                      <th className="text-center pb-4 text-black dark:text-[#22f703]">CBD</th> {/* Removed "(%)" */}
                       <th className="text-center pb-4 text-black dark:text-[#22f703]">Actions</th>
                     </tr>
                   </thead>
@@ -376,7 +379,8 @@ export default function Home() {
 
             {/* Total Votes Across All Users (per current flight) */}
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50 mt-8">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Total Votes Across All Users</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Results</h2>
+              <p className="text-xl text-black dark:text-[#22f703] text-center mb-4">Flight {CURRENT_FLIGHT}     Flight Status: {FLIGHT_STATUS === 1 ? 'Open' : 'Closed'}</p>
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
