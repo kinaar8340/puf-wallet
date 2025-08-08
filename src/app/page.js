@@ -165,9 +165,9 @@ export default function Home() {
   const handleVoteChange = (strain, value) => {
     const numValue = Number(value);
     if (numValue >= 1 && numValue <= 10) {
-      setVotes(prev => ({ ...prev, [strain]: numValue });
+      setVotes(prev => ({ ...prev, [strain]: numValue }));
     } else if (value === '') {
-      setVotes(prev => ({ ...prev, [strain]: 0 });
+      setVotes(prev => ({ ...prev, [strain]: 0 }));
     }
   };
 
@@ -298,9 +298,9 @@ export default function Home() {
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Strains</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Exhibits</h2>  {/* Updated title to match 'Exhibit' */}
               <table className="w-full table-auto mx-auto text-center">
-                <tbody>  {/* Removed <thead> for no headers */}
+                <tbody>  /* Removed <thead> for no headers */
                   {voteStrains.map(s => (
                     <tr key={s.value}>
                       <td className="pb-4">
@@ -379,7 +379,7 @@ export default function Home() {
               <table className="w-full table-auto mx-auto text-center">
                 <thead>
                   <tr>
-                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Strain</th>
+                    <th className="text-center pb-4 text-black dark:text-[#22f703]">Exhibit</th>  {/* Changed to 'Exhibit' */}
                     <th className="text-center pb-4 text-black dark:text-[#22f703]">Total Votes</th>
                   </tr>
                 </thead>
@@ -404,4 +404,4 @@ export default function Home() {
       <ToastContainer theme="dark" />
     </div>
   ); 
-}
+} 
