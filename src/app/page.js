@@ -250,14 +250,14 @@ export default function Home() {
   }, {});
 
   return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-black bg-transparent relative">
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 text-2xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-[48px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain mx-auto" />
-        {publicKey && <p className="text-3xl font-bold text-black bg-[#00ff00] p-8 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
+        {publicKey && <p className="text-3xl font-bold bg-[#00ff00] p-8 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
 
         <div className="flex flex-col items-center justify-center gap-8 w-full">
-          <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 text-black font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
-          {publicKey && <p className="text-xl text-black font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+          <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-6 px-10 rounded w-full text-2xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
+          {publicKey && <p className="text-xl font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
 
         {publicKey ? (
@@ -333,9 +333,9 @@ export default function Home() {
               </div>
             )}
 
-            <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-bold mb-8 text-black text-center">Voting Docket</h2>
-              <p className="text-2xl text-black font-bold text-center mb-4">Select a value between (1-10)</p>
+            <div className="w-full bg-black p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-bold mb-8 text-[#00ff00] text-center">Voting Docket</h2>
+              <p className="text-2xl text-[#00ff00] font-bold text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
                   {voteStrains.map(s => (
@@ -348,31 +348,31 @@ export default function Home() {
                           placeholder={s.label}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="p-8 rounded bg-[#00ff00] text-black font-bold text-2xl border-4 border-black w-full h-56"
+                          className="p-8 rounded bg-black text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56"
                         />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500/70 hover:bg-purple-600/70 text-black font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-8">
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-6 px-10 rounded w-full text-2xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-8">
                 {loading ? 'Claiming...' : 'Submit Votes & Claim $PUF'}
               </button>
             </div>
 
-            <div className="w-full bg-black/75 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-bold mb-8 text-black text-center">Upload Vape Data</h2>
+            <div className="w-full bg-black p-10 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-5xl font-bold mb-8 text-[#00ff00] text-center">Upload Vape Data</h2>
               <form onSubmit={handleUpload} className="flex flex-col gap-10 items-center">
                 <table className="w-full table-auto mx-auto text-center">
                   <tbody>
                     <tr>
                       <td className="pb-4">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-2xl border-4 border-black w-full h-56" required />
+                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-2xl border-4 border-black w-full h-56" required>
+                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-2xl border-4 border-black w-full h-56" required>
                           <option value="">Select Type</option>
                           <option value="Sativa">Sativa</option>
                           <option value="Indica">Indica</option>
@@ -382,24 +382,24 @@ export default function Home() {
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-xl border-4 border-black w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                     <tr>
                       <td className="pb-4">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-[#00ff00] text-black font-bold text-xl border-4 border-black w-full h-56" required />
+                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-8 rounded bg-black text-[#00ff00] font-bold text-xl border-4 border-black w-full h-56" required />
                       </td>
                     </tr>
                   </tbody>
                 </table>
-                <button type="submit" disabled={loading} className="bg-green-500/70 hover:bg-green-600/70 text-black font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500/70 to-green-600/70 mx-auto">
+                <button type="submit" disabled={loading} className="bg-green-500/70 hover:bg-green-600/70 text-[#00ff00] font-bold py-6 px-10 rounded text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-green-500/70 to-green-600/70 mx-auto">
                   {loading ? 'Uploading...' : 'Upload'}
                 </button>
               </form>
             </div>
           </>
         ) : (
-          <p className="text-center text-black font-bold text-2xl">Connect your wallet to upload data and vote!</p>
+          <p className="text-center font-bold text-2xl">Connect your wallet to upload data and vote!</p>
         )}
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
