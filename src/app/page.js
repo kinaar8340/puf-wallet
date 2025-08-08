@@ -298,7 +298,8 @@ export default function Home() {
             </div>
 
             <div className="w-full bg-white dark:bg-gray-900 p-10 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Vote on Exhibits</h2>
+              <h2 className="text-5xl font-semibold mb-8 text-black dark:text-[#22f703] text-center">Voting Docket</h2>
+              <p className="text-2xl text-black dark:text-[#22f703] text-center mb-4">Select a value between (1-10)</p>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
                   {voteStrains.map(s => (
@@ -308,7 +309,7 @@ export default function Home() {
                           type="number"
                           min="1"
                           max="10"
-                          placeholder={`Vote for ${s.label} (1-10)`}
+                          placeholder={s.label}
                           value={votes[s.value] || ''}
                           onChange={(e) => handleVoteChange(s.value, e.target.value)}
                           className="p-8 rounded bg-gray-200 dark:bg-gray-700 text-black dark:text-[#22f703] text-2xl border border-green-500 w-full h-56"
