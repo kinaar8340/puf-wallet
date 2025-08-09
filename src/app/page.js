@@ -47,11 +47,6 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState('0');
 
-  // State for new strain upload
-  const [newGrower, setNewGrower] = useState('');
-  const [newStrain, setNewStrain] = useState('');
-  const [newType, setNewType] = useState('');
-
   // State for votes
   const [votes, setVotes] = useState(
     voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: 0 }), {})
@@ -72,11 +67,13 @@ export default function Home() {
     const uploads = uploadsData || [];
     const aggUploads = uploads.reduce((acc, u) => {
       if (!acc[u.strain]) {
-        acc[u.strain] = { type: u.type, sum_thc: 0, sum_cbd: 0, count: 0 };
+        acc[u.strain] = { type: u.type, sum_thc: 0, sum_cbd: 0, sum_cbn: 0, sum_cbc: 0, count: 0 };
       }
       acc[u.strain].type = u.type; // Use the last type
       acc[u.strain].sum_thc += u.thc || 0;
       acc[u.strain].sum_cbd += u.cbd || 0;
+      acc[u.strain].sum_cbn += u.cbn || 0;
+      acc[u.strain].sum_cbc += u.cbc || 0;
       acc[u.strain].count += 1;
       return acc;
     }, {});
@@ -233,37 +230,10 @@ export default function Home() {
     return acc;
   }, {});
 
-  const handleUploadSubmit = async (e) => {
-    e.preventDefault();
-    if (!publicKey) return;
-    if (!newStrain.trim() || !newType) {
-      toast.error('Please enter a strain name and select a type.');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const { error } = await supabase.from('StrainDetails').upsert([
-        {
-          user_pubkey: publicKey.toBase58(),
-          strain: newStrain,
-          grower: newGrower || null,
-          type: newType,
-        }
-      ]);
-      if (error) throw error;
-
-      toast.success('New strain added successfully!');
-      setNewGrower('');
-      setNewStrain('');
-      setNewType('');
-      await fetchHistory();
-      router.push(`/strain/${encodeURIComponent(newStrain)}`);
-    } catch (error) {
-      console.error('Upload Error:', error);
-      toast.error('Failed to add new strain: ' + (error.message || 'Unknown error'));
-    } finally {
-      setLoading(false);
+  const handleAddStrain = () => {
+    const strainName = window.prompt('Enter the new strain name:');
+    if (strainName && strainName.trim()) {
+      router.push(`/strain/${encodeURIComponent(strainName.trim())}`);
     }
   };
 
@@ -307,8 +277,15 @@ export default function Home() {
             {/* History Dashboard */}
             {publicKey && (
               <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 mt-4 text-[#00ff00]">
-                <h2 className="text-4xl font-bold mb-4 text-center">Your History</h2>
-                {/* Removed <h3> "Uploads" */}
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-4xl font-bold text-[#00ff00]">Your History</h2>
+                  <button
+                    onClick={handleAddStrain}
+                    className="bg-green-500/70 hover:bg-green-600/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl"
+                  >
+                    Add Strain
+                  </button>
+                </div>
                 <table className="w-full table-auto mx-auto text-center">
                   <thead>
                     <tr>
@@ -348,56 +325,6 @@ export default function Home() {
                 {strains.length === 0 && <p className="text-center font-bold text-lg">No strains yet.</p>}
               </div>
             )}
-
-            {/* New Upload Form below Your History */}
-            <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload New Strain</h2>
-              <form onSubmit={handleUploadSubmit} className="flex flex-col gap-5 items-center">
-                <div className="flex flex-col w-full">
-                  <label htmlFor="newGrower" className="text-[#00ff00] font-bold text-xl mb-2">Grower:</label>
-                  <input
-                    id="newGrower"
-                    type="text"
-                    value={newGrower}
-                    onChange={(e) => setNewGrower(e.target.value)}
-                    className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-                  />
-                </div>
-                <div className="flex flex-col w-full">
-                  <label htmlFor="newStrain" className="text-[#00ff00] font-bold text-xl mb-2">Strain Name:</label>
-                  <input
-                    id="newStrain"
-                    type="text"
-                    value={newStrain}
-                    onChange={(e) => setNewStrain(e.target.value)}
-                    className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-                    required
-                  />
-                </div>
-                <div className="flex flex-col w-full">
-                  <label htmlFor="newType" className="text-[#00ff00] font-bold text-xl mb-2">Type:</label>
-                  <select
-                    id="newType"
-                    value={newType}
-                    onChange={(e) => setNewType(e.target.value)}
-                    className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-                    required
-                  >
-                    <option value="">Select Type</option>
-                    <option value="Sativa">Sativa</option>
-                    <option value="Indica">Indica</option>
-                    <option value="Hybrid">Hybrid</option>
-                  </select>
-                </div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-4"
-                >
-                  {loading ? 'Uploading...' : 'Submit Upload'}
-                </button>
-              </form>
-            </div>
 
             <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Voting Docket</h2>
