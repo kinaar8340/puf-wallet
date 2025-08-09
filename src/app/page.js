@@ -342,7 +342,7 @@ export default function Home() {
 
             <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Voting Docket</h2>
-              <p className="text-xl text-[#00ff00] font-bold text-center mb-2">Slide between (0-10) - 0 means no vote</p>
+              <p className="text-xl text-[#00ff00] font-bold text-center mb-2">Slide between (0-10)</p>
               <table className="w-full table-auto mx-auto text-center">
                 <tbody>
                   {voteStrains.map(s => {
@@ -428,4 +428,4 @@ export default function Home() {
       <ToastContainer theme="dark" />
     </div>
   ); 
-}
+} 
