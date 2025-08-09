@@ -1,8 +1,3 @@
-// app/page.jsx
-// Reverted to original web/Next.js version for Vercel build
-// Removed RN imports/components, restored HTML/JSX, react-toastify, dynamic WalletMultiButton, etc.
-// Keep 'use client' for hooks
-
 'use client'; // Client component for hooks and state
 
 import { supabase } from '../lib/supabase';
@@ -14,6 +9,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
@@ -47,14 +43,12 @@ export default function Home() {
   }, []);
 
   const { publicKey } = useWallet(); // No signTransaction needed with API approach
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [balance, setBalance] = useState('0');
 
-  // Form states for upload
-  const [strain, setStrain] = useState('');
-  const [type, setType] = useState('');
-  const [thc, setThc] = useState('');
-  const [cbd, setCbd] = useState('');
+  // State for new strain upload
+  const [newStrain, setNewStrain] = useState('');
 
   // State for votes
   const [votes, setVotes] = useState(
@@ -62,16 +56,39 @@ export default function Home() {
   );
 
   // State for history
-  const [userUploads, setUserUploads] = useState([]);
+  const [strains, setStrains] = useState([]);
+  const [aggregatedUploads, setAggregatedUploads] = useState({});
   const [userVotes, setUserVotes] = useState([]);
   const [totalVotes, setTotalVotes] = useState({});
 
   useEffect(() => {
     if (publicKey) {
+      // Fetch uploads
       supabase.from('Uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
         if (error) console.error('Uploads fetch error:', error);
-        setUserUploads(data || []);
+        const uploads = data || [];
+        const uniqueFromUploads = [...new Set(uploads.map((item) => item.strain))];
+        const agg = uploads.reduce((acc, u) => {
+          if (!acc[u.strain]) {
+            acc[u.strain] = { type: u.type, sum_thc: 0, sum_cbd: 0, count: 0 };
+          }
+          acc[u.strain].type = u.type; // Use the last type
+          acc[u.strain].sum_thc += u.thc || 0;
+          acc[u.strain].sum_cbd += u.cbd || 0;
+          acc[u.strain].count += 1;
+          return acc;
+        }, {});
+        setAggregatedUploads(agg);
+
+        // Fetch strain details
+        supabase.from('StrainDetails').select('strain').eq('user_pubkey', publicKey.toBase58()).then(({ data, error }) => {
+          if (error) console.error('StrainDetails fetch error:', error);
+          const uniqueFromDetails = [...new Set((data || []).map((item) => item.strain))];
+          const allUnique = [...new Set([...uniqueFromUploads, ...uniqueFromDetails])];
+          setStrains(allUnique);
+        });
       });
+
       // Fetch user votes for current flight
       supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
         if (error) console.error('Votes fetch error:', error);
@@ -134,37 +151,6 @@ export default function Home() {
       setLoading(false);
     }
   }, []);
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!publicKey) return;
-
-    setLoading(true);
-    try {
-      const { data, error } = await supabase.from('Uploads').insert([
-        {
-          user_pubkey: publicKey.toBase58(),
-          strain,
-          type,
-          thc: parseFloat(thc),
-          cbd: parseFloat(cbd),
-        }
-      ]);
-      if (error) throw error;
-
-      console.log('Uploaded Data:', { strain, type, thc, cbd });
-      toast.success('Data uploaded successfully!');
-      setStrain(''); setType(''); setThc(''); setCbd('');
-
-      // Refresh user uploads to show in history
-      supabase.from('Uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
-    } catch (error) {
-      console.error('Upload Error:', error);
-      toast.error('Failed to upload data: ' + (error.message || 'Unknown error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getBackgroundColor = (value) => {
     if (value === 0) return 'transparent';
@@ -237,22 +223,14 @@ export default function Home() {
     return acc;
   }, {});
 
-  // Aggregate uploads by strain (no flight filter for uploads)
-  const aggregatedUploads = userUploads.reduce((acc, u) => {
-    if (!acc[u.strain]) {
-      acc[u.strain] = { 
-        type: u.type,
-        sum_thc: 0,
-        sum_cbd: 0,
-        count: 0 
-      };
+  const handleUploadSubmit = (e) => {
+    e.preventDefault();
+    if (!newStrain.trim()) {
+      toast.error('Please enter a strain name.');
+      return;
     }
-    acc[u.strain].type = u.type; // last type
-    acc[u.strain].sum_thc += u.thc;
-    acc[u.strain].sum_cbd += u.cbd;
-    acc[u.strain].count += 1;
-    return acc;
-  }, {});
+    router.push(`/strain/${encodeURIComponent(newStrain)}`);
+  };
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 pb-10 gap-8 sm:p-10 text-xl text-[#00ff00] bg-transparent relative">
@@ -307,26 +285,56 @@ export default function Home() {
                     </tr>
                   </thead>
                   <tbody>
-                    {Object.entries(aggregatedUploads).map(([strain, info], i) => (
-                      <tr key={i}>
-                        <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
-                        <td className="pr-2 pb-2 font-bold text-center">{info.type}</td>
-                        <td className="pr-2 pb-2 font-bold text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
-                        <td className="pb-2 font-bold text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
-                        <td className="pb-2 text-center">
-                          <Link href={`/strain/${strain}`}>
-                            <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
-                              Link
-                            </button>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
+                    {strains.map((strain) => {
+                      const info = aggregatedUploads[strain] || { type: 'N/A', sum_thc: 0, sum_cbd: 0, count: 0 };
+                      const hasData = !!aggregatedUploads[strain];
+                      const typeDisplay = hasData ? info.type : 'N/A';
+                      const thcDisplay = hasData && info.count > 0 ? (info.sum_thc / info.count).toFixed(1) + '%' : 'N/A';
+                      const cbdDisplay = hasData && info.count > 0 ? (info.sum_cbd / info.count).toFixed(1) + '%' : 'N/A';
+                      return (
+                        <tr key={strain}>
+                          <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
+                          <td className="pr-2 pb-2 font-bold text-center">{typeDisplay}</td>
+                          <td className="pr-2 pb-2 font-bold text-center">{thcDisplay}</td>
+                          <td className="pb-2 font-bold text-center">{cbdDisplay}</td>
+                          <td className="pb-2 text-center">
+                            <Link href={`/strain/${encodeURIComponent(strain)}`}>
+                              <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
+                                Link
+                              </button>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
-                {Object.keys(aggregatedUploads).length === 0 && <p className="text-center font-bold text-lg">No uploads yet.</p>}
+                {strains.length === 0 && <p className="text-center font-bold text-lg">No strains yet.</p>}
               </div>
             )}
+
+            {/* New Upload Form below Your History */}
+            <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
+              <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload New Strain</h2>
+              <form onSubmit={handleUploadSubmit} className="flex flex-col gap-5 items-center">
+                <div className="flex flex-col w-full">
+                  <label htmlFor="newStrain" className="text-[#00ff00] font-bold text-xl mb-2">New Strain Name:</label>
+                  <input
+                    id="newStrain"
+                    type="text"
+                    value={newStrain}
+                    onChange={(e) => setNewStrain(e.target.value)}
+                    className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-4"
+                >
+                  Submit Upload
+                </button>
+              </form>
+            </div>
 
             <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
               <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Voting Docket</h2>
@@ -367,44 +375,6 @@ export default function Home() {
                 {loading ? 'Claiming...' : 'Submit Votes'}
               </button>
             </div>
-
-            <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
-              <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload Vape Data</h2>
-              <form onSubmit={handleUpload} className="flex flex-col gap-5 items-center">
-                <table className="w-full table-auto mx-auto text-center">
-                  <tbody>
-                    <tr>
-                      <td className="pb-2">
-                        <input type="text" placeholder="Strain Name" value={strain} onChange={(e) => setStrain(e.target.value)} className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20" required />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="pb-2">
-                        <select value={type} onChange={(e) => setType(e.target.value)} className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20" required>
-                          <option value="">Select Type</option>
-                          <option value="Sativa">Sativa</option>
-                          <option value="Indica">Indica</option>
-                          <option value="Hybrid">Hybrid</option>
-                        </select>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="pb-2">
-                        <input type="number" step="0.1" placeholder="THC (%)" value={thc} onChange={(e) => setThc(e.target.value)} className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20" required />
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="pb-2">
-                        <input type="number" step="0.1" placeholder="CBD (%)" value={cbd} onChange={(e) => setCbd(e.target.value)} className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20" required />
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button type="submit" disabled={loading} className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto">
-                  {loading ? 'Uploading...' : 'Submit Upload'}
-                </button>
-              </form>
-            </div>
           </>
         ) : (
           <p className="text-center font-bold text-xl">Connect your wallet to upload data and vote!</p>
@@ -416,4 +386,4 @@ export default function Home() {
       <ToastContainer theme="dark" />
     </div>
   ); 
-} 
+}
