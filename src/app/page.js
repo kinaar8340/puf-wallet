@@ -242,7 +242,7 @@ export default function Home() {
       <main className="flex flex-col gap-[24px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
           <div className="w-full flex justify-between items-center mb-8">
-            <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-48 h-48 object-contain" />
+            <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-96 h-96 object-contain" />
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
@@ -290,36 +290,22 @@ export default function Home() {
                   <thead>
                     <tr>
                       <th className="text-center pb-2 font-bold underline">Strain Name</th>
-                      <th className="text-center pb-2 font-bold underline">Type</th>
-                      <th className="text-center pb-2 font-bold underline">THC</th>
-                      <th className="text-center pb-2 font-bold underline">CBD</th>
                       <th className="text-center pb-2 font-bold underline">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {strains.map((strain) => {
-                      const infoUploads = aggregatedUploads[strain] || { type: null, sum_thc: 0, sum_cbd: 0, count: 0 };
-                      const infoDetails = aggregatedDetails[strain] || { type: null };
-                      const typeDisplay = infoDetails.type || infoUploads.type || 'N/A';
-                      const hasUploadData = !!aggregatedUploads[strain] && infoUploads.count > 0;
-                      const thcDisplay = hasUploadData ? (infoUploads.sum_thc / infoUploads.count).toFixed(1) + '%' : 'N/A';
-                      const cbdDisplay = hasUploadData ? (infoUploads.sum_cbd / infoUploads.count).toFixed(1) + '%' : 'N/A';
-                      return (
-                        <tr key={strain}>
-                          <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
-                          <td className="pr-2 pb-2 font-bold text-center">{typeDisplay}</td>
-                          <td className="pr-2 pb-2 font-bold text-center">{thcDisplay}</td>
-                          <td className="pb-2 font-bold text-center">{cbdDisplay}</td>
-                          <td className="pb-2 text-center">
-                            <Link href={`/strain/${encodeURIComponent(strain)}`}>
-                              <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
-                                Link
-                              </button>
-                            </Link>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                    {strains.map((strain) => (
+                      <tr key={strain}>
+                        <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
+                        <td className="pb-2 text-center">
+                          <Link href={`/strain/${encodeURIComponent(strain)}`}>
+                            <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
+                              Link
+                            </button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
                 {strains.length === 0 && <p className="text-center font-bold text-lg">No strains yet.</p>}
