@@ -2,7 +2,7 @@
 
 import { supabase } from '../../../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,24 +12,28 @@ export default function StrainData() {
   const params = useParams();
   const strainName = decodeURIComponent(params.strain);
   const { publicKey } = useWallet();
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const [grower, setGrower] = useState('');
   const [type, setType] = useState('');
   const [thc, setThc] = useState('');
   const [cbd, setCbd] = useState('');
+  const [cbn, setCbn] = useState('');
+  const [cbc, setCbc] = useState('');
   const [totalCann, setTotalCann] = useState('');
-  const [notes, setNotes] = useState('');
+  const [terpenesTotal, setTerpenesTotal] = useState('');
   const [terpenes, setTerpenes] = useState({
-    alpha_pinene: '',
-    beta_pinene: '',
     myrcene: '',
     limonene: '',
+    pinene: '',
     linalool: '',
-    terpinolene: '',
     caryophyllene: '',
     humulene: '',
-    beta_caryophyllene: '',
+    terpinolene: '',
+    ocimene: '',
+    geraniol: '',
+    borneol: '',
   });
 
   useEffect(() => {
@@ -45,17 +49,21 @@ export default function StrainData() {
           if (data && data.length > 0) {
             const agg = data.reduce(
               (acc, u) => {
-                acc.sum_thc += u.thc;
-                acc.sum_cbd += u.cbd;
+                acc.sum_thc += u.thc || 0;
+                acc.sum_cbd += u.cbd || 0;
+                acc.sum_cbn += u.cbn || 0;
+                acc.sum_cbc += u.cbc || 0;
                 acc.count += 1;
                 acc.type = u.type; // Use the last type
                 return acc;
               },
-              { sum_thc: 0, sum_cbd: 0, count: 0, type: '' }
+              { sum_thc: 0, sum_cbd: 0, sum_cbn: 0, sum_cbc: 0, count: 0, type: '' }
             );
             setType(agg.type);
-            setThc((agg.sum_thc / agg.count).toFixed(1));
-            setCbd((agg.sum_cbd / agg.count).toFixed(1));
+            setThc((agg.sum_thc / agg.count).toFixed(2));
+            setCbd((agg.sum_cbd / agg.count).toFixed(2));
+            setCbn((agg.sum_cbn / agg.count).toFixed(2));
+            setCbc((agg.sum_cbc / agg.count).toFixed(2));
           }
         });
 
@@ -71,22 +79,29 @@ export default function StrainData() {
           if (data) {
             setGrower(data.grower || '');
             setTotalCann(data.total_cann || '');
-            setNotes(data.notes || '');
+            setCbn(data.cbn || '');
+            setCbc(data.cbc || '');
             setTerpenes({
-              alpha_pinene: data.alpha_pinene || '',
-              beta_pinene: data.beta_pinene || '',
               myrcene: data.myrcene || '',
               limonene: data.limonene || '',
+              pinene: data.pinene || '',
               linalool: data.linalool || '',
-              terpinolene: data.terpinolene || '',
               caryophyllene: data.caryophyllene || '',
               humulene: data.humulene || '',
-              beta_caryophyllene: data.beta_caryophyllene || '',
+              terpinolene: data.terpinolene || '',
+              ocimene: data.ocimene || '',
+              geraniol: data.geraniol || '',
+              borneol: data.borneol || '',
             });
           }
         });
     }
   }, [publicKey, strainName]);
+
+  useEffect(() => {
+    const sum = Object.values(terpenes).reduce((acc, value) => acc + parseFloat(value || 0), 0);
+    setTerpenesTotal(sum.toFixed(2));
+  }, [terpenes]);
 
   const handleTerpeneChange = (key, value) => {
     setTerpenes((prev) => ({ ...prev, [key]: value }));
@@ -103,16 +118,18 @@ export default function StrainData() {
         strain: strainName,
         grower,
         total_cann: parseFloat(totalCann) || null,
-        notes,
-        alpha_pinene: parseFloat(terpenes.alpha_pinene) || null,
-        beta_pinene: parseFloat(terpenes.beta_pinene) || null,
+        cbn: parseFloat(cbn) || null,
+        cbc: parseFloat(cbc) || null,
         myrcene: parseFloat(terpenes.myrcene) || null,
         limonene: parseFloat(terpenes.limonene) || null,
+        pinene: parseFloat(terpenes.pinene) || null,
         linalool: parseFloat(terpenes.linalool) || null,
-        terpinolene: parseFloat(terpenes.terpinolene) || null,
         caryophyllene: parseFloat(terpenes.caryophyllene) || null,
         humulene: parseFloat(terpenes.humulene) || null,
-        beta_caryophyllene: parseFloat(terpenes.beta_caryophyllene) || null,
+        terpinolene: parseFloat(terpenes.terpinolene) || null,
+        ocimene: parseFloat(terpenes.ocimene) || null,
+        geraniol: parseFloat(terpenes.geraniol) || null,
+        borneol: parseFloat(terpenes.borneol) || null,
       };
       const { error } = await supabase.from('StrainDetails').upsert([detail]);
       if (error) throw error;
@@ -125,114 +142,175 @@ export default function StrainData() {
     }
   };
 
+  const handleDelete = async () => {
+    if (!publicKey) return;
+    if (!confirm('Are you sure you want to delete this strain data?')) return;
+
+    setLoading(true);
+    try {
+      const { error } = await supabase
+        .from('StrainDetails')
+        .delete()
+        .eq('user_pubkey', publicKey.toBase58())
+        .eq('strain', strainName);
+      if (error) throw error;
+      toast.success('Data deleted successfully!');
+      router.push('/');
+    } catch (error) {
+      console.error('Delete Error:', error);
+      toast.error('Failed to delete data: ' + (error.message || 'Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const terpeneOrder = [
+    'myrcene',
+    'humulene',
+    'limonene',
+    'terpinolene',
+    'pinene',
+    'ocimene',
+    'linalool',
+    'geraniol',
+    'caryophyllene',
+    'borneol',
+  ];
+
+  const formatTerpeneName = (key) => key.charAt(0).toUpperCase() + key.slice(1);
+
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 pb-10 gap-8 sm:p-10 text-xl text-[#00ff00] bg-transparent relative">
-      <main className="flex flex-col gap-[24px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
+      <main className="flex flex-col gap-4 row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
+          <div className="flex justify-between mb-4">
+            <Link href="/">
+              <button className="bg-blue-500/70 hover:bg-blue-600/70 text-[#00ff00] font-bold py-2 px-4 rounded">
+                BACK
+              </button>
+            </Link>
+            <button
+              onClick={handleDelete}
+              disabled={loading}
+              className="bg-orange-500/70 hover:bg-orange-600/70 text-[#00ff00] font-bold py-2 px-4 rounded"
+            >
+              DELETE
+            </button>
+          </div>
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Strain Data</h2>
-          <form onSubmit={handleSubmit} className="flex flex-col gap-5 items-center">
-            <div className="flex flex-col w-full">
-              <label htmlFor="grower" className="text-[#00ff00] font-bold text-xl mb-2">Grower:</label>
-              <input
-                id="grower"
-                type="text"
-                value={grower}
-                onChange={(e) => setGrower(e.target.value)}
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-              />
-            </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="strainName" className="text-[#00ff00] font-bold text-xl mb-2">Strain Name:</label>
-              <input
-                id="strainName"
-                type="text"
-                value={strainName}
-                disabled
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20 opacity-50"
-              />
-            </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="type" className="text-[#00ff00] font-bold text-xl mb-2">Type:</label>
-              <select
-                id="type"
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-              >
-                <option value="">Select Type</option>
-                <option value="Sativa">Sativa</option>
-                <option value="Indica">Indica</option>
-                <option value="Hybrid">Hybrid</option>
-              </select>
-            </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="thc" className="text-[#00ff00] font-bold text-xl mb-2">THC:</label>
-              <div className="relative">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col w-full gap-1 mb-4">
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Grower :</span>
                 <input
-                  id="thc"
-                  type="number"
-                  step="0.00000001" // float8 precision
-                  value={thc}
-                  onChange={(e) => setThc(e.target.value)}
-                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
+                  type="text"
+                  value={grower}
+                  onChange={(e) => setGrower(e.target.value)}
+                  className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none"
                 />
-                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Strain :</span>
+                <span className="text-[#00ff00] font-bold text-xl text-right">{strainName}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Type :</span>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none"
+                >
+                  <option value="">Select Type</option>
+                  <option value="Sativa">Sativa</option>
+                  <option value="Indica">Indica</option>
+                  <option value="Hybrid">Hybrid</option>
+                </select>
               </div>
             </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="cbd" className="text-[#00ff00] font-bold text-xl mb-2">CBD:</label>
-              <div className="relative">
-                <input
-                  id="cbd"
-                  type="number"
-                  step="0.00000001"
-                  value={cbd}
-                  onChange={(e) => setCbd(e.target.value)}
-                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
-                />
-                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-1 w-full mb-4">
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">THC :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={thc}
+                    onChange={(e) => setThc(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">CBN :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={cbn}
+                    onChange={(e) => setCbn(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">CBD :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={cbd}
+                    onChange={(e) => setCbd(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">CBC :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={cbc}
+                    onChange={(e) => setCbc(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Terpenes :</span>
+                <span className="text-[#00ff00] font-bold text-xl text-right">{terpenesTotal}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Cannabinoids :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={totalCann}
+                    onChange={(e) => setTotalCann(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
               </div>
             </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="totalCann" className="text-[#00ff00] font-bold text-xl mb-2">Total Cannabinoids:</label>
-              <div className="relative">
-                <input
-                  id="totalCann"
-                  type="number"
-                  step="0.00000001"
-                  value={totalCann}
-                  onChange={(e) => setTotalCann(e.target.value)}
-                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
-                />
-                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
-              </div>
-            </div>
-            <div className="flex flex-col w-full">
-              <label htmlFor="notes" className="text-[#00ff00] font-bold text-xl mb-2">Notes:</label>
-              <textarea
-                id="notes"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-32"
-              />
-            </div>
-            <h3 className="text-3xl font-bold mb-2 text-[#00ff00] text-center">Terpene Data</h3>
-            <div className="grid grid-cols-2 gap-4 w-full">
-              {Object.keys(terpenes).map((key) => (
-                <div key={key} className="flex flex-col w-full">
-                  <label htmlFor={key} className="text-[#00ff00] font-bold text-lg mb-2">
-                    {key.replace(/_/g, '-').replace('alpha', 'α').replace('beta', 'β')}: {terpenes[key] ? `${terpenes[key]} %` : ''}
-                  </label>
-                  <div className="relative">
+            <div className="grid grid-cols-2 gap-x-8 gap-y-1 w-full">
+              {terpeneOrder.map((key) => (
+                <div key={key} className="flex justify-between items-center">
+                  <span className="text-[#00ff00] font-bold text-xl">{formatTerpeneName(key)} :</span>
+                  <div className="flex items-center">
                     <input
-                      id={key}
                       type="number"
                       step="0.00000001"
                       value={terpenes[key]}
                       onChange={(e) => handleTerpeneChange(key, e.target.value)}
-                      className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
+                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
                     />
-                    <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
                   </div>
                 </div>
               ))}
@@ -242,14 +320,9 @@ export default function StrainData() {
               disabled={loading}
               className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-4"
             >
-              {loading ? 'Saving...' : 'Save'}
+              {loading ? 'Saving...' : 'SAVE'}
             </button>
           </form>
-          <Link href="/">
-            <button className="bg-blue-500/70 hover:bg-blue-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl mx-auto mt-4">
-              Back
-            </button>
-          </Link>
         </div>
       </main>
       <ToastContainer theme="dark" />
