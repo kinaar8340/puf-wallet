@@ -19,4 +19,69 @@
   }
 }
 
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 30px; /* Tall track to match your large UI */
+  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  outline: none;
+  border-radius: 15px;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
 
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 60px; /* Large thumb for easy sliding */
+  height: 60px;
+  background: #00ff00;
+  border: 4px solid black; /* Matches your border style */
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.slider::-moz-range-thumb {
+  width: 60px;
+  height: 60px;
+  background: #00ff00;
+  border: 4px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.slider::-ms-thumb {
+  width: 60px;
+  height: 60px;
+  background: #00ff00;
+  border: 4px solid black;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 30px;
+  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  border-radius: 15px;
+}
+
+.slider::-moz-range-track {
+  height: 30px;
+  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  border-radius: 15px;
+}
+
+.slider::-ms-track {
+  height: 30px;
+  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  border-radius: 15px;
+  color: transparent; /* Hide default track fill */
+}
