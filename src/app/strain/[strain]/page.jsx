@@ -131,71 +131,98 @@ export default function StrainData() {
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Strain Data</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 items-center">
-            <input
-              type="text"
-              placeholder="Grower"
-              value={grower}
-              onChange={(e) => setGrower(e.target.value)}
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-            />
-            <input
-              type="text"
-              value={strainName}
-              disabled
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20 opacity-50"
-            />
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
-            >
-              <option value="">Select Type</option>
-              <option value="Sativa">Sativa</option>
-              <option value="Indica">Indica</option>
-              <option value="Hybrid">Hybrid</option>
-            </select>
-            <input
-              type="number"
-              step="0.1"
-              placeholder="THC (%)"
-              value={thc}
-              onChange={(e) => setThc(e.target.value)}
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-            />
-            <input
-              type="number"
-              step="0.1"
-              placeholder="CBD (%)"
-              value={cbd}
-              onChange={(e) => setCbd(e.target.value)}
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-            />
-            <input
-              type="number"
-              step="0.1"
-              placeholder="Total Cannabinoids (%)"
-              value={totalCann}
-              onChange={(e) => setTotalCann(e.target.value)}
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-            />
-            <textarea
-              placeholder="Notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-32"
-            />
+            <div className="flex flex-col w-full">
+              <label htmlFor="grower" className="text-[#00ff00] font-bold text-xl mb-2">Grower</label>
+              <input
+                id="grower"
+                type="text"
+                value={grower}
+                onChange={(e) => setGrower(e.target.value)}
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
+              />
+            </div>
+            <div className="flex flex-col w-full">
+              <label htmlFor="strainName" className="text-[#00ff00] font-bold text-xl mb-2">Strain Name</label>
+              <input
+                id="strainName"
+                type="text"
+                value={strainName}
+                disabled
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20 opacity-50"
+              />
+            </div>
+            <div className="flex flex-col w-full">
+              <label htmlFor="type" className="text-[#00ff00] font-bold text-xl mb-2">Type</label>
+              <select
+                id="type"
+                value={type}
+                onChange={(e) => setType(e.target.value)}
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-xl border-4 border-black w-full h-20"
+              >
+                <option value="">Select Type</option>
+                <option value="Sativa">Sativa</option>
+                <option value="Indica">Indica</option>
+                <option value="Hybrid">Hybrid</option>
+              </select>
+            </div>
+            <div className="flex flex-col w-full">
+              <label htmlFor="thc" className="text-[#00ff00] font-bold text-xl mb-2">THC (%)</label>
+              <input
+                id="thc"
+                type="number"
+                step="0.1"
+                value={thc}
+                onChange={(e) => setThc(e.target.value)}
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
+              />
+            </div>
+            <div className="flex flex-col w-full">
+              <label htmlFor="cbd" className="text-[#00ff00] font-bold text-xl mb-2">CBD (%)</label>
+              <input
+                id="cbd"
+                type="number"
+                step="0.1"
+                value={cbd}
+                onChange={(e) => setCbd(e.target.value)}
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
+              />
+            </div>
+            <div className="flex flex-col w-full">
+              <label htmlFor="totalCann" className="text-[#00ff00] font-bold text-xl mb-2">Total Cannabinoids (%)</label>
+              <input
+                id="totalCann"
+                type="number"
+                step="0.1"
+                value={totalCann}
+                onChange={(e) => setTotalCann(e.target.value)}
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
+              />
+            </div>
+            <div className="flex flex-col w-full">
+              <label htmlFor="notes" className="text-[#00ff00] font-bold text-xl mb-2">Notes</label>
+              <textarea
+                id="notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-32"
+              />
+            </div>
             <h3 className="text-3xl font-bold mb-2 text-[#00ff00] text-center">Terpene Data</h3>
             <div className="grid grid-cols-2 gap-4 w-full">
               {Object.keys(terpenes).map((key) => (
-                <input
-                  key={key}
-                  type="number"
-                  step="0.01"
-                  placeholder={`${key.replace(/_/g, '-').replace('alpha', 'α').replace('beta', 'β')} (%)`}
-                  value={terpenes[key]}
-                  onChange={(e) => handleTerpeneChange(key, e.target.value)}
-                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-                />
+                <div key={key} className="flex flex-col w-full">
+                  <label htmlFor={key} className="text-[#00ff00] font-bold text-lg mb-2">
+                    {key.replace(/_/g, '-').replace('alpha', 'α').replace('beta', 'β')} (%)
+                  </label>
+                  <input
+                    id={key}
+                    type="number"
+                    step="0.01"
+                    value={terpenes[key]}
+                    onChange={(e) => handleTerpeneChange(key, e.target.value)}
+                    className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
+                  />
+                </div>
               ))}
             </div>
             <button
