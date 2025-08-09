@@ -256,12 +256,15 @@ export default function Home() {
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 pb-10 gap-8 sm:p-10 text-xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-[24px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
-        <img src="/images/logo1.png" alt="PUF Wallet Logo" className="w-48 h-48 object-contain mx-auto" />
-        {publicKey && <p className="text-2xl font-bold bg-black/75 p-4 rounded border-4 border-black w-full text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>}
-
-        <div className="flex flex-col items-center justify-center gap-4 w-full">
-          <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded w-full text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
-          {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+        <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
+          <div className="w-full flex justify-between items-center mb-8">
+            <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-48 h-48 object-contain" />
+            <div className="flex flex-col items-end gap-4">
+              <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
+              {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
         </div>
 
         {publicKey ? (
