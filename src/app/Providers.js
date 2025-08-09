@@ -3,14 +3,13 @@
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'; // Add other adapters if needed
 
 // Import styles for wallet UI
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 export default function Providers({ children }) {
   const network = WalletAdapterNetwork.Devnet; // Or MainnetBeta for production
-  const wallets = [new PhantomWalletAdapter()]; // Add more wallets as needed
+  const wallets = []; // Phantom will be detected automatically
 
   return (
     <ConnectionProvider endpoint="https://api.devnet.solana.com"> {/* Switch to mainnet endpoint later */}
