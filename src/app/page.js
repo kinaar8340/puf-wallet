@@ -13,6 +13,7 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import Link from 'next/link';
 
 const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
@@ -313,24 +314,11 @@ export default function Home() {
                         <td className="pr-2 pb-2 font-bold text-center">{(info.sum_thc / info.count).toFixed(1)}%</td>
                         <td className="pb-2 font-bold text-center">{(info.sum_cbd / info.count).toFixed(1)}%</td>
                         <td className="pb-2 text-center">
-                          <button
-                            onClick={async () => {
-                              if (confirm(`Delete all uploads for ${strain}? This can't be undone.`)) {
-                                try {
-                                  const { error } = await supabase.from('Uploads').delete().eq('user_pubkey', publicKey.toBase58()).eq('strain', strain);
-                                  if (error) throw error;
-                                  toast.success('Upload deleted!');
-                                  // Refresh uploads
-                                  supabase.from('Uploads').select('*').eq('user_pubkey', publicKey.toBase58()).then(({ data }) => setUserUploads(data || []));
-                                } catch (err) {
-                                  toast.error('Failed to delete: ' + err.message);
-                                }
-                              }
-                            }}
-                            className="bg-red-500/70 hover:bg-red-600/70 font-bold py-1 px-2 rounded text-sm"
-                          >
-                            Delete
-                          </button>
+                          <Link href={`/strain/${strain}`}>
+                            <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
+                              Link
+                            </button>
+                          </Link>
                         </td>
                       </tr>
                     ))}
