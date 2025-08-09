@@ -132,7 +132,7 @@ export default function StrainData() {
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Strain Data</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5 items-center">
             <div className="flex flex-col w-full">
-              <label htmlFor="grower" className="text-[#00ff00] font-bold text-xl mb-2">Grower</label>
+              <label htmlFor="grower" className="text-[#00ff00] font-bold text-xl mb-2">Grower:</label>
               <input
                 id="grower"
                 type="text"
@@ -142,7 +142,7 @@ export default function StrainData() {
               />
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="strainName" className="text-[#00ff00] font-bold text-xl mb-2">Strain Name</label>
+              <label htmlFor="strainName" className="text-[#00ff00] font-bold text-xl mb-2">Strain Name:</label>
               <input
                 id="strainName"
                 type="text"
@@ -152,7 +152,7 @@ export default function StrainData() {
               />
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="type" className="text-[#00ff00] font-bold text-xl mb-2">Type</label>
+              <label htmlFor="type" className="text-[#00ff00] font-bold text-xl mb-2">Type:</label>
               <select
                 id="type"
                 value={type}
@@ -166,40 +166,49 @@ export default function StrainData() {
               </select>
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="thc" className="text-[#00ff00] font-bold text-xl mb-2">THC (%)</label>
-              <input
-                id="thc"
-                type="number"
-                step="0.1"
-                value={thc}
-                onChange={(e) => setThc(e.target.value)}
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-              />
+              <label htmlFor="thc" className="text-[#00ff00] font-bold text-xl mb-2">THC:</label>
+              <div className="relative">
+                <input
+                  id="thc"
+                  type="number"
+                  step="0.00000001" // float8 precision
+                  value={thc}
+                  onChange={(e) => setThc(e.target.value)}
+                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
+                />
+                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+              </div>
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="cbd" className="text-[#00ff00] font-bold text-xl mb-2">CBD (%)</label>
-              <input
-                id="cbd"
-                type="number"
-                step="0.1"
-                value={cbd}
-                onChange={(e) => setCbd(e.target.value)}
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-              />
+              <label htmlFor="cbd" className="text-[#00ff00] font-bold text-xl mb-2">CBD:</label>
+              <div className="relative">
+                <input
+                  id="cbd"
+                  type="number"
+                  step="0.00000001"
+                  value={cbd}
+                  onChange={(e) => setCbd(e.target.value)}
+                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
+                />
+                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+              </div>
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="totalCann" className="text-[#00ff00] font-bold text-xl mb-2">Total Cannabinoids (%)</label>
-              <input
-                id="totalCann"
-                type="number"
-                step="0.1"
-                value={totalCann}
-                onChange={(e) => setTotalCann(e.target.value)}
-                className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-              />
+              <label htmlFor="totalCann" className="text-[#00ff00] font-bold text-xl mb-2">Total Cannabinoids:</label>
+              <div className="relative">
+                <input
+                  id="totalCann"
+                  type="number"
+                  step="0.00000001"
+                  value={totalCann}
+                  onChange={(e) => setTotalCann(e.target.value)}
+                  className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
+                />
+                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+              </div>
             </div>
             <div className="flex flex-col w-full">
-              <label htmlFor="notes" className="text-[#00ff00] font-bold text-xl mb-2">Notes</label>
+              <label htmlFor="notes" className="text-[#00ff00] font-bold text-xl mb-2">Notes:</label>
               <textarea
                 id="notes"
                 value={notes}
@@ -212,16 +221,19 @@ export default function StrainData() {
               {Object.keys(terpenes).map((key) => (
                 <div key={key} className="flex flex-col w-full">
                   <label htmlFor={key} className="text-[#00ff00] font-bold text-lg mb-2">
-                    {key.replace(/_/g, '-').replace('alpha', 'α').replace('beta', 'β')} (%)
+                    {key.replace(/_/g, '-').replace('alpha', 'α').replace('beta', 'β')}: {terpenes[key] ? `${terpenes[key]} %` : ''}
                   </label>
-                  <input
-                    id={key}
-                    type="number"
-                    step="0.01"
-                    value={terpenes[key]}
-                    onChange={(e) => handleTerpeneChange(key, e.target.value)}
-                    className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20"
-                  />
+                  <div className="relative">
+                    <input
+                      id={key}
+                      type="number"
+                      step="0.00000001"
+                      value={terpenes[key]}
+                      onChange={(e) => handleTerpeneChange(key, e.target.value)}
+                      className="p-4 rounded bg-transparent text-[#00ff00] font-bold text-lg border-4 border-black w-full h-20 pr-8 no-spinner"
+                    />
+                    <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-[#00ff00] font-bold text-lg">%</span>
+                  </div>
                 </div>
               ))}
             </div>
