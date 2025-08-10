@@ -1,4 +1,4 @@
-// /puf-wallet-frontend/src/app/strain/[strain]/page.jsx 
+// /puf-wallet-frontend/src/app/strain/[strain]/page.jsx
 
 'use client';
 
@@ -222,16 +222,16 @@ export default function StrainData() {
         </div>
 
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
-          <div className="flex justify-between mb-4">
+          <div className="w-full flex justify-center gap-4 mb-4">
             <Link href="/history">
-              <button className="bg-blue-500/70 hover:bg-blue-600/70 text-[#00ff00] font-bold py-2 px-4 rounded">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
                 Back
               </button>
             </Link>
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="bg-orange-500/70 hover:bg-orange-600/70 text-[#00ff00] font-bold py-2 px-4 rounded"
+              className="bg-orange-500/70 hover:bg-orange-600/70 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500"
             >
               Delete
             </button>
