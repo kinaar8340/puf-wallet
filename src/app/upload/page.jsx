@@ -1,6 +1,6 @@
 // /puf-wallet-frontend/src/app/upload/page.jsx
 
-'use_client';
+"use client";
 
 import { supabase } from '../../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
