@@ -1,6 +1,6 @@
 // /puf-wallet-frontend/src/app/upload/page.jsx
 
-'use client';
+'use_client';
 
 import { supabase } from '../../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -124,70 +124,72 @@ export default function Upload() {
               </Link>
             </div>
             <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
-
-            <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload New Strain</h2>
-            <table className="w-full table-auto mx-auto text-center">
-              <thead>
-                <tr>
-                  <th className="text-center pb-2 font-bold">Growers</th>
-                  <th className="text-center pb-2 font-bold">Strain Name</th>
-                  <th className="text-center pb-2 font-bold">THC %</th>
-                  <th className="text-center pb-2 font-bold">Type</th>
-                  <th className="text-center pb-2 font-bold">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="pb-2">
-                    <input
-                      type="text"
-                      value={grower}
-                      onChange={(e) => setGrower(e.target.value)}
-                      className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
-                    />
-                  </td>
-                  <td className="pb-2">
-                    <input
-                      type="text"
-                      value={strainName}
-                      onChange={(e) => setStrainName(e.target.value)}
-                      className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
-                    />
-                  </td>
-                  <td className="pb-2">
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={thc}
-                      onChange={(e) => setThc(e.target.value)}
-                      className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
-                    />
-                  </td>
-                  <td className="pb-2">
-                    <select
-                      value={type}
-                      onChange={(e) => setType(e.target.value)}
-                      className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
-                    >
-                      <option value="">Select</option>
-                      <option value="Sativa">Sativa</option>
-                      <option value="Indica">Indica</option>
-                      <option value="Hybrid">Hybrid</option>
-                    </select>
-                  </td>
-                  <td className="pb-2">
-                    <button
-                      onClick={handleSave}
-                      disabled={loading}
-                      className="bg-green-500/70 hover:bg-green-600/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl w-full"
-                    >
-                      {loading ? 'Saving...' : 'Save'}
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
           </div>
+        </div>
+
+        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+          <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload New Strain</h2>
+          <table className="w-full table-auto mx-auto text-center">
+            <thead>
+              <tr>
+                <th className="text-center pb-2 font-bold">Growers</th>
+                <th className="text-center pb-2 font-bold">Strain Name</th>
+                <th className="text-center pb-2 font-bold">THC %</th>
+                <th className="text-center pb-2 font-bold">Type</th>
+                <th className="text-center pb-2 font-bold">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="pb-2">
+                  <input
+                    type="text"
+                    value={grower}
+                    onChange={(e) => setGrower(e.target.value)}
+                    className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
+                  />
+                </td>
+                <td className="pb-2">
+                  <input
+                    type="text"
+                    value={strainName}
+                    onChange={(e) => setStrainName(e.target.value)}
+                    className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
+                  />
+                </td>
+                <td className="pb-2">
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={thc}
+                    onChange={(e) => setThc(e.target.value)}
+                    className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
+                  />
+                </td>
+                <td className="pb-2">
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className="bg-gray-800 text-[#00ff00] font-bold text-xl text-center border border-green-500 w-full"
+                  >
+                    <option value="">Select</option>
+                    <option value="Sativa">Sativa</option>
+                    <option value="Indica">Indica</option>
+                    <option value="Hybrid">Hybrid</option>
+                  </select>
+                </td>
+                <td className="pb-2">
+                  <button
+                    onClick={handleSave}
+                    disabled={loading}
+                    className="bg-green-500/70 hover:bg-green-600/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl w-full"
+                  >
+                    {loading ? 'Saving...' : 'Save'}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </main>
       <ToastContainer theme="dark" />
