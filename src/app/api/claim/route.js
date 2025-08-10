@@ -1,98 +1,66 @@
-import { Connection, Keypair, PublicKey, Transaction } from '@solana/web3.js';
-import {
-  createAssociatedTokenAccountInstruction,
-  createTransferInstruction,
-  getAssociatedTokenAddressSync,
-  getMint,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-} from '@solana/spl-token';
-import bs58 from 'bs58';
+// /puf-wallet-frontend/src/app/api/claim/route.js
 
+import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
+import { createMintToInstruction, getMint, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
+
+const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+
+const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
 export async function POST(request) {
   const { recipient } = await request.json();
-
   if (!recipient) {
-    return new Response(JSON.stringify({ error: 'Recipient public key required' }), { status: 400 });
+    return Response.json({ error: 'Recipient public key is required' }, { status: 400 });
   }
 
   try {
-    // Load treasury from env
-    const treasurySecretKey = process.env.TREASURY_PRIVATE_KEY;
-    if (!treasurySecretKey) {
-      throw new Error('Treasury private key not set in env');
+    // Load the mint authority keypair from env (base58 secret key array)
+    const secretKeyString = process.env.PRIVATE_KEY;
+    if (!secretKeyString) {
+      throw new Error('PRIVATE_KEY not set in environment variables');
     }
-    const treasuryKeypair = Keypair.fromSecretKey(bs58.decode(treasurySecretKey));
-
-    const connection = new Connection('https://api.devnet.solana.com', 'confirmed'); // Switch to mainnet URL later
-    const tokenMint = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ'); // Switch to mainnet mint later
-
-    // Get mint decimals
-    const mintInfo = await getMint(connection, tokenMint, 'confirmed', TOKEN_2022_PROGRAM_ID);
-    const decimals = mintInfo.decimals;
+    const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+    const mintAuthority = Keypair.fromSecretKey(secretKey);
 
     const recipientPubkey = new PublicKey(recipient);
-    const recipientATA = getAssociatedTokenAddressSync(
-      tokenMint,
+
+    // Get mint info with Token-2022 program ID
+    const mintInfo = await getMint(connection, TOKEN_MINT, 'confirmed', TOKEN_2022_PROGRAM_ID);
+
+    // Get or create ATA for recipient
+    const recipientATA = await getOrCreateAssociatedTokenAccount(
+      connection,
+      mintAuthority,  // Payer
+      TOKEN_MINT,
       recipientPubkey,
       false,
+      'confirmed',
+      'confirmed',
       TOKEN_2022_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
-    const treasuryATA = getAssociatedTokenAddressSync(
-      tokenMint,
-      treasuryKeypair.publicKey,
-      false,
-      TOKEN_2022_PROGRAM_ID,
-      ASSOCIATED_TOKEN_PROGRAM_ID
-    );
+    // Mint 1000 tokens (adjust amount and decimals as needed)
+    const amount = 1000 * 10 ** mintInfo.decimals;
 
-    const transaction = new Transaction();
-
-    // Check if recipient ATA exists; create if not (treasury pays)
-    const ataInfo = await connection.getAccountInfo(recipientATA);
-    if (!ataInfo) {
-      transaction.add(
-        createAssociatedTokenAccountInstruction(
-          treasuryKeypair.publicKey, // Payer
-          recipientATA,
-          recipientPubkey,
-          tokenMint,
-          TOKEN_2022_PROGRAM_ID,
-          ASSOCIATED_TOKEN_PROGRAM_ID
-        )
-      );
-    }
-
-    // Add transfer instruction (1000 tokens)
-    transaction.add(
-      createTransferInstruction(
-        treasuryATA, // Source
-        recipientATA, // Destination
-        treasuryKeypair.publicKey, // Owner
-        1000 * (10 ** decimals), // Amount
-        [], // No multisig
+    const transaction = new Transaction().add(
+      createMintToInstruction(
+        TOKEN_MINT,
+        recipientATA.address,
+        mintAuthority.publicKey,
+        amount,
+        [],
         TOKEN_2022_PROGRAM_ID
       )
     );
 
-    // Set fee payer and blockhash
-    transaction.feePayer = treasuryKeypair.publicKey;
-    const { blockhash } = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
+    const signature = await sendAndConfirmTransaction(connection, transaction, [mintAuthority]);
 
-    // Sign and send
-    transaction.sign(treasuryKeypair);
-    const signature = await connection.sendRawTransaction(transaction.serialize(), {
-      skipPreflight: true,
-    });
-    await connection.confirmTransaction({ signature, lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight, blockhash }, 'processed');
-
-    return new Response(JSON.stringify({ success: true, signature }), { status: 200 });
+    return Response.json({ signature });
   } catch (error) {
     console.error('Claim error:', error);
-    return new Response(JSON.stringify({ error: error.message || 'Failed to claim rewards' }), { status: 500 });
+    return Response.json({ error: error.message || 'Failed to claim rewards' }, { status: 500 });
   }
 }
