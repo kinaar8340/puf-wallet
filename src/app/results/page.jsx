@@ -28,8 +28,8 @@ const voteStrains = [
   { value: 'Item5', label: 'Item5' },
 ];
 
-const openFlights = [5, 6, 7];
-const closedFlights = [1, 2, 3, 4];
+const openFlights = [6];
+const closedFlights = [4, 5];
 
 export default function Results() {
   const { publicKey } = useWallet();
