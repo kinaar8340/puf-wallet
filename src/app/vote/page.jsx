@@ -157,8 +157,8 @@ export default function Vote() {
   };
 
   return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 pb-10 gap-8 sm:p-10 text-xl text-[#00ff00] bg-transparent relative">
-      <main className="flex flex-col gap-[24px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
+      <main className="flex flex-col gap-[24px] row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
           <div className="w-full flex justify-between items-center mb-8">
             <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain" />
