@@ -1,6 +1,6 @@
 // /puf-wallet-frontend/src/app/strain/[strain]/page.jsx
 
-'use client';
+'use_client';
 
 import { supabase } from '../../../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -234,134 +234,136 @@ export default function StrainData() {
               </button>
             </div>
             <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
-
-            <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Link to Strain Data</h2>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
-              <div className="flex flex-col w-full gap-1 mb-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">Grower :</span>
-                  <input
-                    type="text"
-                    value={grower}
-                    onChange={(e) => setGrower(e.target.value)}
-                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none"
-                  />
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">Strain :</span>
-                  <span className="text-[#00ff00] font-bold text-xl text-right">{strainName}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">Type :</span>
-                  <select
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none"
-                  >
-                    <option value="">Select Type</option>
-                    <option value="Sativa">Sativa</option>
-                    <option value="Indica">Indica</option>
-                    <option value="Hybrid">Hybrid</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-x-8 gap-y-1 w-full mb-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">THC :</span>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      step="0.00000001"
-                      value={thc}
-                      onChange={(e) => setThc(e.target.value)}
-                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
-                    />
-                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">CBN :</span>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      step="0.00000001"
-                      value={cbn}
-                      onChange={(e) => setCbn(e.target.value)}
-                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
-                    />
-                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">CBD :</span>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      step="0.00000001"
-                      value={cbd}
-                      onChange={(e) => setCbd(e.target.value)}
-                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
-                    />
-                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">CBC :</span>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      step="0.00000001"
-                      value={cbc}
-                      onChange={(e) => setCbc(e.target.value)}
-                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
-                    />
-                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">Terpenes :</span>
-                  <span className="text-[#00ff00] font-bold text-xl text-right">{terpenesTotal}%</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-[#00ff00] font-bold text-xl">Cannabinoids :</span>
-                  <div className="flex items-center">
-                    <input
-                      type="number"
-                      step="0.00000001"
-                      value={totalCann}
-                      onChange={(e) => setTotalCann(e.target.value)}
-                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
-                    />
-                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-x-8 gap-y-1 w-full">
-                {terpeneOrder.map((key) => (
-                  <div key={key} className="flex justify-between items-center">
-                    <span className="text-[#00ff00] font-bold text-xl">{formatTerpeneName(key)} :</span>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        step="0.00000001"
-                        value={terpenes[key]}
-                        onChange={(e) => handleTerpeneChange(key, e.target.value)}
-                        className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
-                      />
-                      <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-4"
-              >
-                {loading ? 'Saving...' : 'SAVE'}
-              </button>
-            </form>
           </div>
+        </div>
+
+        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+          <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Link to Strain Data</h2>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
+            <div className="flex flex-col w-full gap-1 mb-4">
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Grower :</span>
+                <input
+                  type="text"
+                  value={grower}
+                  onChange={(e) => setGrower(e.target.value)}
+                  className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none"
+                />
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Strain :</span>
+                <span className="text-[#00ff00] font-bold text-xl text-right">{strainName}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Type :</span>
+                <select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)}
+                  className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none"
+                >
+                  <option value="">Select Type</option>
+                  <option value="Sativa">Sativa</option>
+                  <option value="Indica">Indica</option>
+                  <option value="Hybrid">Hybrid</option>
+                </select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-1 w-full mb-4">
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">THC :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={thc}
+                    onChange={(e) => setThc(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">CBN :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={cbn}
+                    onChange={(e) => setCbn(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">CBD :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={cbd}
+                    onChange={(e) => setCbd(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">CBC :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={cbc}
+                    onChange={(e) => setCbc(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Terpenes :</span>
+                <span className="text-[#00ff00] font-bold text-xl text-right">{terpenesTotal}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[#00ff00] font-bold text-xl">Cannabinoids :</span>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    step="0.00000001"
+                    value={totalCann}
+                    onChange={(e) => setTotalCann(e.target.value)}
+                    className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                  />
+                  <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                </div>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-1 w-full">
+              {terpeneOrder.map((key) => (
+                <div key={key} className="flex justify-between items-center">
+                  <span className="text-[#00ff00] font-bold text-xl">{formatTerpeneName(key)} :</span>
+                  <div className="flex items-center">
+                    <input
+                      type="number"
+                      step="0.00000001"
+                      value={terpenes[key]}
+                      onChange={(e) => handleTerpeneChange(key, e.target.value)}
+                      className="bg-transparent text-[#00ff00] font-bold text-xl text-right border-none outline-none focus:outline-none no-spinner w-20"
+                    />
+                    <span className="text-[#00ff00] font-bold text-xl ml-1">%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-purple-500/70 hover:bg-purple-600/70 text-[#00ff00] font-bold py-3 px-5 rounded w-full text-xl border border-green-500 hover:shadow-green-500/50 bg-gradient-to-br from-purple-500/70 to-purple-600/70 mx-auto mt-4"
+            >
+              {loading ? 'Saving...' : 'SAVE'}
+            </button>
+          </form>
         </div>
       </main>
       <ToastContainer theme="dark" />
