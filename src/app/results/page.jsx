@@ -1,3 +1,4 @@
+
 // /puf-wallet-frontend/src/app/results/page.jsx
 
 'use client';
@@ -80,53 +81,55 @@ export default function Results() {
               </Link>
             </div>
             <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
-
-            <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
-
-            <p className="text-lg font-bold text-center mb-2">Flight Status: Open</p>
-            <table className="w-full table-auto mx-auto text-center border-collapse">
-              <thead>
-                <tr>
-                  <th className="border px-4 py-2">Flight</th>
-                  {voteStrains.map(s => (
-                    <th key={s.value} className="border px-4 py-2">{s.label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {openFlights.map(flight => (
-                  <tr key={flight}>
-                    <td className="border px-4 py-2">{flight}</td>
-                    {voteStrains.map(s => (
-                      <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            <p className="text-lg font-bold text-center my-4 text-red-500">Flight Status: Closed</p>
-            <table className="w-full table-auto mx-auto text-center border-collapse">
-              <thead>
-                <tr>
-                  <th className="border px-4 py-2">Flight</th>
-                  {voteStrains.map(s => (
-                    <th key={s.value} className="border px-4 py-2">{s.label}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {closedFlights.map(flight => (
-                  <tr key={flight}>
-                    <td className="border px-4 py-2">{flight}</td>
-                    {voteStrains.map(s => (
-                      <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
+        </div>
+
+        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+          <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
+
+          <p className="text-lg font-bold text-center mb-2">Flight Status: Open</p>
+          <table className="w-full table-auto mx-auto text-center border-collapse">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2">Flight</th>
+                {voteStrains.map(s => (
+                  <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {openFlights.map(flight => (
+                <tr key={flight}>
+                  <td className="border px-4 py-2">{flight}</td>
+                  {voteStrains.map(s => (
+                    <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <p className="text-lg font-bold text-center my-4 text-red-500">Flight Status: Closed</p>
+          <table className="w-full table-auto mx-auto text-center border-collapse">
+            <thead>
+              <tr>
+                <th className="border px-4 py-2">Flight</th>
+                {voteStrains.map(s => (
+                  <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {closedFlights.map(flight => (
+                <tr key={flight}>
+                  <td className="border px-4 py-2">{flight}</td>
+                  {voteStrains.map(s => (
+                    <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </main>
     </div>
