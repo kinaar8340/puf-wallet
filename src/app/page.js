@@ -1,4 +1,4 @@
-// /puf-wallet-frontend/src/app/page.js 
+// /puf-wallet-frontend/src/app/page.js
 
 'use client'; // Client component for hooks and state
 
@@ -30,8 +30,8 @@ const voteStrains = [
   { value: 'Item5', label: 'Item5' },
 ];
 
-const openFlights = [5];
-const closedFlights = [1];
+const openFlights = [5, 6, 7];
+const closedFlights = [1, 2, 3, 4];
 
 export default function Home() {
   useEffect(() => {
@@ -86,7 +86,7 @@ export default function Home() {
         </div>
 
         {publicKey ? (
-          <>
+          <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/vote">
                 <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
@@ -105,54 +105,52 @@ export default function Home() {
               </Link>
             </div>
 
-            <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00]">
-              <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
+            <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
 
-              <p className="text-lg font-bold text-center mb-2">Flight Status: Open</p>
-              <table className="w-full table-auto mx-auto text-center border-collapse">
-                <thead>
-                  <tr>
-                    <th className="border px-4 py-2">Flight</th>
+            <p className="text-lg font-bold text-center mb-2">Flight Status: Open</p>
+            <table className="w-full table-auto mx-auto text-center border-collapse">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Flight</th>
+                  {voteStrains.map(s => (
+                    <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {openFlights.map(flight => (
+                  <tr key={flight}>
+                    <td className="border px-4 py-2">{flight}</td>
                     {voteStrains.map(s => (
-                      <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                      <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
                     ))}
                   </tr>
-                </thead>
-                <tbody>
-                  {openFlights.map(flight => (
-                    <tr key={flight}>
-                      <td className="border px-4 py-2">{flight}</td>
-                      {voteStrains.map(s => (
-                        <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
+            </table>
 
-              <p className="text-lg font-bold text-center my-4 text-red-500">Flight Status: Closed</p>
-              <table className="w-full table-auto mx-auto text-center border-collapse">
-                <thead>
-                  <tr>
-                    <th className="border px-4 py-2">Flight</th>
+            <p className="text-lg font-bold text-center my-4 text-red-500">Flight Status: Closed</p>
+            <table className="w-full table-auto mx-auto text-center border-collapse">
+              <thead>
+                <tr>
+                  <th className="border px-4 py-2">Flight</th>
+                  {voteStrains.map(s => (
+                    <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {closedFlights.map(flight => (
+                  <tr key={flight}>
+                    <td className="border px-4 py-2">{flight}</td>
                     {voteStrains.map(s => (
-                      <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                      <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
                     ))}
                   </tr>
-                </thead>
-                <tbody>
-                  {closedFlights.map(flight => (
-                    <tr key={flight}>
-                      <td className="border px-4 py-2">{flight}</td>
-                      {voteStrains.map(s => (
-                        <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
           <p className="text-center font-bold text-xl">Connect your wallet to upload data and vote!</p>
         )}
