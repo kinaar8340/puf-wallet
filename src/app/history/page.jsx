@@ -99,40 +99,42 @@ export default function History() {
               </Link>
             </div>
             <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
-
-            <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
-            <table className="w-full table-auto mx-auto text-center">
-              <thead>
-                <tr>
-                  <th className="text-center pb-2 font-bold underline">Growers</th>
-                  <th className="text-center pb-2 font-bold underline">Strain Name</th>
-                  <th className="text-center pb-2 font-bold underline">THC %</th>
-                  <th className="text-center pb-2 font-bold underline">Type</th>
-                  <th className="text-center pb-2 font-bold underline">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {strains.map((strain) => (
-                  <tr key={strain}>
-                    <td className="pr-2 pb-2 font-bold text-center">{aggregatedDetails[strain]?.grower || ''}</td>
-                    <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
-                    <td className="pr-2 pb-2 font-bold text-center">
-                      {aggregatedUploads[strain] ? (aggregatedUploads[strain].sum_thc / aggregatedUploads[strain].count).toFixed(2) : '0.00'}
-                    </td>
-                    <td className="pr-2 pb-2 font-bold text-center">{aggregatedDetails[strain]?.type || aggregatedUploads[strain]?.type || ''}</td>
-                    <td className="pb-2 text-center">
-                      <Link href={`/strain/${encodeURIComponent(strain)}`}>
-                        <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
-                          Link
-                        </button>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {strains.length === 0 && <p className="text-center font-bold text-lg">No strains yet.</p>}
           </div>
+        </div>
+
+        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+          <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
+          <table className="w-full table-auto mx-auto text-center">
+            <thead>
+              <tr>
+                <th className="text-center pb-2 font-bold underline">Growers</th>
+                <th className="text-center pb-2 font-bold underline">Strain Name</th>
+                <th className="text-center pb-2 font-bold underline">THC %</th>
+                <th className="text-center pb-2 font-bold underline">Type</th>
+                <th className="text-center pb-2 font-bold underline">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {strains.map((strain) => (
+                <tr key={strain}>
+                  <td className="pr-2 pb-2 font-bold text-center">{aggregatedDetails[strain]?.grower || ''}</td>
+                  <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
+                  <td className="pr-2 pb-2 font-bold text-center">
+                    {aggregatedUploads[strain] ? (aggregatedUploads[strain].sum_thc / aggregatedUploads[strain].count).toFixed(2) : '0.00'}
+                  </td>
+                  <td className="pr-2 pb-2 font-bold text-center">{aggregatedDetails[strain]?.type || aggregatedUploads[strain]?.type || ''}</td>
+                  <td className="pb-2 text-center">
+                    <Link href={`/strain/${encodeURIComponent(strain)}`}>
+                      <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
+                        Link
+                      </button>
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {strains.length === 0 && <p className="text-center font-bold text-lg">No strains yet.</p>}
         </div>
       </main>
     </div>
