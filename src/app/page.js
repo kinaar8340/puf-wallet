@@ -30,8 +30,8 @@ const voteStrains = [
   { value: 'Item5', label: 'Item5' },
 ];
 
-const openFlights = [4, 5, 6];
-const closedFlights = [1, 2, 3];
+const openFlights = [5];
+const closedFlights = [1];
 
 export default function Home() {
   useEffect(() => {
