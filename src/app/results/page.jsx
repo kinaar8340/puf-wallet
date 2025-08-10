@@ -49,7 +49,7 @@ export default function Results() {
       })();
     }
     // Fetch all votes for aggregation
-    supabase.from('votes').select('*').then(({ data, error } ) => {
+    supabase.from('votes').select('*').then(({ data, error }) => {
       if (error) console.error('Total votes refresh error:', error);
       const agg = (data || []).reduce((acc, v) => {
         if (!acc[v.flight]) acc[v.flight] = {};
@@ -65,10 +65,7 @@ export default function Results() {
       <main className="flex flex-col gap-[24px] row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
           <div className="w-full flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
-              <span className="bg-green-500/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl">PUF WALLET</span>
-            </div>
+            <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
