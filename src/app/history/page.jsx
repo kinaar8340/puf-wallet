@@ -83,25 +83,29 @@ export default function History() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-[24px] row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
-          <div className="w-full flex justify-between items-center mb-8">
-            <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain" />
+          <div className="w-full flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
+              <span className="bg-green-500/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl">PUF WALLET</span>
+            </div>
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
             </div>
           </div>
-          <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
         </div>
 
         {publicKey && (
           <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 mt-4 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
-              <Link href="/">
+              <Link href="/minimal">
                 <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
                   Back
                 </button>
               </Link>
             </div>
+            <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
+
             <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
             <table className="w-full table-auto mx-auto text-center">
               <thead>
