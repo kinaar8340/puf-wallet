@@ -102,7 +102,7 @@ export default function StrainData() {
         .eq('user_pubkey', publicKey.toBase58())
         .eq('strain', strainName)
         .single()
-        .then(({ data, error }) => {
+        .then(({ data, error } ) => {
           if (error && error.code !== 'PGRST116') console.error('StrainDetails fetch error:', error); // Ignore no rows error
           if (data) {
             setGrower(data.grower || '');
@@ -183,7 +183,7 @@ export default function StrainData() {
         .eq('strain', strainName);
       if (error) throw error;
       toast.success('Data deleted successfully!');
-      router.push('/');
+      router.push('/minimal');
     } catch (error) {
       console.error('Delete Error:', error);
       toast.error('Failed to delete data: ' + (error.message || 'Unknown error'));
@@ -211,14 +211,16 @@ export default function StrainData() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-4 row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
-          <div className="w-full flex justify-between items-center mb-8">
-            <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain" />
+          <div className="w-full flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
+              <span className="bg-green-500/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl">PUF WALLET</span>
+            </div>
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
             </div>
           </div>
-          <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
         </div>
 
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
@@ -236,6 +238,8 @@ export default function StrainData() {
               Delete
             </button>
           </div>
+          <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
+
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Link to Strain Data</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
             <div className="flex flex-col w-full gap-1 mb-4">
