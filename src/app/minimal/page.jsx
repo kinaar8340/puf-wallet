@@ -41,7 +41,7 @@ export default function Minimal() {
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-[24px] row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
-          <div className="w-full flex justify-between items-center mb-8">
+          <div className="w-full flex justify-between items-center">
             <div className="flex items-center gap-4">
               <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
               <span className="bg-green-500/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl">PUF WALLET</span>
@@ -53,30 +53,31 @@ export default function Minimal() {
           </div>
         </div>
 
-        <div className="w-full flex justify-center gap-4 mb-4">
-          <Link href="/results">
-            <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Results
-            </button>
-          </Link>
-          <Link href="/vote">
-            <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Vote
-            </button>
-          </Link>
-          <Link href="/upload">
-            <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Upload
-            </button>
-          </Link>
-          <Link href="/history">
-            <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              History
-            </button>
-          </Link>
+        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+          <div className="w-full flex justify-center gap-4 mb-4">
+            <Link href="/results">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Results
+              </button>
+            </Link>
+            <Link href="/vote">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Vote
+              </button>
+            </Link>
+            <Link href="/upload">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Upload
+              </button>
+            </Link>
+            <Link href="/history">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                History
+              </button>
+            </Link>
+          </div>
+          <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
         </div>
-
-        <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
       </main>
     </div>
   );
