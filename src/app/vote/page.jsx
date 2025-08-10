@@ -1,4 +1,4 @@
-// /puf-wallet-frontend/src/app/vote/page.jsx 
+// /puf-wallet-frontend/src/app/vote/page.jsx
 
 'use client';
 
@@ -170,21 +170,21 @@ export default function Vote() {
           <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
         </div>
 
-        <div className="w-full flex justify-center gap-4 mb-4">
-          <Link href="/">
-            <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Back
-            </button>
-          </Link>
-          <button onClick={handleResetSliders} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-            Reset Sliders
-          </button>
-          <button onClick={handleVoteSubmit} disabled={loading} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-            Submit Vote
-          </button>
-        </div>
-
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
+          <div className="w-full flex justify-center gap-4 mb-4">
+            <Link href="/">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Back
+              </button>
+            </Link>
+            <button onClick={handleResetSliders} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+              Reset Sliders
+            </button>
+            <button onClick={handleVoteSubmit} disabled={loading} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+              Submit Vote
+            </button>
+          </div>
+
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Vote Docket</h2>
           <table className="w-full table-auto mx-auto text-center">
             <tbody>
