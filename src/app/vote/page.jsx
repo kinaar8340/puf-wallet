@@ -158,66 +158,65 @@ export default function Vote() {
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
-      <main className="flex flex-col gap-[24px] row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
-        <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
-          <div className="w-full flex justify-between items-center">
+      <main className="flex flex-col row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
+        <div className="w-full bg-black/75 rounded border-4 border-black">
+          <div className="w-full bg-black/75 p-8 flex justify-between items-center">
             <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
             </div>
           </div>
-        </div>
-
-        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
-          <div className="w-full flex justify-center gap-4 mb-4">
-            <Link href="/minimal">
-              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-                Back
+          <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+            <div className="w-full flex justify-center gap-4 mb-4">
+              <Link href="/minimal">
+                <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                  Back
+                </button>
+              </Link>
+              <button onClick={handleResetSliders} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Reset Sliders
               </button>
-            </Link>
-            <button onClick={handleResetSliders} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Reset Sliders
-            </button>
-            <button onClick={handleVoteSubmit} disabled={loading} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Submit Vote
-            </button>
-          </div>
-          <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
+              <button onClick={handleVoteSubmit} disabled={loading} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Submit Vote
+              </button>
+            </div>
+            <p className="text-2xl font-bold text-center mb-4">$PUF Balance: {Number(balance).toFixed(2)}</p>
 
-          <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Vote Docket</h2>
-          <table className="w-full table-auto mx-auto text-center">
-            <tbody>
-              {voteStrains.map(s => {
-                const value = votes[s.value];
-                const color = getBackgroundColor(value);
-                return (
-                  <tr key={s.value}>
-                    <td className="pb-2">
-                      <div className="flex items-center justify-center">
-                        <input
-                          type="range"
-                          min="0"
-                          max="10"
-                          step="1"
-                          value={value}
-                          onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                          className="slider w-3/4"
-                        />
-                        <span 
-                          className="ml-2 p-4 rounded text-[#00ff00] font-bold text-xl border-4 border-black min-w-[80px] text-center"
-                          style={{ backgroundColor: color }}
-                        >
-                          {value > 0 ? value : ''}
-                        </span>
-                      </div>
-                      <p className="text-center mt-2 font-bold">{s.label}</p>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+            <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Vote Docket</h2>
+            <table className="w-full table-auto mx-auto text-center">
+              <tbody>
+                {voteStrains.map(s => {
+                  const value = votes[s.value];
+                  const color = getBackgroundColor(value);
+                  return (
+                    <tr key={s.value}>
+                      <td className="pb-2">
+                        <div className="flex items-center justify-center">
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            step="1"
+                            value={value}
+                            onChange={(e) => handleVoteChange(s.value, e.target.value)}
+                            className="slider w-3/4"
+                          />
+                          <span 
+                            className="ml-2 p-4 rounded text-[#00ff00] font-bold text-xl border-4 border-black min-w-[80px] text-center"
+                            style={{ backgroundColor: color }}
+                          >
+                            {value > 0 ? value : ''}
+                          </span>
+                        </div>
+                        <p className="text-center mt-2 font-bold">{s.label}</p>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </main>
       <ToastContainer theme="dark" />
