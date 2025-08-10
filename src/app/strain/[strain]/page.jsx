@@ -1,3 +1,5 @@
+// /puf-wallet-frontend/src/app/strain/[strain]/page.jsx 
+
 'use client';
 
 import { supabase } from '../../../lib/supabase';
@@ -7,6 +9,19 @@ import { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
+
+const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
+
+const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+
+// Solana Devnet connection
+const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+
+// $PUF token mint
+const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 export default function StrainData() {
   const params = useParams();
@@ -14,6 +29,7 @@ export default function StrainData() {
   const { publicKey } = useWallet();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [balance, setBalance] = useState('0');
 
   const [grower, setGrower] = useState('');
   const [type, setType] = useState('');
@@ -37,6 +53,18 @@ export default function StrainData() {
   });
 
   useEffect(() => {
+    if (publicKey) {
+      // Fetch balance
+      (async () => {
+        try {
+          const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+          const res = await connection.getTokenAccountBalance(ata);
+          setBalance(res.value.uiAmountString);
+        } catch {
+          setBalance('0');
+        }
+      })();
+    }
     if (publicKey && strainName) {
       // Fetch aggregated from Uploads
       supabase
@@ -182,11 +210,22 @@ export default function StrainData() {
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 pb-10 gap-8 sm:p-10 text-xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-4 row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
+        <div className="w-full bg-black/75 p-8 rounded border-4 border-black flex flex-col items-center">
+          <div className="w-full flex justify-between items-center mb-8">
+            <img src="/images/logo0.png" alt="PUF Wallet Logo" className="w-64 h-64 object-contain" />
+            <div className="flex flex-col items-end gap-4">
+              <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
+              {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+            </div>
+          </div>
+          <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
+        </div>
+
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
           <div className="flex justify-between mb-4">
-            <Link href="/">
+            <Link href="/history">
               <button className="bg-blue-500/70 hover:bg-blue-600/70 text-[#00ff00] font-bold py-2 px-4 rounded">
-                BACK
+                Back
               </button>
             </Link>
             <button
@@ -194,10 +233,10 @@ export default function StrainData() {
               disabled={loading}
               className="bg-orange-500/70 hover:bg-orange-600/70 text-[#00ff00] font-bold py-2 px-4 rounded"
             >
-              DELETE
+              Delete
             </button>
           </div>
-          <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Strain Data</h2>
+          <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Link to Strain Data</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
             <div className="flex flex-col w-full gap-1 mb-4">
               <div className="flex justify-between items-center">
