@@ -1,4 +1,4 @@
-// /puf-wallet-frontend/src/app/upload/page.jsx 
+// /puf-wallet-frontend/src/app/upload/page.jsx
 
 'use client';
 
@@ -118,15 +118,15 @@ export default function Upload() {
           <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
         </div>
 
-        <div className="w-full flex justify-start mb-4">
-          <Link href="/">
-            <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
-              Back
-            </button>
-          </Link>
-        </div>
-
         <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50">
+          <div className="w-full flex justify-center gap-4 mb-4">
+            <Link href="/">
+              <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                Back
+              </button>
+            </Link>
+          </div>
+
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload New Strain</h2>
           <table className="w-full table-auto mx-auto text-center">
             <thead>
