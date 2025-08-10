@@ -1,4 +1,4 @@
-// /puf-wallet-frontend/src/app/history/page.jsx 
+// /puf-wallet-frontend/src/app/history/page.jsx
 
 'use client';
 
@@ -79,13 +79,6 @@ export default function History() {
     }
   }, [publicKey, fetchHistory]);
 
-  const handleAddStrain = () => {
-    const strainName = window.prompt('Enter the new strain name:');
-    if (strainName && strainName.trim()) {
-      router.push(`/strain/${encodeURIComponent(strainName.trim())}`);
-    }
-  };
-
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-4 pb-10 gap-8 sm:p-10 text-xl text-[#00ff00] bg-transparent relative">
       <main className="flex flex-col gap-[24px] row-start-2 items-center justify-center w-full max-w-2xl mx-auto">
@@ -110,15 +103,7 @@ export default function History() {
 
         {publicKey && (
           <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 mt-4 text-[#00ff00]">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-4xl font-bold text-[#00ff00]">Your History</h2>
-              <button
-                onClick={handleAddStrain}
-                className="bg-green-500/70 hover:bg-green-600/70 text-[#00ff00] font-bold py-2 px-4 rounded text-xl"
-              >
-                Add Strain
-              </button>
-            </div>
+            <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
             <table className="w-full table-auto mx-auto text-center">
               <thead>
                 <tr>
