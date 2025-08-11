@@ -1,8 +1,10 @@
 import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
 import { createTransferInstruction, getMint, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
 
-const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+console.log('SPL Token Version:', require('@solana/spl-token').version);
+console.log('getMint type with require:', typeof require('@solana/spl-token').getMint);
 
+const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
 const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
