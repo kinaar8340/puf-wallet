@@ -1,12 +1,11 @@
-// /puf-wallet-frontend/src/app/api/claim/route.js
-
 import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
-import { createMintToInstruction, getMint, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
+import { createMintToInstruction, getMint, getAssociatedTokenAddress, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 const TOKEN_MINT = new PublicKey('8pqRKW61bVjwuYZrs6uu6HEZvZaFwym68UHi7djCkAFr');
-const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEbNbGKPFXCWuBvf9Ss623VQ5DA');
+const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
 export async function POST(request) {
   const { recipient } = await request.json();
@@ -31,7 +30,7 @@ export async function POST(request) {
     // Get or create ATA for recipient
     const recipientATA = await getOrCreateAssociatedTokenAccount(
       connection,
-      mintAuthority,  // Payer
+      mintAuthority, // Payer
       TOKEN_MINT,
       recipientPubkey,
       false,
