@@ -21,7 +21,7 @@ export async function POST(request) {
       throw new Error('PRIVATE_KEY not set in environment variables');
     }
 
-    console.log('Imported getMint type:', typeof getMint);  //troubleshooting getMint status500
+    console.log('Imported getMint type:', typeof getMint);  //troubleshooting getMint 
 
     const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
     const treasuryKeypair = Keypair.fromSecretKey(secretKey);
