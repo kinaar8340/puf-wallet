@@ -5,7 +5,7 @@
 import { supabase } from '../../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -22,7 +22,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
 
 // Current flight
-const CURRENT_FLIGHT = 6;
+const CURRENT_FLIGHT = 5;
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },
@@ -61,7 +61,8 @@ export default function Vote() {
     }
   }, [publicKey]);
 
-  const claimRewards = async (recipient) => {
+  // Function to claim rewards (calls server API for transfer)
+  const claimRewards = useCallback(async (recipient) => {
     if (!recipient) return;
 
     setLoading(true);
@@ -94,7 +95,7 @@ export default function Vote() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const getBackgroundColor = (value) => {
     if (value === 0) return 'transparent';
