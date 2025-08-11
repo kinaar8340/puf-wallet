@@ -17,8 +17,8 @@ export async function POST(request) {
   }
 
   try {
-    console.log('SPL Token Version:', require('@solana/spl-token/package.json').version); // Corrected debug
-    console.log('getMint type:', typeof getMint); // Debug
+    console.log('SPL Token Version:', require('@solana/spl-token/package.json').version); // Corrected
+    console.log('getMint type:', typeof getMint); // Should now be 'function'
 
     // Load treasury keypair from env
     const secretKeyString = process.env.PRIVATE_KEY;
