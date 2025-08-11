@@ -1,11 +1,12 @@
 import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
-import { createMintToInstruction, getMint, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
+import { createTransferInstruction, getMint, getOrCreateAssociatedTokenAccount } from '@solana/spl-token';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
 const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+const TREASURY_PUBKEY = new PublicKey('AYtdNKSeZZDDutzVefExeRwMPskLVYZyY6Xd5hceE93E');
 
 export async function POST(request) {
   const { recipient } = await request.json();
@@ -14,23 +15,36 @@ export async function POST(request) {
   }
 
   try {
-    // Load the mint authority keypair from env (base58 secret key array)
+    // Load treasury keypair (signer) from env
     const secretKeyString = process.env.PRIVATE_KEY;
     if (!secretKeyString) {
       throw new Error('PRIVATE_KEY not set in environment variables');
     }
     const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
-    const mintAuthority = Keypair.fromSecretKey(secretKey);
+    const treasuryKeypair = Keypair.fromSecretKey(secretKey);
 
     const recipientPubkey = new PublicKey(recipient);
 
-    // Get mint info with Token-2022 program ID
+    // Get mint info (for decimals)
     const mintInfo = await getMint(connection, TOKEN_MINT, 'confirmed', TOKEN_PROGRAM_ID);
 
-    // Get or create ATA for recipient with Token-2022 program ID
+    // Get treasury ATA (source; assumes it exists and holds tokens)
+    const treasuryATA = await getOrCreateAssociatedTokenAccount(
+      connection,
+      treasuryKeypair,
+      TOKEN_MINT,
+      TREASURY_PUBKEY,
+      false,
+      'confirmed',
+      'confirmed',
+      TOKEN_PROGRAM_ID,
+      ASSOCIATED_TOKEN_PROGRAM_ID
+    );
+
+    // Get or create recipient ATA (destination)
     const recipientATA = await getOrCreateAssociatedTokenAccount(
       connection,
-      mintAuthority,  // Payer
+      treasuryKeypair,  // Treasury pays fees
       TOKEN_MINT,
       recipientPubkey,
       false,
@@ -40,21 +54,21 @@ export async function POST(request) {
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
-    // Mint 1000 tokens (adjust amount and decimals as needed)
+    // Transfer 1000 tokens (adjust for decimals)
     const amount = 1000 * 10 ** mintInfo.decimals;
 
     const transaction = new Transaction().add(
-      createMintToInstruction(
-        TOKEN_MINT,
-        recipientATA.address,
-        mintAuthority.publicKey,
+      createTransferInstruction(
+        treasuryATA.address,  // Source ATA
+        recipientATA.address,  // Destination ATA
+        TREASURY_PUBKEY,  // Owner (treasury pubkey)
         amount,
-        [],
+        [],  // No multi-signers
         TOKEN_PROGRAM_ID
       )
     );
 
-    const signature = await sendAndConfirmTransaction(connection, transaction, [mintAuthority]);
+    const signature = await sendAndConfirmTransaction(connection, transaction, [treasuryKeypair]);
 
     return Response.json({ signature });
   } catch (error) {
