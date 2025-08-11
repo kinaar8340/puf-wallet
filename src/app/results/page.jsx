@@ -1,5 +1,3 @@
-// /puf-wallet-frontend/src/app/results/page.jsx
-
 'use client';
 
 import { supabase } from '../../lib/supabase';
@@ -17,7 +15,7 @@ const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adap
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 // $PUF token mint
-const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
+const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },

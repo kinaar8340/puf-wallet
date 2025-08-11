@@ -1,5 +1,3 @@
-// /puf-wallet-frontend/src/app/vote/page.jsx
-
 'use client';
 
 import { supabase } from '../../lib/supabase';
@@ -9,7 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
+import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token'; // Corrected import
 import Link from 'next/link';
 
 const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
@@ -19,7 +17,7 @@ const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adap
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 // $PUF token mint
-const TOKEN_MINT = new PublicKey('8pqRKW61bVjwuYZrs6uu6HEZvZaFwym68UHi7djCkAFr');
+const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
 
 // Current flight
 const CURRENT_FLIGHT = 7;

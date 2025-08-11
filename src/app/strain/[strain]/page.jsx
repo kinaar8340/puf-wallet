@@ -1,5 +1,3 @@
-// /puf-wallet-frontend/src/app/strain/[strain]/page.jsx
-
 'use client';
 
 import { supabase } from '../../../lib/supabase';
@@ -21,7 +19,7 @@ const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqC
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 // $PUF token mint
-const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
+const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
 
 export default function StrainData() {
   const params = useParams();
