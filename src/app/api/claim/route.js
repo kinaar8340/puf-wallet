@@ -6,7 +6,7 @@ import { createMintToInstruction, getMint, getOrCreateAssociatedTokenAccount } f
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
-const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
 export async function POST(request) {
@@ -26,10 +26,10 @@ export async function POST(request) {
 
     const recipientPubkey = new PublicKey(recipient);
 
-    // Get mint info with standard Token program ID
-    const mintInfo = await getMint(connection, TOKEN_MINT, 'confirmed', TOKEN_PROGRAM_ID);
+    // Get mint info with Token-2022 program ID
+    const mintInfo = await getMint(connection, TOKEN_MINT, 'confirmed', TOKEN_2022_PROGRAM_ID);
 
-    // Get or create ATA for recipient
+    // Get or create ATA for recipient with Token-2022 program ID
     const recipientATA = await getOrCreateAssociatedTokenAccount(
       connection,
       mintAuthority,  // Payer
@@ -38,7 +38,7 @@ export async function POST(request) {
       false,
       'confirmed',
       'confirmed',
-      TOKEN_PROGRAM_ID,
+      TOKEN_2022_PROGRAM_ID,
       ASSOCIATED_TOKEN_PROGRAM_ID
     );
 
@@ -52,7 +52,7 @@ export async function POST(request) {
         mintAuthority.publicKey,
         amount,
         [],
-        TOKEN_PROGRAM_ID
+        TOKEN_2022_PROGRAM_ID
       )
     );
 
