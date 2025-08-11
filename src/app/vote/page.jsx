@@ -20,7 +20,7 @@ const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
 
 // Current flight
-const CURRENT_FLIGHT = 7;
+const CURRENT_FLIGHT = 8;
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },
