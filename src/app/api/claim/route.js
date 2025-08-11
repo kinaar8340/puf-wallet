@@ -5,9 +5,8 @@ import { createMintToInstruction, getMint, getOrCreateAssociatedTokenAccount } f
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
-const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
-const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
-const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+const TOKEN_MINT = new PublicKey('8pqRKW61bVjwuYZrs6uu6HEZvZaFwym68UHi7djCkAFr');
+const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEbNbGKPFXCWuBvf9Ss623VQ5DA');
 
 export async function POST(request) {
   const { recipient } = await request.json();

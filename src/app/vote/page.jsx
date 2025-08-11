@@ -19,7 +19,7 @@ const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adap
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 // $PUF token mint
-const TOKEN_MINT = new PublicKey('3o2B9qoezrzED5p47agp8QVtozvjqGXGSvkW42pxyzEJ');
+const TOKEN_MINT = new PublicKey('8pqRKW61bVjwuYZrs6uu6HEZvZaFwym68UHi7djCkAFr');
 
 // Current flight
 const CURRENT_FLIGHT = 7;
