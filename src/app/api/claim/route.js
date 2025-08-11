@@ -20,9 +20,11 @@ export async function POST(request) {
     if (!secretKeyString) {
       throw new Error('PRIVATE_KEY not set in environment variables');
     }
+
+    console.log('Imported getMint type:', typeof getMint);  //troubleshooting getMint status500
+
     const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
     const treasuryKeypair = Keypair.fromSecretKey(secretKey);
-
     const recipientPubkey = new PublicKey(recipient);
 
     // Get mint info (for decimals)
