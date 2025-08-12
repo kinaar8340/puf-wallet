@@ -1,11 +1,10 @@
-/* ~/puf-wallet-frontend/src/app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply text-black dark:text-[#00ff00];
+    @apply bg-white dark:bg-black text-black dark:text-[#00ff00];
   }
 }
 
