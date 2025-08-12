@@ -12,7 +12,6 @@ import { useRouter } from 'next/navigation';
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 
-const { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } = require('@solana/web3.js');
 const splToken = require('@solana/spl-token');
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('6sTBrWuViekTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7');
