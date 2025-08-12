@@ -21,7 +21,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xW
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
 // Current flight
-const CURRENT_FLIGHT = 9;
+const CURRENT_FLIGHT = 10; 
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },
@@ -157,27 +157,27 @@ export default function Vote() {
   };
 
   return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl bg-transparent relative dark:text-[#00ff00] dark:bg-gray-900 text-gray-900 bg-white">
       <main className="flex flex-col row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
-        <div className="w-full bg-black/75 rounded border-4 border-black">
-          <div className="w-full bg-black/75 p-8 flex justify-between items-center">
+        <div className="w-full rounded border-4 border-black dark:border-gray-800 dark:bg-black/50 bg-white/50">
+          <div className="w-full p-8 flex justify-between items-center dark:bg-black/50 bg-white/50">
             <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
             <div className="flex flex-col items-end gap-4">
-              <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
+              <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br dark:from-blue-500/70 dark:to-blue-600/70 dark:hover:bg-blue-600/70 from-blue-500 to-blue-600 hover:bg-blue-700" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
             </div>
           </div>
-          <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+          <div className="w-full p-5 rounded-b-lg shadow-md shadow-green-500/50 dark:text-[#00ff00] dark:bg-black/50 text-gray-900 bg-white/50">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/minimal">
-                <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                <button className="text-xl font-bold py-3 px-5 rounded border border-green-500 dark:bg-gray-800/50 dark:hover:bg-gray-700/50 dark:text-[#00ff00] bg-gray-200/50 hover:bg-gray-300/50 text-gray-900">
                   Back
                 </button>
               </Link>
-              <button onClick={handleResetSliders} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+              <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 dark:bg-gray-800/50 dark:hover:bg-gray-700/50 dark:text-[#00ff00] bg-gray-200/50 hover:bg-gray-300/50 text-gray-900">
                 Reset Sliders
               </button>
-              <button onClick={handleVoteSubmit} disabled={loading} className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+              <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 dark:bg-gray-800/50 dark:hover:bg-gray-700/50 dark:text-[#00ff00] bg-gray-200/50 hover:bg-gray-300/50 text-gray-900">
                 Submit Vote
               </button>
             </div>
@@ -185,8 +185,8 @@ export default function Vote() {
           </div>
         </div>
 
-        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
-          <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Vote Docket</h2>
+        <div className="w-full p-5 rounded-lg shadow-md shadow-green-500/50 mt-8 dark:text-[#00ff00] dark:bg-black/50 text-gray-900 bg-white/50">
+          <h2 className="text-4xl font-bold mb-4 text-center">Vote Docket</h2>
           <table className="w-full table-auto mx-auto text-center">
             <tbody>
               {voteStrains.map(s => {
@@ -206,7 +206,7 @@ export default function Vote() {
                           className="slider w-3/4"
                         />
                         <span 
-                          className="ml-2 p-4 rounded text-[#00ff00] font-bold text-xl border-4 border-black min-w-[80px] text-center"
+                          className="ml-2 p-4 rounded font-bold text-xl border-4 border-black dark:border-gray-800 dark:text-[#00ff00] text-gray-900 min-w-[80px] text-center"
                           style={{ backgroundColor: color }}
                         >
                           {value > 0 ? value : ''}
@@ -221,7 +221,7 @@ export default function Vote() {
           </table>
         </div>
       </main>
-      <ToastContainer theme="dark" />
+      <ToastContainer theme="colored" />
     </div>
   );
 }
