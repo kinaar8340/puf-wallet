@@ -1,4 +1,4 @@
-// ~/puf-wallet-frontend/src/app/vote/page.jsx
+// ~/puf-wallet-frontend/src/app/vote/page.jsx 
 
 'use client';
 
@@ -42,12 +42,10 @@ export default function Vote() {
 
   useEffect(() => {
     if (publicKey) {
-      // Fetch user votes for current flight
       supabase.from('votes').select('*').eq('user_pubkey', publicKey.toBase58()).eq('flight', CURRENT_FLIGHT).then(({ data, error }) => {
         if (error) console.error('Votes fetch error:', error);
         setUserVotes(data || []);
       });
-      // Fetch balance
       (async () => {
         try {
           const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
@@ -60,7 +58,6 @@ export default function Vote() {
     }
   }, [publicKey]);
 
-  // Function to claim rewards (calls server API for transfer)
   const claimRewards = useCallback(async (recipient) => {
     if (!recipient) return;
 
@@ -79,8 +76,6 @@ export default function Vote() {
       }
 
       toast.success(`Rewards claimed! Tx: ${data.signature}`);
-
-      // Refresh balance
       try {
         const ata = await getAssociatedTokenAddress(TOKEN_MINT, recipient);
         const res = await connection.getTokenAccountBalance(ata);
@@ -114,7 +109,6 @@ export default function Vote() {
 
     setLoading(true);
     try {
-      // Check if user has already voted in this flight
       const { data: existingVotes, error: checkError } = await supabase.from('votes').select('id').eq('user_pubkey', publicKey.toBase58()).eq('flight', CURRENT_FLIGHT).limit(1);
       if (checkError) throw checkError;
       if (existingVotes.length > 0) {
@@ -130,12 +124,7 @@ export default function Vote() {
 
       for (const [strain, vote_amount] of voteEntries) {
         const { data, error } = await supabase.from('votes').insert([
-          {
-            user_pubkey: publicKey.toBase58(),
-            strain,
-            vote_amount,
-            flight: CURRENT_FLIGHT,
-          }
+          { user_pubkey: publicKey.toBase58(), strain, vote_amount, flight: CURRENT_FLIGHT },
         ]);
         if (error) throw error;
         console.log('Vote Submitted for', strain, ':', { vote_amount });
@@ -157,37 +146,37 @@ export default function Vote() {
   };
 
   return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl bg-[url('/images/bg1.png')] bg-cover bg-no-repeat relative dark:bg-gray-900 bg-white">
-      <main className="flex flex-col row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
-        <div className="w-full rounded border-4 border-black dark:border-gray-800 dark:bg-black/50 bg-white/50">
-          <div className="w-full p-8 flex justify-between items-center dark:bg-black/50 bg-white/50">
+    <div className="relative">
+      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-4 sm:p-10">
+        <div className="w-full rounded border-4 border-black bg-black/50">
+          <div className="w-full p-8 flex justify-between items-center bg-black/50">
             <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
             <div className="flex flex-col items-end gap-4">
-              <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br dark:from-blue-500/70 dark:to-blue-600/70 dark:hover:bg-blue-600/70 from-blue-500 to-blue-600 hover:bg-blue-700" />
-              {publicKey && <p className="text-lg font-bold text-black dark:text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+              <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
+              {publicKey && <p className="text-lg font-bold text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
             </div>
           </div>
-          <div className="w-full p-5 rounded-b-lg shadow-md shadow-green-500/50 dark:bg-black/50 bg-white/50">
+          <div className="w-full p-5 rounded-b-lg shadow-md shadow-green-500/50 bg-black/50">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/minimal">
-                <button className="text-xl font-bold py-3 px-5 rounded border border-green-500 dark:bg-gray-800/50 dark:hover:bg-gray-700/50 bg-gray-200/50 hover:bg-gray-300/50 text-black dark:text-[#00ff00]">
+                <button className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
                   Back
                 </button>
               </Link>
-              <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 dark:bg-gray-800/50 dark:hover:bg-gray-700/50 bg-gray-200/50 hover:bg-gray-300/50 text-black dark:text-[#00ff00]">
+              <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
                 Reset Sliders
               </button>
-              <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 dark:bg-gray-800/50 dark:hover:bg-gray-700/50 bg-gray-200/50 hover:bg-gray-300/50 text-black dark:text-[#00ff00]">
+              <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
                 Submit Vote
               </button>
             </div>
-            <p className="text-2xl font-bold text-center mb-4 text-black dark:text-[#00ff00]">$PUF Balance: {Number(balance).toFixed(2)}</p>
+            <p className="text-2xl font-bold text-center mb-4 text-[#00ff00]">$PUF Balance: {Number(balance).toFixed(2)}</p>
           </div>
         </div>
 
-        <div className="w-full p-5 rounded-lg shadow-md shadow-green-500/50 mt-8 dark:bg-black/50 bg-white/50">
-          <h2 className="text-4xl font-bold mb-4 text-center text-black dark:text-[#00ff00]">Vote Docket</h2>
-          <table className="w-full table-auto mx-auto text-center">
+        <div className="w-full p-5 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
+          <h2 className="text-4xl font-bold mb-4 text-center text-[#00ff00]">Vote Docket</h2>
+          <table className="w-full table-auto mx-auto text-center border-collapse border border-black">
             <tbody>
               {voteStrains.map(s => {
                 const value = votes[s.value];
@@ -206,13 +195,13 @@ export default function Vote() {
                           className="slider w-3/4"
                         />
                         <span 
-                          className="ml-2 p-4 rounded font-bold text-xl border-4 border-black dark:border-gray-800 min-w-[80px] text-center text-white"
+                          className="ml-2 p-4 rounded font-bold text-xl border-4 border-black min-w-[80px] text-center text-white"
                           style={{ backgroundColor: color }}
                         >
                           {value > 0 ? value : ''}
                         </span>
                       </div>
-                      <p className="text-center mt-2 font-bold text-black dark:text-[#00ff00]">{s.label}</p>
+                      <p className="text-center mt-2 font-bold text-[#00ff00]">{s.label}</p>
                     </td>
                   </tr>
                 );

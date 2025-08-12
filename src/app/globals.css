@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply text-black dark:text-[#00ff00];
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
