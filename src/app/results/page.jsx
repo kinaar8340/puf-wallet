@@ -8,13 +8,11 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
-import { Token, createTransferInstruction, createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
+import { Connection, PublicKey } from '@solana/web3.js';
+import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('6sTBrWuViekTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7');
-const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
-const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
@@ -26,8 +24,8 @@ const voteStrains = [
   { value: 'Item5', label: 'Item5' },
 ];
 
-const openFlights = [8,9,10,11];
-const closedFlights = [4,5,6,7];
+const openFlights = [6,7];
+const closedFlights = [4,5];
 
 export default function Results() {
   const { publicKey } = useWallet();
@@ -39,7 +37,7 @@ export default function Results() {
       // Fetch balance
       (async () => {
         try {
-          const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey, false, TOKEN_2022_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID);
+          const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
           const res = await connection.getTokenAccountBalance(ata);
           setBalance(res.value.uiAmountString);
         } catch {

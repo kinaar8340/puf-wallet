@@ -1,12 +1,11 @@
 // ~/puf-wallet-frontend/src/app/api/claim/route.js
-//
 
 import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
 import { Token, createTransferInstruction, createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('6sTBrWuViekTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7');
-const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+const TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
 
 export async function POST(request) {
@@ -25,7 +24,9 @@ export async function POST(request) {
 
     const recipientPubkey = new PublicKey(recipient);
 
-    const mintInfo = await Token.getMintInfo(connection, TOKEN_MINT);
+    // Create Token instance and get mint info
+    const token = new Token(connection, TOKEN_MINT, TOKEN_PROGRAM_ID, treasuryKeypair);
+    const mintInfo = await token.getMintInfo();
 
     const treasuryATA = await getAssociatedTokenAddress(TOKEN_MINT, treasuryKeypair.publicKey);
     let info = await connection.getAccountInfo(treasuryATA);
