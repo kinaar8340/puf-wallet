@@ -2,15 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    @apply bg-white dark:bg-black text-black dark:text-[#00ff00];
-  }
-}
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -22,6 +21,15 @@
     --background: #0a0a0a;
     --foreground: #ededed;
   }
+}
+
+body {
+  background-image: url('/images/bg2.png');
+  background-size: 100px;
+}
+
+.dark body {  background-image: url('/images/bg1.png');
+  background-size: 100px;
 }
 
 .slider {
