@@ -147,8 +147,8 @@ export default function Vote() {
 
   return (
     <div className="relative">
-      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-4 sm:p-10">
-        <div className="w-full rounded border-4 border-black bg-black/50">
+      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10"> 
+        <div className="w-full p-5 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50"> 
           <div className="w-full p-8 flex justify-between items-center bg-black/50">
             <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
             <div className="flex flex-col items-end gap-4">
@@ -170,7 +170,7 @@ export default function Vote() {
                 Submit Vote
               </button>
             </div>
-            <p className="text-2xl font-bold text-center mb-4 text-[#00ff00]">$PUF Balance: {Number(balance).toFixed(2)}</p>
+            <p className="text-2xl font-bold text-center mb-4 text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           </div>
         </div>
 
