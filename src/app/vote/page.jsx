@@ -19,7 +19,7 @@ const TOKEN_MINT = new PublicKey('6sTBrWuViekTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7')
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
 // Current flight
-const CURRENT_FLIGHT = 8;
+const CURRENT_FLIGHT = 9;
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },
