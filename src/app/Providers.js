@@ -1,3 +1,5 @@
+// ~/puf-wallet-frontend/src/app/Providers.js
+
 'use client';
 
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
