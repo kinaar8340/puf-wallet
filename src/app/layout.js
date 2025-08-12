@@ -1,40 +1,15 @@
-'use client';
+import { Providers } from './Providers';
+import './globals.css';
 
-import { useEffect } from 'react';
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
-
-export function Providers({ children }) {
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
-    const applyTheme = () => {
-      if (mediaQuery.matches) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    };
-
-    applyTheme(); // Initial apply
-    mediaQuery.addEventListener('change', applyTheme); // Listen for changes
-
-    return () => mediaQuery.removeEventListener('change', applyTheme);
-  }, []);
-
-  const wallets = [
-    new PhantomWalletAdapter(),
-    // Add other adapters if needed
-  ];
-
+export default function RootLayout({ children }) {
   return (
-    <ConnectionProvider endpoint="https://api.devnet.solana.com">
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          {children}
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <html lang="en" className="dark">
+      <body className="font-sans min-h-screen relative bg-[url('/images/bg1.png')] bg-cover bg-center bg-no-repeat">
+        <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+        <main className="relative z-10">
+          <Providers>{children}</Providers>
+        </main>
+      </body>
+    </html>
   );
 }
