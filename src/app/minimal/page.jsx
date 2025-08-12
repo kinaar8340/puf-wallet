@@ -41,7 +41,7 @@ export default function Minimal() {
       <main className="flex flex-col row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
         <div className="w-full bg-black/75 rounded border-4 border-black">
           <div className="w-full bg-black/75 p-8 flex justify-between items-center">
-            <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
+            <img src="/images/icon0.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
               {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
