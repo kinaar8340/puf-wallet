@@ -21,7 +21,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xW
 const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
 // Current flight
-const CURRENT_FLIGHT = 8;
+const CURRENT_FLIGHT = 9;
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },
