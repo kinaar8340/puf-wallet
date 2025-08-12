@@ -79,4 +79,4 @@ exports.POST = async (request) => {
     console.error('Claim error:', error);
     return new Response(JSON.stringify({ error: error.message || 'Failed to claim rewards' }), { status: 500 });
   }
-};
+}; 
