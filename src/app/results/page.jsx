@@ -1,21 +1,22 @@
+// /puf-wallet-frontend/src/app/results/page.jsx
+
 'use client';
 
 import { supabase } from '../../lib/supabase';
 import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
 import { useState, useEffect } from 'react';
-import { Connection, PublicKey } from '@solana/web3.js';
-import { getAssociatedTokenAddress, ASSOCIATED_TOKEN_PROGRAM_ID } from '@solana/spl-token';
 import Link from 'next/link';
 
-const TOKEN_2022_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
-const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
+import { Connection, Keypair, PublicKey, Transaction, sendAndConfirmTransaction } from '@solana/web3.js';
+import { Token, createTransferInstruction, createAssociatedTokenAccountInstruction, getAssociatedTokenAddress } from '@solana/spl-token';
 
-// Solana Devnet connection
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
-
-// $PUF token mint
 const TOKEN_MINT = new PublicKey('EPvHfFwU6TJhuwvftoxR1xy3WrFroLaEFYEJkp2BUHt6');
+const TOKEN_PROGRAM_ID = new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
+const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey('ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL');
+
+const WalletMultiButton = dynamic(async () => (await import('@solana/wallet-adapter-react-ui')).WalletMultiButton, { ssr: false });
 
 const voteStrains = [
   { value: 'Item1', label: 'Item1' },
@@ -25,8 +26,8 @@ const voteStrains = [
   { value: 'Item5', label: 'Item5' },
 ];
 
-const openFlights = [8,9];
-const closedFlights = [4,5,6,7];
+const openFlights = [6,7];
+const closedFlights = [4,5];
 
 export default function Results() {
   const { publicKey } = useWallet();
