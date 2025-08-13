@@ -5,8 +5,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -18,26 +18,26 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #000000;
+    --foreground: #000000;
   }
 }
 
-body {
+/*body {
   background-image: url('/images/bg2.png');
   background-size: 400px;
 }
 
 .dark body {  background-image: url('/images/bg1.png');
   background-size: 400px;
-}
+}*/ 
 
 .slider {
   -webkit-appearance: none;
   appearance: none;
-  width: 100%;
-  height: 30px; /* Tall track to match your large UI */
-  background: linear-gradient(to right, hsl(0, 0%, 99%), hsl(0, 100%, 50%));
+  width: 80%;
+  height: 10px; 
+  background: linear-gradient(to right, hsl(0, 0%, 0%), hsl(0, 100%, 50%));
   outline: none;
   border-radius: 15px;
   opacity: 0.9;
@@ -82,19 +82,19 @@ body {
 
 .slider::-webkit-slider-runnable-track {
   height: 30px;
-  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  background: linear-gradient(to right, hsl(0, 0%, 0%), hsl(0, 100%, 50%));
   border-radius: 15px;
 }
 
 .slider::-moz-range-track {
   height: 30px;
-  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  background: linear-gradient(to right, hsl(0, 0%, 0%), hsl(0, 100%, 50%));
   border-radius: 15px;
 }
 
 .slider::-ms-track {
   height: 30px;
-  background: linear-gradient(to right, hsl(120, 100%, 50%), hsl(0, 100%, 50%));
+  background: linear-gradient(to right, hsl(0, 0%, 0%), hsl(0, 100%, 50%));
   border-radius: 15px;
   color: transparent; /* Hide default track fill */
 }
