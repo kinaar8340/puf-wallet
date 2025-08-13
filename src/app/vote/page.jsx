@@ -151,16 +151,16 @@ return (
       {/* Combined container for header and controls on the same background */}
       <div className="w-full rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
         {/* Header section */}
-        <div className="w-full p-5 flex justify-top items-center">
+        <div className="w-full p-5 flex items-center">
           <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
           {publicKey && <p className="text-lg font-bold text-center mx-auto text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
         <div className="w-full p-5 flex justify-between items-center">
           <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 object-contain object-center" />
-          <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
+          <p className="bg-black/10 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           <div className="flex flex-col items-end gap-4"></div>
         </div>
-          <div className="w-full bg-black/1 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+          <div className="w-full bg-black/10 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <p></p>
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/results">
@@ -173,10 +173,10 @@ return (
                   Back 
                 </button>
               </Link>
-                <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]>
+                <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
                   Reset
                 </button>
-                <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]>
+                <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
                   Submit
                 </button>
             </div>
@@ -224,4 +224,3 @@ return (
     <ToastContainer theme="colored" />
   </div>
 );
-} // eof 
