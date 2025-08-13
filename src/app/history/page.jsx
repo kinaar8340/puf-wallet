@@ -120,7 +120,7 @@ return (
           </div>
         </div>
 
-        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+        <div className="w-full bg-black/50 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
           <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
           <table className="w-full table-auto mx-auto text-center">
             <thead>
