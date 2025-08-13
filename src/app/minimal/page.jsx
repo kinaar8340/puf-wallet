@@ -47,10 +47,9 @@ return (
           {publicKey && <p className="text-lg font-bold text-center mx-auto text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
         </div>
         <div className="w-full p-5 flex justify-between items-center">
-          <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 object-contain object-center object-left" />
-          <div className="flex flex-col items-end gap-4">
-             <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">| $PUF: {Number(balance).toFixed(2)}  |  </p>
-          </div>
+          <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 object-contain object-center" />
+          <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
+          <div className="flex flex-col items-end gap-4"></div>
         </div>
           <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
