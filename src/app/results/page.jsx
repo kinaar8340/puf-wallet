@@ -102,9 +102,9 @@ return (
           </div>
         </div>
 
-        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+        <div className="w-full bg-black/50 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
           <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
-          <p className="text-lg font-bold text-center mb-2">Flight Status: Open</p>
+          <p className="text-lg font-bold text-[#ffffff] text-center mb-2">Flight Status: Open</p>
           <table className="w-full table-auto mx-auto text-center border-b border-r border-green-500 shadow-md shadow-green-500/50 border-collapse">
             <thead>
               <tr>
