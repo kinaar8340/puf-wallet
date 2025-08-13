@@ -63,6 +63,7 @@ return (
   <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
     <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
       {/* Combined container for header and controls on the same background  */}
+      <div className="fixed h-full w-full p-10 bg-black/25 z-10">
       <div className="fixed top-0 left-0 w-1/3 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10"> 
         {/* Header section */}
         <div className="w-full p-5 flex justify-top items-center">
@@ -103,7 +104,7 @@ return (
       </div>
 
       {/* Table - Voting Results */} 
-      <div className="fixed top-0 right-0 w-2/3 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
+      
        <div className="fixed top-0 right-0 w-2/3 p-10 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
         <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
         <p className="text-lg font-bold text-[#ffffff] text-center mb-2">Flight Status: Open</p>
