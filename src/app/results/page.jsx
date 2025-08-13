@@ -63,7 +63,7 @@ return (
   <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
     <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
       {/* Combined container for header and controls on the same background */}
-      <div className="fixed top-0 w-full rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10"> {/* Changed to w-full for full-width dashboard */}
+      <div className="fixed top-0 w-1/2 justify-left rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10"> {/* Changed to w-full for full-width dashboard */}
         {/* Header section */}
         <div className="w-full p-5 flex justify-top items-center">
           <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
@@ -102,7 +102,7 @@ return (
         </div>
       </div>
 
-      <div className="w-full bg-black/50 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-72"> {/* Increased to mt-72 for more space; adjust as needed */}
+      <div className="fixed top-0 w-1/2 justify-right rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
         <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
         <p className="text-lg font-bold text-[#ffffff] text-center mb-2">Flight Status: Open</p>
         <table className="w-full table-auto mx-auto text-center border-b border-r border-green-500 shadow-md shadow-green-500/50 border-collapse">
