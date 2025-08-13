@@ -6,7 +6,7 @@ import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adap
 import { useMemo } from 'react';
 
 import { Providers } from './Providers';
-import '../globals.css';  // Import global styles including Tailwind
+import './globals.css';  // Import global styles including Tailwind
 
 export default function RootLayout({ children }) {
   const network = 'devnet';  // Or use WalletAdapterNetwork.Devnet
