@@ -102,7 +102,8 @@ return (
         </div>
       </div>
 
-      <div className="fixed top-0 right-0 w-1/3 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
+      {/* Table - Voting Results */}
+      <div className="fixed top-0 right-0 w-1/2 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
         <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
         <p className="text-lg font-bold text-[#ffffff] text-center mb-2">Flight Status: Open</p>
         <table className="w-full table-auto mx-auto text-center border-b border-r border-green-500 shadow-md shadow-green-500/50 border-collapse">
