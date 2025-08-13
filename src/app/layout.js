@@ -1,5 +1,3 @@
-// ~/puf-wallet-frontend/src/app/layout.js
-
 'use client';
 
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
@@ -18,7 +16,8 @@ export default function RootLayout({ children }) {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect={false}>  // Set autoConnect to false to prevent auto-reconnect issues
+      <WalletProvider wallets={wallets} autoConnect={false}>
+        {/* Set autoConnect to false to prevent auto-reconnect issues */}
         <WalletModalProvider>
           {children}
         </WalletModalProvider>
