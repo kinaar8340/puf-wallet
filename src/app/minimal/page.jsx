@@ -49,7 +49,7 @@ return (
             {publicKey && <p className="text-lg font-bold text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
           </div>
         </div>
-        <p className="bg-black/90 text-lg text-left text-[#00ff00] font-bold mx-auto">$PUF: {Number(balance).toFixed(2)}</p>
+        <p className="bg-black/10 text-lg text-left text-[#00ff00] font-bold mx-auto">$PUF: {Number(balance).toFixed(2)}</p>
           <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/results">
