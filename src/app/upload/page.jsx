@@ -146,9 +146,9 @@ return (
         </div>
 
         {/*Table - Upload New Strain*/}
-        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+        <div className="w-full rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Upload New Strain</h2>
-          <table className="w-full table-auto mx-auto text-center">
+          <table className="w-full table-auto mx-auto text-center text-[#ffffff]">
             <thead>
               <tr>
                 <th className="text-center pb-2 font-bold">Growers</th>
