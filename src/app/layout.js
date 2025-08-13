@@ -4,6 +4,7 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { useMemo } from 'react';
+import '../globals.css';  // Import global styles including Tailwind
 
 export default function RootLayout({ children }) {
   const network = 'devnet';  // Or use WalletAdapterNetwork.Devnet
@@ -15,13 +16,20 @@ export default function RootLayout({ children }) {
   );
 
   return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect={false}>
-        {/* Set autoConnect to false to prevent auto-reconnect issues */}
-        <WalletModalProvider>
-          {children}
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <html lang="en">
+      <head>
+         <link rel="icon" href="/images/icon0.png" type="image/png"/>
+      </head>
+      <body>
+        <ConnectionProvider endpoint={endpoint}>
+          <WalletProvider wallets={wallets} autoConnect={false}>
+            {/* Set autoConnect to false to prevent auto-reconnect issues */}
+            <WalletModalProvider>
+              {children}
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </body>
+    </html>
   );
 }
