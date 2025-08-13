@@ -148,8 +148,8 @@ export default function Vote() {
   return (
     <div className="relative">
       <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10"> 
-        <div>  
-          <div className="w-full p-8 flex justify-between items-center rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
+        <div className="w-full p-2 flex rounded-5g shadow-md shadow-green-500/50 mt-8 bg-black/50">  
+          <div className="w-full p-2 flex justify-between items-center rounded-5g shadow-md shadow-green-500/50 mt-8 bg-black/50">
             <img src="/images/icon0.png" alt="/images/icon1.png" className="w-32 h-32 object-contain object-top object-left" /> 
             <div className="flex flex-col items-end gap-4">
               <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
