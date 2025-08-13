@@ -57,7 +57,7 @@ return (
                 </button>
               </Link>
               <Link href="/vote">
-                <button className="bg-gray-800 hover:bg-gray-700 shadow-md shadow-green-500/50 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500">
+                <button className="bg-gray-800 hover:bg-gray-700 shadow-md shadow-green-500/50 text-[#00ff00] font-bold py-3 px-5 rounded text-xl rounded-b-lg shadow-md shadow-green-500/50 border-b border-r border-green-500">
                   Vote
                 </button>
               </Link>
@@ -72,10 +72,10 @@ return (
                 </button>
               </Link>
             </div>
-            <p className="border border-green-500 text-2xl font-bold text-center">$PUF: {Number(balance).toFixed(2)}</p>
+            <p className="text-2xl text-center text-[#333333] bg-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           </div>
         </div>
       </main>
     </div>
   );
-} //eof
+} //eof 
