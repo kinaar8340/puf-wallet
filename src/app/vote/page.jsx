@@ -144,7 +144,7 @@ export default function Vote() {
   const handleResetSliders = () => {
     setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: 0 }), {}));
   };
-  
+
 return (
   <div className="relative">
     <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
@@ -217,3 +217,4 @@ return (
     <ToastContainer theme="colored" />
   </div>
 );
+} // eof
