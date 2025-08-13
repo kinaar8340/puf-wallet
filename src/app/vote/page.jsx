@@ -145,79 +145,72 @@ export default function Vote() {
     setVotes(voteStrains.reduce((acc, s) => ({ ...acc, [s.value]: 0 }), {}));
   };
 
-return (
-  <div className="relative">
-    <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
-      <div className="w-full p-2 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
-        {/* Header with logo and Solana connect button – using <header> for semantics, but you could wrap the logo in <h1> if you want a heading level */}
-        <header className="flex justify-between items-center mb-4 p-2">
-          {/* If you want to use <h1> around the logo for SEO or structure, here's how – add text if needed */}
-          <h1 className="flex items-center text-3xl font-bold text-[#00ff00]">
-            <img src="/images/icon0.png" alt="PUF Wallet Logo" className="w-32 h-32 object-contain object-top object-left mr-4" />
-            {/* Optional: Add title text here, e.g., PUF Wallet */}
-          </h1>
-          <div className="flex flex-col items-end gap-4">
-            <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
-            {publicKey && <p className="text-lg font-bold text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+  return (
+    <div className="relative">
+      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10"> 
+        <div className="w-full p-10 flex justify-between rounded-1g shadow-md shadow-green-500/50 mt-8 bg-black/50">  
+          <div className="w-full p-10 flex justify-between items-center rounded-1g shadow-md shadow-green-500/50 mt-8 bg-black/50">
+            <img src="/images/icon0.png" alt="/images/icon1.png" className="w-32 h-32 object-contain object-top object-left" /> 
+            <div className="flex flex-col items-end gap-4">
+              <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
+              {publicKey && <p className="text-lg font-bold text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+            </div>
           </div>
-        </header>
-
-        {/* Controls section with buttons and balance – brought "forward" as a separate card-like section */}
-        <div className="w-full p-5 rounded-b-lg shadow-md shadow-green-500/50 bg-black/50">
-          <div className="w-full flex justify-center gap-4 mb-4">
-            <Link href="/minimal">
-              <button className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
-                Back
+          <div className="w-full p-5 rounded-b-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
+            <div className="w-full flex justify-center gap-4 mb-4">
+              <Link href="/minimal">
+                <button className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
+                  Back
+                </button>
+              </Link>
+              <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
+                Reset Sliders
               </button>
-            </Link>
-            <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
-              Reset Sliders
-            </button>
-            <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
-              Submit Vote
-            </button>
+              <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
+                Submit Vote
+              </button>
+            </div>
+            <p className="text-2xl font-bold text-center mb-4 text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           </div>
-          <p className="text-2xl font-bold text-center mb-4 text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
         </div>
-      </div>
 
-      {/* Vote docket as the "base" or main content section in the back/below */}
-      <div className="w-full p-3 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
-        <h2 className="text-4xl font-bold mb-4 text-center text-[#00ff00]">Vote Docket</h2>
-        <table className="w-full table-auto mx-auto text-center border-collapse border border-black">
-          <tbody>
-            {voteStrains.map(s => {
-              const value = votes[s.value];
-              const color = getBackgroundColor(value);
-              return (
-                <tr key={s.value}>
-                  <td className="pb-2">
-                    <div className="flex items-center justify-center">
-                      <input
-                        type="range"
-                        min="0"
-                        max="10"
-                        step="1"
-                        value={value}
-                        onChange={(e) => handleVoteChange(s.value, e.target.value)}
-                        className="slider w-3/4"
-                      />
-                      <span 
-                        className="ml-2 p-2 rounded font-bold text-xl border-4 border-black min-w-[80px] text-center text-white"
-                        style={{ backgroundColor: color }}
-                      >
-                        {value > 0 ? value : ''}
-                      </span>
-                    </div>
-                    <p className="text-center mt-2 font-bold text-[#00ff00]">{s.label}</p>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </main>
-    <ToastContainer theme="colored" />
-  </div>
-);
+        <div className="w-full p-3 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
+          <h2 className="text-4xl font-bold mb-4 text-center text-[#00ff00]">Vote Docket</h2>
+          <table className="w-full table-auto mx-auto text-center border-collapse border border-black">
+            <tbody>
+              {voteStrains.map(s => {
+                const value = votes[s.value];
+                const color = getBackgroundColor(value);
+                return (
+                  <tr key={s.value}>
+                    <td className="pb-2">
+                      <div className="flex items-center justify-center">
+                        <input
+                          type="range"
+                          min="0"
+                          max="10"
+                          step="1"
+                          value={value}
+                          onChange={(e) => handleVoteChange(s.value, e.target.value)}
+                          className="slider w-3/4"
+                        />
+                        <span 
+                          className="ml-2 p-2 rounded font-bold text-xl border-4 border-black min-w-[80px] text-center text-white"
+                          style={{ backgroundColor: color }}
+                        >
+                          {value > 0 ? value : ''}
+                        </span>
+                      </div>
+                      <p className="text-center mt-2 font-bold text-[#00ff00]">{s.label}</p>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </main>
+      <ToastContainer theme="colored" />
+    </div>
+  );
+}
