@@ -1,4 +1,4 @@
-// /puf-wallet-frontend/src/app/minimal/page.jsx
+// /puf-wallet-frontend/src/app/minimal/page.jsx 
 
 'use client';
 
@@ -55,7 +55,7 @@ export default function Minimal() {
                 </button>
               </Link>
               <Link href="/vote">
-                <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
+                <button className="bg-gray-800 hover:bg-gray-700 shadow-md shadow-green-500/50 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border border-green-500">
                   Vote
                 </button>
               </Link>
@@ -70,7 +70,7 @@ export default function Minimal() {
                 </button>
               </Link>
             </div>
-            <p className="text-2xl font-bold text-center">$PUF Balance: {Number(balance).toFixed(2)}</p>
+            <p className="text-2xl font-bold text-center">$PUF: {Number(balance).toFixed(2)}</p>
           </div>
         </div>
       </main>
