@@ -147,7 +147,7 @@ export default function Vote() {
 
 return (
   <div className="relative">
-    <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
+    <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10 text-xl text-[#00ff00]">
       {/* Combined container for header and controls on the same background */}
       <div className="w-full rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50 text-xl text-[#00ff00]">
         {/* Header section */}
