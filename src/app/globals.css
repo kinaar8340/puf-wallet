@@ -5,21 +5,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #000000;
-  --foreground: #000000;
+  --background: #333333;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #000000;
-    --foreground: #000000;
+    --background: #333333;
   }
 }
 
@@ -29,6 +26,12 @@ body {
   background-attachment: fixed;
   background-position: left top;
   background-size: 400px;
+
+  background-image: url('/images/bg2.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right top;
+  background-size: 400px;
 }
 
 .dark body {
@@ -36,6 +39,12 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: left top;
+  background-size: 400px;
+
+  background-image: url('/images/bg1.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: right top;
   background-size: 400px;
 }
 
