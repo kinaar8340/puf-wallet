@@ -121,7 +121,7 @@ return (
         </div>
 
         {/* Table - Your History */}
-        <div className="fixed top-0 right-0 w-1/2 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10 text-[#00ff00]">
+        <div className="fixed top-0 right-0 w-2/3 p-8 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10 text-[#00ff00]">
           <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
           <table className="w-full table-auto mx-auto text-center">
             <thead>
