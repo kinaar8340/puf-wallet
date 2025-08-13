@@ -77,17 +77,19 @@ export default function History() {
     }
   }, [publicKey, fetchHistory]);
 
-  return (
-    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
-      <main className="flex flex-col row-start-1 items-center justify-center w-full max-w-2xl mx-auto">
-        <div className="w-full bg-black/75 rounded border-4 border-black">
-          <div className="w-full bg-black/75 p-8 flex justify-between items-center">
-            <img src="/images/icon2.png" alt="PUF Wallet Logo" className="w-16 h-16 object-contain" />
-            <div className="flex flex-col items-end gap-4">
-              <WalletMultiButton className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70" />
-              {publicKey && <p className="text-lg font-bold">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
-            </div>
+return (
+  <div className="relative">
+    <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
+      {/* Combined container for header and controls on the same background */}
+      <div className="w-full rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
+        {/* Header section */}
+        <div className="w-full p-4 flex justify-between items-center">
+          <img src="/images/icon0.png" alt="PUF Wallet Logo" className="w-32 h-32 object-contain object-top object-left" />
+          <div className="flex flex-col items-end gap-4">
+            <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
+            {publicKey && <p className="text-lg font-bold text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
           </div>
+        </div>
           <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/minimal">
