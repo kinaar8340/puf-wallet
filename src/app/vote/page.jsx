@@ -174,7 +174,7 @@ export default function Vote() {
           </div>
         </div>
 
-        <div className="w-full p-5 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
+        <div className="w-full p-3 rounded-lg shadow-md shadow-green-500/50 mt-8 bg-black/50">
           <h2 className="text-4xl font-bold mb-4 text-center text-[#00ff00]">Vote Docket</h2>
           <table className="w-full table-auto mx-auto text-center border-collapse border border-black">
             <tbody>
@@ -195,7 +195,7 @@ export default function Vote() {
                           className="slider w-3/4"
                         />
                         <span 
-                          className="ml-2 p-4 rounded font-bold text-xl border-4 border-black min-w-[80px] text-center text-white"
+                          className="ml-2 p-2 rounded font-bold text-xl border-4 border-black min-w-[80px] text-center text-white"
                           style={{ backgroundColor: color }}
                         >
                           {value > 0 ? value : ''}
