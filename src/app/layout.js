@@ -4,6 +4,8 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { useMemo } from 'react';
+
+import { Providers } from './Providers';
 import '../globals.css';  // Import global styles including Tailwind
 
 export default function RootLayout({ children }) {
