@@ -72,7 +72,7 @@ return (
                 </button>
               </Link>
             </div>
-            <p className="text-2xl text-center text-[#333333] bg-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
+            <p className="text-2xl text-center text-[#333333] bg-[#00ff00] w-1/2 mx-auto">$PUF: {Number(balance).toFixed(2)}</p>
           </div>
         </div>
       </main>
