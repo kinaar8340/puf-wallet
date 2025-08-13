@@ -49,7 +49,7 @@ return (
         <div className="w-full p-5 flex justify-between items-center">
           <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 object-contain object-center object-left" />
           <div className="flex flex-col items-end gap-4">
-             <p className="w=1/2 bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">| $PUF: {Number(balance).toFixed(2)}  |  </p>
+             <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">| $PUF: {Number(balance).toFixed(2)}  |  </p>
           </div>
         </div>
           <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
