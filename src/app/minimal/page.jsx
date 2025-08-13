@@ -52,30 +52,30 @@ return (
           <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/results">
-                <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
                   Results
                 </button>
               </Link>
               <Link href="/vote">
-                <button className="bg-gray-600 hover:bg-gray-500 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
                   Vote
                 </button>
               </Link>
               <Link href="/upload">
-                <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
                   Upload
                 </button>
               </Link>
               <Link href="/history">
-                <button className="bg-gray-800 hover:bg-gray-700 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
                   History
                 </button>
               </Link>
             </div>
-            <p className="text-2xl text-center text-[#333333] bg-[#00ff00] w-1/2 mx-auto">$PUF: {Number(balance).toFixed(2)}</p>
+            <p className="text-2xl text-center text-[#333333] bg-[#00ff00] font-bold py-3 px-5 rounded w-1/2 mx-auto">$PUF: {Number(balance).toFixed(2)}</p>
           </div>
         </div>
       </main>
     </div>
   );
-}
+} //eof
