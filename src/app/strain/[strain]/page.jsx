@@ -249,7 +249,7 @@ return (
         </div>
 
         {/* Table - Link to Strain Data */}
-        <div className="w-full bg-black/75 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
+        <div className="w-full bg-black/50 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
           <h2 className="text-4xl font-bold mb-4 text-[#00ff00] text-center">Link to Strain Data</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-2 items-center">
             <div className="flex flex-col w-full gap-1 mb-4">
