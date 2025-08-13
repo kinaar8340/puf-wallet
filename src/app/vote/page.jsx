@@ -173,16 +173,12 @@ return (
                   Back 
                 </button>
               </Link>
-              <Link href="/upload">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  Upload
+                <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]>
+                  Reset
                 </button>
-              </Link>
-              <Link href="/history">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  History
+                <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]>
+                  Submit
                 </button>
-              </Link>
             </div>
             <p></p>
           </div>
@@ -228,4 +224,4 @@ return (
     <ToastContainer theme="colored" />
   </div>
 );
-} // eof
+} // eof 
