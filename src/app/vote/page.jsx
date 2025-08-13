@@ -174,10 +174,10 @@ return (
                 </button>
               </Link>
                 <button onClick={handleResetSliders} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
-                  Reset
+                  Reset Sliders
                 </button>
                 <button onClick={handleVoteSubmit} disabled={loading} className="text-xl font-bold py-3 px-5 rounded border border-green-500 bg-gray-800/50 hover:bg-gray-700/50 text-[#00ff00]">
-                  Submit
+                  Submit Vote
                 </button>
             </div>
             <p></p>
@@ -224,3 +224,4 @@ return (
     <ToastContainer theme="colored" />
   </div>
 );
+}
