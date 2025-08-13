@@ -13,8 +13,7 @@ export default function RootLayout({ children }) {
   const endpoint = 'https://api.devnet.solana.com';
 
   const wallets = useMemo(
-    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
-    []
+    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()]
   );
 
   return (
