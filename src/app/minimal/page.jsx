@@ -46,10 +46,10 @@ return (
           <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 py-3 px-5 rounded object-contain object-top object-left" />
           <div className="flex flex-col items-end gap-4">
             <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
-            {publicKey && <p className="text-lg font-bold text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
+            {publicKey && <p className="text-lg font-bold text-right mx-auto text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
           </div>
         </div>
-        <p className="bg-black/1 text-lg text-left text-[#00ff00] font-bold mx-auto">$PUF: {Number(balance).toFixed(2)}</p>
+        <p className="bg-black/1 text-lg font-bold text-left mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/results">
