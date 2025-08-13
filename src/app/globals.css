@@ -21,7 +21,7 @@
 }
 
 body {
-  background-image: url('/images/bg3.png');
+  background-image: url('/images/bg2.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
@@ -29,7 +29,7 @@ body {
 }
 
 .dark body {
-  background-image: url('/images/bg3.png');
+  background-image: url('/images/bg2.png');
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
@@ -41,7 +41,7 @@ body {
   appearance: none;
   width: 80%;
   height: 10px; 
-  background: linear-gradient(to right, hsl(0, 0%, 0%), hsl(0, 100%, 50%));
+  background: linear-gradient(to right, hsl(0, 100%, 5%), hsl(12, 100%, 50%));
   outline: none;
   border-radius: 15px;
   opacity: 0.9;
