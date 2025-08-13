@@ -51,7 +51,8 @@ return (
           <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           <div className="flex flex-col items-end gap-4"></div>
         </div>
-          <div className="w-full bg-black/75 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+          <div className="w-full bg-black/1 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+            <p></p>
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/results">
                 <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
@@ -80,4 +81,4 @@ return (
       </main>
     </div>
   );
-} //eof
+} //eof 
