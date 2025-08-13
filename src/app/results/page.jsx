@@ -63,7 +63,7 @@ return (
   <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
     <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
       {/* Combined container for header and controls on the same background */}
-      <div className="fixed top-0 w-1/2 rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
+      <div className="fixed top-0 w-full rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10"> {/* Changed to w-full for full-width dashboard */}
         {/* Header section */}
         <div className="w-full p-5 flex justify-top items-center">
           <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
@@ -74,81 +74,81 @@ return (
           <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
           <div className="flex flex-col items-end gap-4"></div>
         </div>
-          <div className="w-full bg-black/1 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
-            <p></p>
-            <div className="w-full flex justify-center gap-4 mb-4">
-              <Link href="/minimal">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  Back
-                </button>
-              </Link>
-              <Link href="/vote">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  Vote
-                </button>
-              </Link>
-              <Link href="/upload">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  Upload
-                </button>
-              </Link>
-              <Link href="/history">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  History
-                </button>
-              </Link>
-            </div>
-            <p></p>
+        <div className="w-full bg-black/1 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
+          <p></p>
+          <div className="w-full flex justify-center gap-4 mb-4">
+            <Link href="/minimal">
+              <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                Back
+              </button>
+            </Link>
+            <Link href="/vote">
+              <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                Vote
+              </button>
+            </Link>
+            <Link href="/upload">
+              <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                Upload
+              </button>
+            </Link>
+            <Link href="/history">
+              <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                History
+              </button>
+            </Link>
           </div>
+          <p></p>
         </div>
+      </div>
 
-        <div className="w-full bg-black/50 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-8">
-          <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
-          <p className="text-lg font-bold text-[#ffffff] text-center mb-2">Flight Status: Open</p>
-          <table className="w-full table-auto mx-auto text-center border-b border-r border-green-500 shadow-md shadow-green-500/50 border-collapse">
-            <thead>
-              <tr>
-                <th className="border px-4 py-2 ">Flight</th>
+      <div className="w-full bg-black/50 p-5 rounded-lg shadow-md shadow-green-500/50 text-[#00ff00] mt-72"> {/* Increased to mt-72 for more space; adjust as needed */}
+        <h2 className="text-4xl font-bold mb-4 text-center">Voting Results</h2>
+        <p className="text-lg font-bold text-[#ffffff] text-center mb-2">Flight Status: Open</p>
+        <table className="w-full table-auto mx-auto text-center border-b border-r border-green-500 shadow-md shadow-green-500/50 border-collapse">
+          <thead>
+            <tr>
+              <th className="border px-4 py-2 ">Flight</th>
+              {voteStrains.map(s => (
+                <th key={s.value} className="border px-4 py-2">{s.label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {openFlights.map(flight => (
+              <tr key={flight}>
+                <td className="border px-4 py-2">{flight}</td>
                 {voteStrains.map(s => (
-                  <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                  <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
                 ))}
               </tr>
-            </thead>
-            <tbody>
-              {openFlights.map(flight => (
-                <tr key={flight}>
-                  <td className="border px-4 py-2">{flight}</td>
-                  {voteStrains.map(s => (
-                    <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            ))}
+          </tbody>
+        </table>
 
-          <p className="text-lg font-bold text-center my-4 text-red-500">Flight Status: Closed</p>
-          <table className="w-full table-auto mx-auto text-center border-collapse">
-            <thead>
-              <tr>
-                <th className="border px-4 py-2">Flight</th>
+        <p className="text-lg font-bold text-center my-4 text-red-500">Flight Status: Closed</p>
+        <table className="w-full table-auto mx-auto text-center border-collapse">
+          <thead>
+            <tr>
+              <th className="border px-4 py-2">Flight</th>
+              {voteStrains.map(s => (
+                <th key={s.value} className="border px-4 py-2">{s.label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {closedFlights.map(flight => (
+              <tr key={flight}>
+                <td className="border px-4 py-2">{flight}</td>
                 {voteStrains.map(s => (
-                  <th key={s.value} className="border px-4 py-2">{s.label}</th>
+                  <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
                 ))}
               </tr>
-            </thead>
-            <tbody>
-              {closedFlights.map(flight => (
-                <tr key={flight}>
-                  <td className="border px-4 py-2">{flight}</td>
-                  {voteStrains.map(s => (
-                    <td key={s.value} className="border px-4 py-2">{allVotes[flight]?.[s.value] || 0}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </main>
-    </div>
-  );
-}
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+);
+} 
