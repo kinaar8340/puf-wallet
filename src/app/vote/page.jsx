@@ -185,7 +185,7 @@ return (
         </div>
 
       {/* Vote docket section in its own container below */}
-      <div className="fixed top-0 right-0 w-1/2 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
+      <div className="fixed top-0 right-0 w-2/3 p-8 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
         <h2 className="text-4xl font-bold mb-4 text-center text-[#00ff00]">Vote Docket</h2>
         <table className="w-full table-auto mx-auto text-center border-collapse border border-black">
           <tbody>
