@@ -1,4 +1,4 @@
-/* ~/puf-wallet-frontend/src/app/minimal/page.tsx */
+/* puf-wallet-frontend/src/app/minimal/page.tsx */ 
 
 'use client';
 
@@ -11,13 +11,13 @@ import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
-const TOKEN_MINT = new PublicKey('6sTBrWuVVi elTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7');  // Fixed: remove space
+const TOKEN_MINT = new PublicKey('6sTBrWuViekTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7');
 
 export default function Minimal() {
   const { publicKey, connected, disconnect } = useWallet();
   const { setVisible } = useWalletModal();
-  const [balance, setBalance] = useState('0');
-  const [buttonLabel, setButtonLabel] = useState('Connect');
+  const [balance, setBalance] = useState<string>('0');  // Typed state
+  const [buttonLabel, setButtonLabel] = useState<string>('Connect');
 
   useEffect(() => {
     if (publicKey) {
@@ -39,7 +39,7 @@ export default function Minimal() {
     } else {
       setButtonLabel('Connect');
     }
-  }, [connected, publicKey]);
+  }, [connected, publicKey]);  // Sync label on state change to ensure re-render
 
   const handleWalletClick = () => {
     if (connected) {
@@ -94,6 +94,4 @@ export default function Minimal() {
       </main>
     </div>
   );
-}
-
-export const dynamic = 'force-dynamic';  // Disable static prerender
+} 
