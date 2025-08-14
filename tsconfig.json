@@ -4,15 +4,15 @@
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,  // Start with false to ease migration, then enable for stricter checks
+    "strict": false,  // Set to true later for stricter typing
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext",
+    "module": "esnext",  // Critical: enables import/export
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve",  // Preserves JSX for Next.js
     "incremental": true,
     "plugins": [{ "name": "next" }]
   },
