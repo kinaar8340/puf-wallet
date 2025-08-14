@@ -6,6 +6,7 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { useMemo } from 'react';
+
 import { Providers } from './Providers';
 import './globals.css';  // Import global styles including Tailwind
 
@@ -14,13 +15,14 @@ export default function RootLayout({ children }) {
   const endpoint = 'https://api.devnet.solana.com';
 
   const wallets = useMemo(
-    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()]
+    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
+    []  // Add this empty array to fix the warning
   );
 
   return (
     <html lang="en">
       <head>
-         <link rel="icon" href="/images/icon0.png" type="image/png"/>
+        <link rel="icon" href="/images/icon0.png" type="image/png"/>
       </head>
       <body>
         <ConnectionProvider endpoint={endpoint}>
@@ -34,4 +36,4 @@ export default function RootLayout({ children }) {
       </body>
     </html>
   );
-}
+} /* eof */
