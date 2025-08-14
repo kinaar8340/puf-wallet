@@ -2,39 +2,20 @@
 
 'use client';
 
-import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
-import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
-import { useMemo } from 'react';
-
+import { useMemo } from 'react';  // Keep if needed elsewhere, but unused here now
 import './globals.css';  // Import global styles including Tailwind
 
-import Providers from 'Providers';
+import { Providers } from './Providers';  // Fixed import: relative path and named export
 
 export default function RootLayout({ children }) {
-  const network = 'devnet';  // Or use WalletAdapterNetwork.Devnet
-  const endpoint = 'https://api.devnet.solana.com';
-
-  const wallets = useMemo(
-    () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
-    []  // Add this to fix the ESLint warning
-  );
-
   return (
     <html lang="en">
       <head>
         <link rel="icon" href="/images/icon0.png" type="image/png"/>
       </head>
       <body>
-        <ConnectionProvider endpoint={endpoint}>
-          <WalletProvider wallets={wallets} autoConnect={false}>
-            {/* Set autoConnect to false to prevent auto-reconnect issues */}
-            <WalletModalProvider>
-              {children}
-            </WalletModalProvider>
-          </WalletProvider>
-        </ConnectionProvider>
+        <Providers>{children}</Providers>  // Use the Providers component here
       </body>
     </html>
   );
-} /* eof */
+} 
