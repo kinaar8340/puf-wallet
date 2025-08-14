@@ -1,4 +1,4 @@
-// ~/puf-wallet-frontend/src/app/history/page.tsx 
+/* puf-wallet-frontend/src/app/history/page.tsx */ 
 
 'use client';
 
@@ -6,6 +6,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 
@@ -17,47 +18,9 @@ export default function Minimal() {
   const { setVisible } = useWalletModal();
   const [balance, setBalance] = useState<string>('0');  // Typed state
   const [buttonLabel, setButtonLabel] = useState<string>('Connect');
-  const [aggregatedUploads, setAggregatedUploads] = useState({});
-  const [aggregatedDetails, setAggregatedDetails] = useState({});
-
-  const fetchHistory = useCallback(async () => {
-    if (!publicKey) return;
-
-    const { data: uploadsData, error: uploadsError } = await supabase.from('Uploads').select('*').eq('user_pubkey', publicKey.toBase58());
-    if (uploadsError) console.error('Uploads fetch error:', uploadsError);
-    const uploads = uploadsData || [];
-    const aggUploads = uploads.reduce((acc, u) => {
-      if (!acc[u.strain]) {
-        acc[u.strain] = { type: u.type, sum_thc: 0, sum_cbd: 0, sum_cbn: 0, sum_cbc: 0, count: 0 };
-      }
-      acc[u.strain].type = u.type; // Use the last type
-      acc[u.strain].sum_thc += u.thc || 0;
-      acc[u.strain].sum_cbd += u.cbd || 0;
-      acc[u.strain].sum_cbn += u.cbn || 0;
-      acc[u.strain].sum_cbc += u.cbc || 0;
-      acc[u.strain].count += 1;
-      return acc;
-    }, {});
-    setAggregatedUploads(aggUploads);
-    const uniqueFromUploads = Object.keys(aggUploads);
-
-    const { data: detailsData, error: detailsError } = await supabase.from('StrainDetails').select('*').eq('user_pubkey', publicKey.toBase58());
-    if (detailsError) console.error('StrainDetails fetch error:', detailsError);
-    const details = detailsData || [];
-    const aggDetails = details.reduce((acc, d) => {
-      acc[d.strain] = { type: d.type, grower: d.grower };
-      return acc;
-    }, {});
-    setAggregatedDetails(aggDetails);
-    const uniqueFromDetails = Object.keys(aggDetails);
-
-    setStrains([...new Set([...uniqueFromUploads, ...uniqueFromDetails])]);
-  }, [publicKey]);
 
   useEffect(() => {
     if (publicKey) {
-      fetchHistory();
-      // Fetch balance
       (async () => {
         try {
           const ata = await getAssociatedTokenAddress(TOKEN_MINT, publicKey);
@@ -68,25 +31,42 @@ export default function Minimal() {
         }
       })();
     }
-  }, [publicKey, fetchHistory]);
+  }, [publicKey]);
 
-return (
-  <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
-    <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
-      {/* Combined container for header and controls on the same background */}
-      <div className="fixed top-0 left-0 w-1/3 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10">
-        {/* Header section */}
-        <div className="w-full p-5 flex justify-top items-center">
-          <WalletMultiButton className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70" />
-          {publicKey && <p className="text-lg font-bold text-center mx-auto text-[#00ff00]">Connected: {publicKey.toBase58().slice(0, 6)}...{publicKey.toBase58().slice(-4)}</p>}
-        </div>
-        <div className="w-full p-5 flex justify-between items-center">
-          <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 object-contain object-center" />
-          <p className="bg-black/1 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
-          <div className="flex flex-col items-end gap-4"></div>
-        </div>
-          <div className="w-full bg-black/1 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
-            <p></p>
+  useEffect(() => {
+    if (connected && publicKey) {
+      setButtonLabel(`${publicKey.toBase58().slice(0, 6)}...${publicKey.toBase58().slice(-4)}`);
+    } else {
+      setButtonLabel('Connect');
+    }
+  }, [connected, publicKey]);  // Sync label on state change to ensure re-render
+
+  const handleWalletClick = () => {
+    if (connected) {
+      disconnect();
+    } else {
+      setVisible(true);
+    }
+  };
+
+  return (
+    <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
+      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10">
+        {/* Combined container for header and controls on the same background */}
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-1/3 rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10 p-4">
+          {/* Header section */}
+          <div className="w-full p-5 flex justify-center items-center">
+            <button
+              onClick={handleWalletClick}
+              className="font-bold py-3 px-5 rounded text-xl bg-gradient-to-br from-blue-500/70 to-blue-600/70 hover:bg-blue-600/70 text-[#00ff00] shadow-md shadow-green-500/50">
+              {buttonLabel}
+            </button>
+          </div>
+          <div className="w-full p-5 flex justify-between items-center">
+            <img src="/images/icon0.png" alt="PUF Wallet" className="w-32 h-32 object-contain object-center" />
+            <p className="bg-black/10 text-lg font-bold text-center mx-auto text-[#00ff00]">$PUF: {Number(balance).toFixed(2)}</p>
+          </div>
+          <div className="w-full bg-black/10 p-5 rounded-b-lg shadow-md shadow-green-500/50 text-[#00ff00]">
             <div className="w-full flex justify-center gap-4 mb-4">
               <Link href="/results">
                 <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
@@ -98,57 +78,20 @@ return (
                   Vote
                 </button>
               </Link>
-              <Link href="/minimal">
-                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
-                  Back
-                </button>
-              </Link>
               <Link href="/upload">
                 <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
                   Upload
                 </button>
               </Link>
+              <Link href="/history">
+                <button className="bg-gray-700 hover:bg-gray-600 text-[#00ff00] font-bold py-3 px-5 rounded text-xl border-b border-r border-green-500 shadow-md shadow-green-500/50">
+                  History
+                </button>
+              </Link>
             </div>
-            <p></p>
           </div>
-        </div>
-
-        {/* Table - Your History */}
-        <div className="fixed top-0 right-0 w-2/3 p-8 mx-auto rounded-lg shadow-md shadow-green-500/50 bg-black/50 z-10 text-[#00ff00]">
-          <h2 className="text-4xl font-bold text-[#00ff00] mb-4">Your History</h2>
-          <table className="w-full table-auto mx-auto text-center">
-            <thead>
-              <tr>
-                <th className="text-center pb-2 font-bold underline">Growers</th>
-                <th className="text-center pb-2 font-bold underline">Strain Name</th>
-                <th className="text-center pb-2 font-bold underline">THC %</th>
-                <th className="text-center pb-2 font-bold underline">Type</th>
-                <th className="text-center pb-2 font-bold underline">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {strains.map((strain) => (
-                <tr key={strain}>
-                  <td className="pr-2 pb-2 font-bold text-center">{aggregatedDetails[strain]?.grower || ''}</td>
-                  <td className="pr-2 pb-2 font-bold text-center">{strain}</td>
-                  <td className="pr-2 pb-2 font-bold text-center">
-                    {aggregatedUploads[strain] ? (aggregatedUploads[strain].sum_thc / aggregatedUploads[strain].count).toFixed(2) : '0.00'}
-                  </td>
-                  <td className="pr-2 pb-2 font-bold text-center">{aggregatedDetails[strain]?.type || aggregatedUploads[strain]?.type || ''}</td>
-                  <td className="pb-2 text-center">
-                    <Link href={`/strain/${encodeURIComponent(strain)}`}>
-                      <button className="bg-blue-500/70 hover:bg-blue-600/70 font-bold py-1 px-2 rounded text-sm">
-                        Link
-                      </button>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {strains.length === 0 && <p className="text-center font-bold text-lg">No strains yet.</p>}
         </div>
       </main>
     </div>
   );
-}
+} 
