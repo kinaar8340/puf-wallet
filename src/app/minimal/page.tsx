@@ -94,7 +94,7 @@ export default function Minimal() {
         </div>
 
         {/* Test content to confirm visibility - remove once fixed */}
-        <h1 className="text-3xl font-bold mt-8">Welcome to PUF Wallet</h1>
+        <h1 className="text-3xl text-[#333333] font-bold mt-8">Welcome to PUF Wallet</h1>
         <p className="text-lg">This content should now be visible below the header. Balance: {balance}</p>
       </main>
     </div>
