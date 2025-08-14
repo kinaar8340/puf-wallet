@@ -5,7 +5,7 @@
 import './globals.css';
 import { useMemo } from 'react';
 import { Providers } from './Providers'; 
-@import "tailwindcss"; 
+import "tailwindcss"; 
 
 export default function RootLayout({ children }) {
   return (
