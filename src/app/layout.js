@@ -1,4 +1,4 @@
-/* ~/puf-wallet-frontend/src/app/layout.js */
+/* ~/puf-wallet-frontend/src/app/layout.js   */
 
 'use client';
 
