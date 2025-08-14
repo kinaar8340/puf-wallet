@@ -8,11 +8,11 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false, // False for easy migration; set to true later
+    "strict": false, 
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "module": "esnext", // Fixes the import/export issue
+    "module": "esnext", 
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
