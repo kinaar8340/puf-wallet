@@ -7,6 +7,7 @@ import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 // Add other adapters if needed, e.g., from '@solana/wallet-adapter-wallets'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 export function Providers({ children }) {
   const wallets = useMemo(() => [
@@ -18,6 +19,7 @@ export function Providers({ children }) {
     <ConnectionProvider endpoint="https://api.devnet.solana.com">
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
+          <WalletMultiButton />
           {children}
         </WalletModalProvider>
       </WalletProvider>
