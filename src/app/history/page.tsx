@@ -6,23 +6,17 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-
 import { Connection, PublicKey } from '@solana/web3.js';
 import { getAssociatedTokenAddress } from '@solana/spl-token';
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 const TOKEN_MINT = new PublicKey('6sTBrWuViekTdbYPK9kAypnwpXJqqrp6yDzTB1PK3Mp7');
+
 export default function Minimal() {
   const { publicKey, connected, disconnect } = useWallet();
   const { setVisible } = useWalletModal();
   const [balance, setBalance] = useState<string>('0');  // Typed state
   const [buttonLabel, setButtonLabel] = useState<string>('Connect');
-  
-  export default function History() {
-  const { publicKey } = useWallet();
-  const router = useRouter();
-  const [balance, setBalance] = useState('0');
-  const [strains, setStrains] = useState([]);
   const [aggregatedUploads, setAggregatedUploads] = useState({});
   const [aggregatedDetails, setAggregatedDetails] = useState({});
 
