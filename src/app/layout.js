@@ -14,7 +14,9 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="/images/icon0.png" type="image/png"/>
       </head>
       <body>
-        <Providers>{children}</Providers>  // Use the Providers component here
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
