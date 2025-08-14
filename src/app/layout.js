@@ -1,10 +1,9 @@
-/* ~/puf-wallet-frontend/src/app/layout.js   */
+/* ~/puf-wallet-frontend/src/app/layout.js */
 
 'use client';
 
+import './globals.css';
 import { useMemo } from 'react';
-import './globals.css'; 
-
 import { Providers } from './Providers';  
 
 export default function RootLayout({ children }) {
