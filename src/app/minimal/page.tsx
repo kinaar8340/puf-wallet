@@ -1,3 +1,5 @@
+/* ~/puf-wallet-frontend/src/app/minimal/page.tsx */
+
 'use client';
 
 import { useWallet } from '@solana/wallet-adapter-react';
@@ -49,9 +51,9 @@ export default function Minimal() {
 
   return (
     <div suppressHydrationWarning={true} className="font-sans grid grid-rows-[1fr_20px] items-start justify-items-center min-h-screen px-4 pb-4 gap-8 sm:px-10 sm:pb-10 text-xl text-[#00ff00] bg-transparent relative">
-      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10 pt-64">  // Increased pt-64 to make room for header (adjust as needed)
+      <main className="flex flex-col items-center justify-center w-full max-w-2xl mx-auto p-1 sm:p-10 pt-64">  
         {/* Fixed header - limited height with h-auto */}
-        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-1/3 h-auto rounded-lg shadow-md shadow-green-500/50 bg-black/70 z-10 p-4">  // h-auto to prevent full-height, higher opacity
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-1/3 h-auto rounded-lg shadow-md shadow-green-500/50 bg-black/70 z-10 p-4">  
           {/* Header section */}
           <div className="w-full p-5 flex justify-center items-center">
             <button
