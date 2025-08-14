@@ -7,7 +7,6 @@ import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { PhantomWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { useMemo } from 'react';
 
-import { Providers } from './Providers';
 import './globals.css';  // Import global styles including Tailwind
 
 export default function RootLayout({ children }) {
@@ -16,7 +15,7 @@ export default function RootLayout({ children }) {
 
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter()],
-    []  // Add this empty array to fix the warning
+    []  // Add this to fix the ESLint warning
   );
 
   return (
