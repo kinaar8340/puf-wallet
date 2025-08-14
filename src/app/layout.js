@@ -9,6 +9,8 @@ import { useMemo } from 'react';
 
 import './globals.css';  // Import global styles including Tailwind
 
+import Providers from 'Providers';
+
 export default function RootLayout({ children }) {
   const network = 'devnet';  // Or use WalletAdapterNetwork.Devnet
   const endpoint = 'https://api.devnet.solana.com';
