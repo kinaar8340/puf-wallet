@@ -1,5 +1,6 @@
 /* ~/puf-wallet-frontend/src/app/globals.css */
 @import '@solana/wallet-adapter-react-ui/styles.css';
+@import "tailwindcss";
 
 @tailwind base;
 @tailwind components;
