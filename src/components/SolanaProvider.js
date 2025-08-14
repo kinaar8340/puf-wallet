@@ -1,4 +1,6 @@
-'use client'; // Client-side only
+/* ~/puf-wallet-frontend/src/components/SolanaProvider.js */
+
+'use client';
 
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
@@ -14,12 +16,16 @@ export default function Providers({ children }) {
   const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
   return (
-    <ConnectionProvider endpoint={connection.rpcEndpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>
-          {children}
-        </WalletModalProvider>
-      </WalletProvider>
-    </ConnectionProvider>
+    <div>
+      <WalletMultiButton>
+        <ConnectionProvider endpoint={connection.rpcEndpoint}>
+          <WalletProvider wallets={wallets} autoConnect>
+            <WalletModalProvider>
+              {children}
+            </WalletModalProvider>
+          </WalletProvider>
+        </ConnectionProvider>
+      </WalletMultiButton>
+    </div>
   );
-}
+} //eof

@@ -1,8 +1,9 @@
+/* ~/puf-wallet-frontend/src/app/globals.css */
+@import "tailwindcss";
+@import '@solana/wallet-adapter-react-ui/styles.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import "tailwindcss";
 
 :root {
   --background: #333333;
@@ -65,8 +66,8 @@ body {
 }
 
 .slider::-moz-range-thumb {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
   background: #00ff00;
   border: 4px solid black;
   border-radius: 50%;
@@ -75,8 +76,8 @@ body {
 }
 
 .slider::-ms-thumb {
-  width: 60px;
-  height: 60px;
+  width: 30px;
+  height: 30px;
   background: #00ff00;
   border: 4px solid black;
   border-radius: 50%;
