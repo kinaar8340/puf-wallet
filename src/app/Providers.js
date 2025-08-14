@@ -1,4 +1,4 @@
-// ~/puf-wallet-frontend/src/app/Providers.js
+/* ~/puf-wallet-frontend/src/app/Providers.js */
 
 'use client';
 
@@ -17,7 +17,7 @@ export function Providers({ children }) {
 
   return (
     <ConnectionProvider endpoint="https://api.devnet.solana.com">
-      <WalletProvider wallets={wallets} autoConnect={false}>  // Set to false as per your needs
+      <WalletProvider wallets={wallets} autoConnect={false}> 
         <WalletModalProvider>
           <WalletMultiButton />
           {children}
