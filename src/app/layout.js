@@ -2,10 +2,10 @@
 
 'use client';
 
-import { useMemo } from 'react';  // Keep if needed elsewhere, but unused here now
-import './globals.css';  // Import global styles including Tailwind
+import { useMemo } from 'react';
+import './globals.css'; 
 
-import { Providers } from './Providers';  // Fixed import: relative path and named export
+import { Providers } from './Providers';  
 
 export default function RootLayout({ children }) {
   return (
